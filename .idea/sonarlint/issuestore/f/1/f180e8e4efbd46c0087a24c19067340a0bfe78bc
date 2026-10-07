@@ -1,0 +1,20 @@
+
+?	php:S1481€")Remove this unused "$key" local variable.(äŸá÷
+j	php:S3776Î"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(¹°ã‚
+M	php:S1172§"2Remove the unused function parameter "$attribute".(×ÇÉ›ûÿÿÿÿ
+D	php:S1172ş".Remove the unused function parameter "$value".(ûŒ™˜
+F	php:S14814",Remove this unused "$status" local variable.(Òú¼•øÿÿÿÿ
+i	php:S3776&"TRefactor this function to reduce its Cognitive Complexity from 61 to the 15 allowed.(Ôà
+o	php:S3776Ÿ"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(ñ¤°’şÿÿÿÿ
+I	php:S1172§".Remove the unused function parameter "$value".(×ÇÉ›ûÿÿÿÿ
+?	php:S1481ê")Remove this unused "$key" local variable.(äŸá÷
+t	php:S1192"^Define a constant instead of duplicating this literal "assets/img/room/room-gallery/" 5 times.(óîÇ
+H	php:S1172ş"2Remove the unused function parameter "$attribute".(ûŒ™˜
+D	php:S1481~"/Remove this unused "$vendor_id" local variable.(êĞÜˆ
+G	php:S1481Ä"1Remove this unused "$videoImgURL" local variable.(‡§şó
+j	php:S3776·"TRefactor this function to reduce its Cognitive Complexity from 30 to the 15 allowed.(ï·¸§
+j	php:S3776À"TRefactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.(±õ©Ö
+_	php:S1192–"IDefine a constant instead of duplicating this literal "rooms.id" 4 times.(¬Áî
+y	php:S1192Ï"^Define a constant instead of duplicating this literal "assets/img/room/featureImage/" 5 times.(Ğñ‹âıÿÿÿÿ
+\	php:S1192Š"GDefine a constant instead of duplicating this literal "_title" 6 times.(€÷°
+x	php:S1488´"]Immediately return this expression instead of assigning it to the temporary variable "$data".(Ö†ıüÿÿÿÿ

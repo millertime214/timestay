@@ -1,0 +1,16 @@
+
+d	php:S1192"NDefine a constant instead of duplicating this literal "/bulk-delete" 15 times.(·¦±¹
+\	php:S1192T"HDefine a constant instead of duplicating this literal "/store" 18 times.(Ó™ŸH
+w	php:S1192b"bDefine a constant instead of duplicating this literal "Admin\RoomBookingController@index" 3 times.(¤ØõŒ
+k	php:S1192"QDefine a constant instead of duplicating this literal "/update-password" 3 times.(åÙ¾Øüÿÿÿÿ
+g	php:S1192˜"LDefine a constant instead of duplicating this literal "{id}/delete" 4 times.(ËÎøÄıÿÿÿÿ
+f	php:S1192‡"QDefine a constant instead of duplicating this literal "/update-settings" 4 times.(ä€¢L
+_	php:S1192O"JDefine a constant instead of duplicating this literal "/settings" 8 times.(¡ŞËû
+a	php:S1192ô"FDefine a constant instead of duplicating this literal "/edit" 3 times.(…Ìšùÿÿÿÿ
+g	php:S1192Ë"LDefine a constant instead of duplicating this literal "delete/{id}" 4 times.(Š»™Âÿÿÿÿÿ
+^	php:S1192W"IDefine a constant instead of duplicating this literal "/update" 18 times.(èò¥Ú
+d	php:S1192"NDefine a constant instead of duplicating this literal "/delete/{id}" 14 times.(¨µ¶
+g	php:S1192É"LDefine a constant instead of duplicating this literal "update/{id}" 4 times.(Ó±¿ùøÿÿÿÿ
+c	php:S1192•"MDefine a constant instead of duplicating this literal "/{id}/delete" 3 times.(ÚçÆù
+k	php:S1192"QDefine a constant instead of duplicating this literal "/change-password" 3 times.(ƒ¼Å“úÿÿÿÿ
+‘php:S138"xThis function expression has 564 lines, which is greater than the 150 lines authorized. Split it into smaller functions.(Ã›Ô®üÿÿÿÿ

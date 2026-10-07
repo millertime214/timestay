@@ -1,0 +1,29 @@
+
+Ujavascript:S1854"3Remove this useless assignment to variable "loops".(€ÍÍıÿÿÿÿ
+Gjavascript:S1117ë"+'i' is already declared in the upper scope.(Ö¾®7
+bjavascript:S905÷"FExpected an assignment or function call and instead saw an expression.(™Óµ†
+bjavascript:S1854¾"@Remove this useless assignment to variable "testimonialSlider1".(¬¨÷ëşÿÿÿÿ
+ejavascript:S1481Ê"CRemove the declaration of the unused 'testimonialSlider2' variable.(ü¶§ûÿÿÿÿ
+Yjavascript:S1481ë"7Remove the declaration of the unused 'swiper' variable.(Í“€şÿÿÿÿ
+Vjavascript:S1854ë"4Remove this useless assignment to variable "swiper".(Í“€şÿÿÿÿ
+Rjavascript:S1117“"0'swiper' is already declared in the upper scope.(Í“€şÿÿÿÿ
+bjavascript:S1481Ö"@Remove the declaration of the unused 'proSingleSlider' variable.(„äıØÿÿÿÿÿ
+ejavascript:S1481¾"CRemove the declaration of the unused 'testimonialSlider1' variable.(¬¨÷ëşÿÿÿÿ
+Yjavascript:S1481“"7Remove the declaration of the unused 'swiper' variable.(Í“€şÿÿÿÿ
+Zjavascript:S1481ï"8Remove the declaration of the unused 'swiper2' variable.(ÊĞÍ÷ÿÿÿÿÿ
+vjavascript:S3699¢"TRemove this use of the output from "dataTable"; "dataTable" doesn't return anything.(½á¥÷şÿÿÿÿ
+fjavascript:S905#"FExpected an assignment or function call and instead saw an expression.(¢ô¯÷ÿÿÿÿÿ
+Vjavascript:S1854“"4Remove this useless assignment to variable "swiper".(Í“€şÿÿÿÿ
+Xjavascript:S1854ú"4Remove this useless assignment to variable "errors".(ƒÁìş8˜ŠïÄì3
+=javascript:S878¡"!Unexpected use of comma operator.(Ìã´²
+Wjavascript:S1854ï"5Remove this useless assignment to variable "swiper2".(ÊĞÍ÷ÿÿÿÿÿ
+=javascript:S1534"Duplicate key 'pagination'.(©½Õ¼ûÿÿÿÿ
+bjavascript:S905¡"FExpected an assignment or function call and instead saw an expression.(Ìã´²
+Rjavascript:S1117ë"0'swiper' is already declared in the upper scope.(Í“€şÿÿÿÿ
+Ajavascript:S878#"!Unexpected use of comma operator.(¢ô¯÷ÿÿÿÿÿ
+Ujavascript:S1854Ã"8Remove this useless assignment to variable "selectList".(¹ôÿ²
+=javascript:S878÷"!Unexpected use of comma operator.(™Óµ†
+bjavascript:S1854Ê"@Remove this useless assignment to variable "testimonialSlider2".(ü¶§ûÿÿÿÿ
+[javascript:S1481ú"7Remove the declaration of the unused 'errors' variable.(ƒÁìş8˜ŠïÄì3
+_javascript:S1854Ö"=Remove this useless assignment to variable "proSingleSlider".(„äıØÿÿÿÿÿ
+Xjavascript:S1481Ã";Remove the declaration of the unused 'selectList' variable.(¹ôÿ²

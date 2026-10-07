@@ -1,0 +1,10 @@
+
+W	php:S1142¹"<This method has 4 returns, which is more than the 3 allowed.(ˆÝˆñúÿÿÿÿ
+i	php:S3776"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(Ôàž
+p	php:S1192T"VDefine a constant instead of duplicating this literal "memberships.vendor_id" 3 times.(ÿÈ½øÿÿÿÿ
+m	php:S1192V"SDefine a constant instead of duplicating this literal "memberships.status" 3 times.(â¹°’ùÿÿÿÿ
+e	php:S1192T"KDefine a constant instead of duplicating this literal "vendors.id" 6 times.(ÿÈ½øÿÿÿÿ
+d	php:S1192Z"ODefine a constant instead of duplicating this literal "vendors.status" 3 times.(ýÒŸ’
+l	php:S1192W"WDefine a constant instead of duplicating this literal "memberships.start_date" 3 times.(ãôØ¨
+g	php:S1192‘"QDefine a constant instead of duplicating this literal "hotels.vendor_id" 7 times.(·Æ¦ß
+r	php:S1192X"XDefine a constant instead of duplicating this literal "memberships.expire_date" 3 times.(ØÐšÏýÿÿÿÿ

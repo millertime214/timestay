@@ -1,0 +1,14 @@
+
+C	php:S1125¢"(Remove the literal "true" boolean value.(´“óæüÿÿÿÿ
+q	php:S1192Î"[Define a constant instead of duplicating this literal "assets/file/invoices/room/" 3 times.(Üê»ø
+[	php:S1192Œ"FDefine a constant instead of duplicating this literal "H:i:s" 3 times.(†½ä*
+4php:S125›"Remove this commented out code.(ıŸô»
+n	php:S3776&"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(ğÀÏíúÿÿÿÿ
+‚	php:S1488…"gImmediately return this expression instead of assigning it to the temporary variable "$calculatedData".(ã³ˆÁøÿÿÿÿ
+1	php:S3626ö"Remove this redundant jump.(ûÁİ…
+_	php:S3358«"DExtract this nested ternary operation into an independent statement.(­µ¸‚ûÿÿÿÿ
+1	php:S3626¤"Remove this redundant jump.(ûÁİ…
+W	php:S1142&"=This method has 21 returns, which is more than the 3 allowed.(ğÀÏíúÿÿÿÿ
+v	php:S1488ª"`Immediately return this expression instead of assigning it to the temporary variable "$arrData".(¶ğ×Ù
+}	php:S1488 "bImmediately return this expression instead of assigning it to the temporary variable "$orderInfo".(¸ı¸­ûÿÿÿÿ
+k	php:S11920"ODefine a constant instead of duplicating this literal "Court Booking" 19 times.(éß§¨8ÙüÃ³é3

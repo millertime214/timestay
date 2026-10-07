@@ -1,0 +1,32 @@
+
+q	php:S1192§"[Define a constant instead of duplicating this literal "assets/file/invoices/room/" 6 times.(á•ïÛ
+b	php:S1192é"GDefine a constant instead of duplicating this literal "H:i:s" 18 times.(ØşÅßüÿÿÿÿ
+=	php:S1481Í"'Remove this unused "$x" local variable.(íÒçî
+j	php:S3776÷"TRefactor this function to reduce its Cognitive Complexity from 22 to the 15 allowed.(”€âœ
+	php:S1192Ç"fDefine a constant instead of duplicating this literal "assets/file/attachments/room-booking/" 4 times.(æ±¡ıÿÿÿÿ
+o	php:S3776æ"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(Õ¹ÚÒøÿÿÿÿ
+a	php:S1192ù"FDefine a constant instead of duplicating this literal "m/d/Y" 8 times.(§ş›şÿÿÿÿ
+t	php:S1192·"YDefine a constant instead of duplicating this literal "hourly_room_prices.price" 4 times.(şÕƒªûÿÿÿÿ
+m	php:S1192•"WDefine a constant instead of duplicating this literal "additional_services.id" 4 times.(ÙŸ”¼
+h	php:S1192h"SDefine a constant instead of duplicating this literal "memberships.status" 3 times.(äˆæ
+^	php:S1192Y"IDefine a constant instead of duplicating this literal "rooms.id" 3 times.(¦ü®ƒ
+=	php:S1481¦"'Remove this unused "$x" local variable.(íÒçî
+p	php:S1192e"VDefine a constant instead of duplicating this literal "memberships.vendor_id" 3 times.(Î„ÎØÿÿÿÿÿ
+_	php:S3358Ì"DExtract this nested ternary operation into an independent statement.(÷Ï‚üÿÿÿÿ
+•php:S138Ù"{This function "makeBooking" has 171 lines, which is greater than the 150 lines authorized. Split it into smaller functions.(•¬é£üÿÿÿÿ
+o	php:S3776Ù"TRefactor this function to reduce its Cognitive Complexity from 35 to the 15 allowed.(•¬é£üÿÿÿÿ
+j	php:S1192‰"ODefine a constant instead of duplicating this literal "%02d:%02d:%02d" 6 times.(¿Ï¬Æıÿÿÿÿ
+n	php:S1192¹"XDefine a constant instead of duplicating this literal "hourly_room_prices.hour" 4 times.(ÄÆ„ö
+l	php:S1192i"WDefine a constant instead of duplicating this literal "memberships.start_date" 3 times.(ƒóÊ¸
+k	php:S1192d"QDefine a constant instead of duplicating this literal "rooms.vendor_id" 10 times.(¶Áº÷ÿÿÿÿÿ
+p	php:S1192º"UDefine a constant instead of duplicating this literal "hourly_room_prices.*" 4 times.(Ú˜“Òşÿÿÿÿ
+g	php:S1192¶"QDefine a constant instead of duplicating this literal "booking_hours.id" 4 times.(¦ßÙ
+q	php:S1192¶"[Define a constant instead of duplicating this literal "hourly_room_prices.hour_id" 4 times.(¦ßÙ
+c	php:S1192"HDefine a constant instead of duplicating this literal " +1 day" 6 times.(·­é½ÿÿÿÿÿ
+b	php:S1763†
+"GDelete this unreachable code or refactor the code to make it reachable.(œ÷ãÈşÿÿÿÿ
+r	php:S1192j"XDefine a constant instead of duplicating this literal "memberships.expire_date" 3 times.(ÍÈñÏúÿÿÿÿ
+1	php:S3626«"Remove this redundant jump.(ûÁİ…
+k	php:S1192Y"VDefine a constant instead of duplicating this literal "room_contents.room_id" 3 times.(¦ü®ƒ
+_	php:S1192‹"IDefine a constant instead of duplicating this literal "23:59:59" 6 times.(üŠØ½
+w	php:S1192¸"\Define a constant instead of duplicating this literal "booking_hours.serial_number" 8 times.(· ç¤şÿÿÿÿ

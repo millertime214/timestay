@@ -1,0 +1,15 @@
+
+c	php:S1192Ü"MDefine a constant instead of duplicating this literal "vendor.login" 3 times.(Ë ƒñ
+M	php:S1481ë"0Remove this unused "$eventColor" local variable.(£¸Þß8Ý‹ïÄì3
+Q	php:S1142K"<This method has 5 returns, which is more than the 3 allowed.(²Ï¥·
+R	php:S1142ÿ"<This method has 9 returns, which is more than the 3 allowed.(©¦Œð
+Z	php:S1226¿"DIntroduce a new variable instead of reusing the parameter "$vendor".(Ùë»°
+f	php:S11929"QDefine a constant instead of duplicating this literal "vendor.dashboard" 5 times.(´Õúú
+j	php:S3776ò"TRefactor this function to reduce its Cognitive Complexity from 25 to the 15 allowed.(šÄúž
+?	php:S1125¦")Remove the literal "false" boolean value.(Ë£½¬
+c	php:S1871Ç"MThis branch's code block is the same as the block for the branch on line 310.(å¥ž‡
+j	php:S3776ÿ"TRefactor this function to reduce its Cognitive Complexity from 33 to the 15 allowed.(©¦Œð
+i	php:S3776K"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(²Ï¥·
+j	php:S3776»"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(Éàç
+a	php:S1192ã"FDefine a constant instead of duplicating this literal "_name" 4 times.(•ÄšÎýÿÿÿÿ
+?	php:S1125³")Remove the literal "false" boolean value.(û—º‘

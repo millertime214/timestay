@@ -1,0 +1,70 @@
+
+`	php:S1192n"FDefine a constant instead of duplicating this literal "m/d/Y" 8 times.(§ş›şÿÿÿÿ
+n	php:S1192"XDefine a constant instead of duplicating this literal "room_contents.amenities" 6 times.(Š§˜õ
+k	php:S3776í"URefactor this function to reduce its Cognitive Complexity from 136 to the 15 allowed.(Ôœ
+N	php:S1481É
+",Remove this unused "$colors" local variable.(¹êéŸıÿÿÿÿ8ï¨‘»è3
+v	php:S1192Â"[Define a constant instead of duplicating this literal "hotel_contents.language_id" 7 times.(ùÊşÂùÿÿÿÿ
+u	php:S1192•"ZDefine a constant instead of duplicating this literal "hotels.logo as hotelImage" 5 times.(Á™èøÿÿÿÿ
+i	php:S1192¿"SDefine a constant instead of duplicating this literal "room_categories.id" 6 times.(ï˜Èù
+u	php:S1192Å"ZDefine a constant instead of duplicating this literal "room_contents.language_id" 6 times.(èŒğ÷şÿÿÿÿ
+s	php:S1192”"^Define a constant instead of duplicating this literal "hotels.longitude as longitude" 6 times.(—¥Ö(
+k	php:S1192¾"PDefine a constant instead of duplicating this literal "rooms.hotel_id" 34 times.(ÊÒª£üÿÿÿÿ
+i	php:S1192"SDefine a constant instead of duplicating this literal "room_contents.slug" 6 times.(Å©İ
+m	php:S1192Ï"WDefine a constant instead of duplicating this literal "memberships.start_date" 7 times.(ƒóÊ¸
+php:S138í"{This function "search_room" has 532 lines, which is greater than the 150 lines authorized. Split it into smaller functions.(Ôœ
+r	php:S1192“"\Define a constant instead of duplicating this literal "hotels.latitude as latitude" 6 times.(í¾îÎ
+`	php:S1192Õ"KDefine a constant instead of duplicating this literal "vendors.id" 7 times.(«ïğH
+x	php:S1192–"bDefine a constant instead of duplicating this literal "hotel_contents.title as hotelName" 5 times.(›‰ûá
+Ephp:S108¹")Either remove or fill this block of code.(å¥‡8°°ˆùã3
+`	php:S1192­"JDefine a constant instead of duplicating this literal "rooms.id" 46 times.(ì°ŠŒ
+o	php:S1192"TDefine a constant instead of duplicating this literal "room_contents.title" 6 times.(„Ä€àøÿÿÿÿ
+c	php:S1871²"MThis branch's code block is the same as the block for the branch on line 928.(å¥‡
+l	php:S1192Ê"QDefine a constant instead of duplicating this literal "rooms.vendor_id" 30 times.(¶Áº÷ÿÿÿÿÿ
+J	php:S1066‘"/Merge this if statement with the enclosing one.(ş‘ƒÌıÿÿÿÿ
+á	php:S1192‚"ÊDefine a constant instead of duplicating this literal "
+            (6371000 * acos(
+            cos(radians(?)) *
+            cos(radians(hotels.latitude)) *
+            cos(radians(hotels.longitude) - radians(?)) +
+            sin(radians(?)) *
+            sin(radians(hotels.latitude))
+            )) < ?
+            " 4 times.(Ğ×«Ë
+b	php:S1192b"HDefine a constant instead of duplicating this literal " +1 day" 3 times.(·­é½ÿÿÿÿÿ
+J	php:S1066Û"/Merge this if statement with the enclosing one.(õÜ¢âıÿÿÿÿ
+^	php:S1192"HDefine a constant instead of duplicating this literal "rooms.*" 6 times.(É¾í•
+p	php:S1192š"ZDefine a constant instead of duplicating this literal "hotel_contents.country_id" 5 times.(³Ş”ô
+r	php:S1192¿"\Define a constant instead of duplicating this literal "room_contents.room_category" 8 times.(ï˜Èù
+p	php:S1192‘"UDefine a constant instead of duplicating this literal "hotels.id as hotelId" 6 times.(•¡€òşÿÿÿÿ
+J	php:S1066å"/Merge this if statement with the enclosing one.(ô÷ó‹øÿÿÿÿ
+h	php:S1192Ç"MDefine a constant instead of duplicating this literal "rooms.status" 8 times.(î·Ş£ıÿÿÿÿ
+v	php:S1192—"aDefine a constant instead of duplicating this literal "hotel_contents.slug as hotelSlug" 6 times.(Êü‰
+E	php:S1066à"/Merge this if statement with the enclosing one.(°Ü£Ï
+j	php:S3776!"URefactor this function to reduce its Cognitive Complexity from 111 to the 15 allowed.(Ôà
+i	php:S1192Î"SDefine a constant instead of duplicating this literal "memberships.status" 7 times.(äˆæ
+s	php:S1192™"XDefine a constant instead of duplicating this literal "hotel_contents.state_id" 5 times.(’ìÙáşÿÿÿÿ
+i	php:S1192]"ODefine a constant instead of duplicating this literal "%02d:%02d:%02d" 3 times.(¿Ï¬Æıÿÿÿÿ
+o	php:S1192Á"TDefine a constant instead of duplicating this literal "hotel_categories.id" 6 times.(¶ûÔ‡ıÿÿÿÿ
+l	php:S1192¼"VDefine a constant instead of duplicating this literal "room_contents.room_id" 6 times.(ŠŸÂ”
+Q	php:S1066Ç"/Merge this if statement with the enclosing one.(¨şë¾ûÿÿÿÿ8°°ˆùã3
+v	php:S1192Á"[Define a constant instead of duplicating this literal "hotel_contents.category_id" 6 times.(¶ûÔ‡ıÿÿÿÿ
+r	php:S1192¸
+"\Define a constant instead of duplicating this literal "booking_hours.serial_number" 4 times.(Ä³Ê»
+e	php:S1192Ø"ODefine a constant instead of duplicating this literal "vendors.status" 6 times.(¼¦®ù
+s	php:S1192Ä"XDefine a constant instead of duplicating this literal "hotel_categories.status" 6 times.(¹•Â«üÿÿÿÿ
+r	php:S1192˜"WDefine a constant instead of duplicating this literal "hotel_contents.city_id" 5 times.(éÜîéøÿÿÿÿ
+J	php:S1066Ş"/Merge this if statement with the enclosing one.(ş‘ƒÌıÿÿÿÿ
+q	php:S1192’"VDefine a constant instead of duplicating this literal "hotels.stars as stars" 6 times.(Î®ªÜÿÿÿÿÿ
+e	php:S1192¾"JDefine a constant instead of duplicating this literal "hotels.id" 9 times.(ÊÒª£üÿÿÿÿ
+m	php:S1192Ã"WDefine a constant instead of duplicating this literal "room_categories.status" 6 times.(ëˆÃ
+^	php:S1192;"IDefine a constant instead of duplicating this literal "00:00:00" 3 times.(ÏëıË
+i	php:S3776Ë"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ı»µ!
+s	php:S1192Ğ"XDefine a constant instead of duplicating this literal "memberships.expire_date" 7 times.(ÍÈñÏúÿÿÿÿ
+n	php:S1192À"XDefine a constant instead of duplicating this literal "hotel_contents.hotel_id" 7 times.(“Á¼¨
+‰php:S138!"uThis function "index" has 481 lines, which is greater than the 150 lines authorized. Split it into smaller functions.(Ôà
+q	php:S1192Ë"VDefine a constant instead of duplicating this literal "memberships.vendor_id" 7 times.(Î„ÎØÿÿÿÿÿ
+Œphp:S138À	"wThis function "details" has 184 lines, which is greater than the 150 lines authorized. Split it into smaller functions.(¥ğ™ô
+c	php:S1871²"MThis branch's code block is the same as the block for the branch on line 300.(å¥‡
+i	php:S1192È"NDefine a constant instead of duplicating this literal "hotels.status" 6 times.(ãÍ¹Êüÿÿÿÿ
+a	php:S11929"GDefine a constant instead of duplicating this literal "H:i:s" 12 times.(ÍµµÂøÿÿÿÿ

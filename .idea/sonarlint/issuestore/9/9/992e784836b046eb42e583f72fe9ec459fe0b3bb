@@ -1,0 +1,23 @@
+
+n	php:S1192¹"XDefine a constant instead of duplicating this literal "hourly_room_prices.hour" 4 times.(ÄÆ„ö
+t	php:S1192·"YDefine a constant instead of duplicating this literal "hourly_room_prices.price" 4 times.(şÕƒªûÿÿÿÿ
+_	php:S3358Ì"DExtract this nested ternary operation into an independent statement.(÷Ï‚üÿÿÿÿ
+b	php:S1192í"GDefine a constant instead of duplicating this literal "H:i:s" 18 times.(ØşÅßüÿÿÿÿ
+j	php:S3776â"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(”€âœ
+a	php:S1192ü"FDefine a constant instead of duplicating this literal "m/d/Y" 8 times.(§ş›şÿÿÿÿ
+c	php:S1192"HDefine a constant instead of duplicating this literal " +1 day" 6 times.(·­é½ÿÿÿÿÿ
+W	php:S1854i"=Remove this useless assignment to local variable '$roomInfo'.(¦©œ´ùÿÿÿÿ
+m	php:S1192–"WDefine a constant instead of duplicating this literal "additional_services.id" 4 times.(ÙŸ”¼
+g	php:S1192¶"QDefine a constant instead of duplicating this literal "booking_hours.id" 4 times.(¦ßÙ
+=	php:S1481˜"'Remove this unused "$x" local variable.(íÒçî
+w	php:S1192¸"\Define a constant instead of duplicating this literal "booking_hours.serial_number" 8 times.(· ç¤şÿÿÿÿ
+o	php:S3776Ø"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(Õ¹ÚÒøÿÿÿÿ
+	php:S4143p"tVerify this is the array key that was intended to be written to; a value has already been saved for it and not used.(í—‹¡şÿÿÿÿ
+i	php:S3776Ô"TRefactor this function to reduce its Cognitive Complexity from 22 to the 15 allowed.(ø×ƒD
+q	php:S1192¶"[Define a constant instead of duplicating this literal "hourly_room_prices.hour_id" 4 times.(¦ßÙ
+o	php:S3776Ü"TRefactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed.(•¬é£üÿÿÿÿ
+=	php:S1481Š"'Remove this unused "$x" local variable.(íÒçî
+p	php:S1192º"UDefine a constant instead of duplicating this literal "hourly_room_prices.*" 4 times.(Ú˜“Òşÿÿÿÿ
+j	php:S1192Š"ODefine a constant instead of duplicating this literal "%02d:%02d:%02d" 6 times.(¿Ï¬Æıÿÿÿÿ
+_	php:S1192Œ"IDefine a constant instead of duplicating this literal "23:59:59" 6 times.(üŠØ½
+|	php:S11928"bDefine a constant instead of duplicating this literal "vendor.room_bookings.all_bookings" 3 times.(šÅ†¦ùÿÿÿÿ
