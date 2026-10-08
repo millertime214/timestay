@@ -18,7 +18,8 @@
 
 
   @includeIf('frontend.partials.styles')
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2472255881742374"
+     crossorigin="anonymous"></script>
 </head>
 
 <body class="theme-color">

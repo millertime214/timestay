@@ -57,7 +57,7 @@ function mapInitialize(featured_content, room_content) {
     map = L.map('main-map', {
       center: [12.8797, 121.7740],
       minZoom: 0,
-      maxZoom: 22,
+      maxZoom: 19,
       scrollWheelZoom: o,
       tap: !L.Browser.mobile,
       fullscreenControl: true,

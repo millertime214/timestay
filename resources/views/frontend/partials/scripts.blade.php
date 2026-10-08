@@ -64,7 +64,8 @@
 {{-- custom main js --}}
 <script src="{{ asset('assets/front/js/main.js') }}"></script>
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2472255881742374"
+     crossorigin="anonymous"></script>
 
 {{-- whatsapp init code --}}
 

@@ -19,7 +19,7 @@
             </p>
           </div>
         </div>
-        <div class="col-xl-2 col-lg-3 col-sm-6">
+        <div class="col-xl-3 col-lg-3 col-sm-6">
           <div class="footer-widget" data-aos="fade-up">
             <h4 class="title">{{ __('Quick Links') }}</h4>
             <ul class="footer-links">
@@ -35,7 +35,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-xl-2 col-lg-3 col-sm-6">
+        <div class="col-xl-3 col-lg-3 col-sm-6">
           <div class="footer-widget" data-aos="fade-up">
             <h4>{{ __('Contact Us') }}</h4>
             <ul class="info-list">
@@ -58,7 +58,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-xl-4 col-md-6">
+        <div class="col-xl-4 col-md-6 d-none">
           <div class="footer-widget" data-aos="fade-up">
             <h4 class="title">{{ __('Subscribe Us') }}</h4>
             <p>
