@@ -137,6 +137,47 @@
     <div class="container">
       <div class="row gx-xl-5">
         <div class="col-lg-8">
+          <div class="row">
+            <div class="col-12">
+              @if ($openPlaySlotsNextWeek->isNotEmpty())
+              <div class="widget widget-booking border radius-md mb-40">
+                <div class="p-20 border-bottom bg-primary-light">
+                  <h4 class="title mb-1"><i class="fas fa-users me-2"></i>{{ __('Open Play This Week') }}</h4>
+                  <p class="mb-0">{{ __('Join an available session and reserve your place.') }}</p>
+                </div>
+                <div class="p-20 d-flex gap-4">
+                  @foreach ($openPlaySlotsNextWeek as $openPlaySlot)
+                    <div class="col-md-5">
+                      @if ($openPlaySlot->poster)
+                        <a href="{{ route('frontend.open_play.show', $openPlaySlot->id) }}">
+                          <img src="{{ asset('assets/img/open-play/' . $openPlaySlot->poster) }}"
+                            alt="{{ $openPlaySlot->title ?: __('Open Play') }}" class="img-fluid w-100 radius-sm mb-3">
+                        </a>
+                      @endif
+                      <h6 class="mb-1">{{ $openPlaySlot->title ?: __('Open Play') }}</h6>
+                      @if ($openPlaySlot->category)<span class="badge bg-primary mb-2">{{ $openPlaySlot->category }}</span>@endif
+                      <p class="mb-1"><strong>{{ $openPlaySlot->starts_at->format('D, M d') }}</strong></p>
+                      <p class="mb-1">
+                        <i class="fal fa-clock me-1"></i>
+                        {{ $openPlaySlot->starts_at->format('h:i A') }}–{{ $openPlaySlot->ends_at->isSameDay($openPlaySlot->starts_at) ? $openPlaySlot->ends_at->format('h:i A') : $openPlaySlot->ends_at->format('M d, h:i A') }}
+                      </p>
+                      <p class="mb-2"><strong>{{ symbolPrice($openPlaySlot->price_per_player) }}</strong> {{ __('per player') }}</p>
+                      @if ($siteIsBookable)
+                        <a class="btn btn-primary radius-sm w-100" href="{{ route('frontend.open_play.show', $openPlaySlot->id) }}">
+                          <i class="fal fa-calendar-check me-1"></i>{{ __('Register Here') }}
+                        </a>
+                      @else
+                        <button class="btn btn-secondary radius-sm w-100" type="button" disabled>
+                          <i class="fas fa-ban me-1"></i>{{ __('Registration Unavailable') }}
+                        </button>
+                      @endif
+                    </div>
+                  @endforeach
+                </div>
+              </div>
+            @endif
+            </div>
+          </div>
           <div class="product-single-gallery radius-md gallery-popup mb-40" data-aos="fade-up">
             <div class="swiper product-single-slider">
               <div class="swiper-wrapper">
@@ -730,7 +771,7 @@
         <div class="col-lg-4">
           <aside class="widget-area" data-aos="fade-up">
             @if ($openPlaySlotsNextWeek->isNotEmpty())
-              <div class="widget widget-booking border radius-md mb-40">
+              <div class="widget widget-booking border radius-md mb-40 d-none">
                 <div class="p-20 border-bottom bg-primary-light">
                   <h4 class="title mb-1"><i class="fas fa-users me-2"></i>{{ __('Open Play This Week') }}</h4>
                   <p class="mb-0">{{ __('Join an available session and reserve your place.') }}</p>

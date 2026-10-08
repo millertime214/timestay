@@ -149,61 +149,7 @@
         </div>
       </div>
       <!-- Hotel Details -->
-      <div class="hotel-single-details" data-aos="fade-up">
-        <!-- Product description -->
-        <div class="hotel-desc">
-
-          <!-- Hotel gallery -->
-          <div class="hotel-gallery mb-20">
-            <h3 class="title mb-20">{{ $hotel->title }} Gallery</h3>
-            <div class="row gallery-popup">
-              <div class="col-lg-10">
-                <!-- Start product-slider wrapper -->
-                <div class="product-slider-style2-wrapper">
-                  <!-- Start product-slider -->
-                  <div class="swiper product-slider-style2 radius-md">
-                    <div class="swiper-wrapper">
-                      @foreach ($hotelImages as $gallery)
-                        <div class="swiper-slide product-slider-item">
-                          <figure class="lazy-container ratio ratio-5-3">
-                            <a href="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
-                              class="lightbox-single">
-                              <img class="lazyload"
-                                src="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
-                                data-src="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
-                                alt="{{ __('hotel image') }}">
-                            </a>
-                          </figure>
-                        </div>
-                      @endforeach
-                    </div>
-                    <div class="product-slider-button-prev slider-btn"><i class="fal fa-angle-left"></i></div>
-                    <div class="product-slider-button-next slider-btn"><i class="fal fa-angle-right"></i></div>
-                  </div>
-
-                  <!-- product-slider-style2-thumb -->
-                  <div thumbsSlider="" class="swiper product-slider-style2-thumb">
-                    <div class="swiper-wrapper">
-                      @foreach ($hotelImages as $gallery)
-                        <div class="swiper-slide product-slider-thumb-item">
-                          <img class="lazyload" src="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
-                            alt="Image">
-                        </div>
-                      @endforeach
-                    </div>
-                  </div>
-                  <!-- End product-slider -->
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="tinymce-content">
-            {!! optional($hotel)->description !!}
-          </div>
-        </div>
-          <!-- Rooms -->
-        @if (count($rooms) > 0)
+       @if (count($rooms) > 0)
           <div class="product-area similar-product pb-15 mt-25" data-aos="fade-up">
             <div class="section-title title-inline mb-30">
               <h3 class="title">{{ __('Courts') }}</h3>
@@ -378,6 +324,62 @@
             </div>
           </div>
         @endif
+        
+      <div class="hotel-single-details" data-aos="fade-up">
+        <!-- Product description -->
+        <div class="hotel-desc">
+
+          <!-- Hotel gallery -->
+          <div class="hotel-gallery mb-20">
+            <h3 class="title mb-20">{{ $hotel->title }} Gallery</h3>
+            <div class="row gallery-popup">
+              <div class="col-lg-10">
+                <!-- Start product-slider wrapper -->
+                <div class="product-slider-style2-wrapper">
+                  <!-- Start product-slider -->
+                  <div class="swiper product-slider-style2 radius-md">
+                    <div class="swiper-wrapper">
+                      @foreach ($hotelImages as $gallery)
+                        <div class="swiper-slide product-slider-item">
+                          <figure class="lazy-container ratio ratio-5-3">
+                            <a href="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
+                              class="lightbox-single">
+                              <img class="lazyload"
+                                src="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
+                                data-src="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
+                                alt="{{ __('hotel image') }}">
+                            </a>
+                          </figure>
+                        </div>
+                      @endforeach
+                    </div>
+                    <div class="product-slider-button-prev slider-btn"><i class="fal fa-angle-left"></i></div>
+                    <div class="product-slider-button-next slider-btn"><i class="fal fa-angle-right"></i></div>
+                  </div>
+
+                  <!-- product-slider-style2-thumb -->
+                  <div thumbsSlider="" class="swiper product-slider-style2-thumb">
+                    <div class="swiper-wrapper">
+                      @foreach ($hotelImages as $gallery)
+                        <div class="swiper-slide product-slider-thumb-item">
+                          <img class="lazyload" src="{{ asset('assets/img/hotel/hotel-gallery/' . $gallery->image) }}"
+                            alt="Image">
+                        </div>
+                      @endforeach
+                    </div>
+                  </div>
+                  <!-- End product-slider -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tinymce-content">
+            {!! optional($hotel)->description !!}
+          </div>
+        </div>
+          <!-- Rooms -->
+        
 
 
         

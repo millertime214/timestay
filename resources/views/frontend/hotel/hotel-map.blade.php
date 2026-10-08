@@ -476,10 +476,10 @@
   @if ($basicInfo->google_map_api_key_status == 1)
     <script src="{{ asset('assets/front/js/api-search-2.js') }}"></script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClwhg2wjC4G0CvjZGVxBRtxoIJKc3obFU&libraries=places&callback=initMap"
+      src="https://maps.googleapis.com/maps/api/js?key={{ $basicInfo->google_map_api_key }}&libraries=places&callback=initMap"
       async defer></script>
   @endif
-  <script src="{{ asset('assets/front/js/map-hotel.js') }}"></script>
+  <script src="{{ asset('assets/front/js/map-hotel.js') }}?v={{ filemtime(public_path('assets/front/js/map-hotel.js')) }}"></script>
   <script>
     "use strict";
     var featured_contents = {!! json_encode($featured_contents) !!};

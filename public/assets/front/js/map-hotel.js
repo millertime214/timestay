@@ -55,7 +55,9 @@ function mapInitialize(featured_content, hotel_content) {
     o = !0;
   if ($('#main-map').length) {
     map = L.map('main-map', {
-      center: [105.931426295101, 160.020130352685],
+      // Use a valid Philippines fallback. Leaflet rejects latitudes outside
+      // -90..90 and the previous value prevented the map from initializing.
+      center: [12.8797, 121.7740],
       minZoom: 0,
       maxZoom: 22,
       scrollWheelZoom: o,
@@ -66,9 +68,9 @@ function mapInitialize(featured_content, hotel_content) {
       }
     });
 
-    var t = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-
-      maxZoom: 22
+    var t = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     // Assuming dd is your data array
@@ -76,15 +78,20 @@ function mapInitialize(featured_content, hotel_content) {
 
       var jpopup_customOptions = {};
 
-      var latitude = element.latitude;
-      var longitude = element.longitude;
+      var latitude = Number.parseFloat(element.latitude);
+      var longitude = Number.parseFloat(element.longitude);
       var cityId = element.city_id;
       var stateId = element.state_id;
       var countryId = element.country_id;
 
+      if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+        !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+        return;
+      }
+
       var a = L.marker([latitude, longitude], {
         icon: L.divIcon({
-          html: '<div class="marker-container"><div class="marker-card"><div class="front face"><i class="fa fa-hotel"></i></div><div class="marker-arrow"></div></div></div>',
+          html: '<div class="marker-container"><div class="marker-card"><div class="front face"><i class="fa fa-futbol"></i></div><div class="marker-arrow"></div></div></div>',
           className: 'open_street_map_marker google_marker',
           iconSize: [40, 46],
           popupAnchor: [1, -35],
@@ -121,14 +128,19 @@ function mapInitialize(featured_content, hotel_content) {
     hotel_content.forEach(function (element) {
       var jpopup_customOptions = {};
 
-      var latitude = element.latitude;
-      var longitude = element.longitude;
+      var latitude = Number.parseFloat(element.latitude);
+      var longitude = Number.parseFloat(element.longitude);
       var cityId = element.city_id;
       var stateId = element.state_id;
       var countryId = element.country_id;
+
+      if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+        !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+        return;
+      }
       var a = L.marker([latitude, longitude], {
         icon: L.divIcon({
-          html: '<div class="marker-container"><div class="marker-card"><div class="front face"><i class="fa fa-hotel"></i></div><div class="marker-arrow"></div></div></div>',
+          html: '<div class="marker-container"><div class="marker-card"><div class="front face"><i class="fa fa-futbol"></i></div><div class="marker-arrow"></div></div></div>',
           className: 'open_street_map_marker google_marker',
           iconSize: [40, 46],
           popupAnchor: [1, -35],

@@ -27,10 +27,9 @@
                 <li>
                   <a href="{{ $quickLinkInfo->url }}" target="_self" title="{{ __('Link') }}">{{ $quickLinkInfo->title }}</a>
                 </li>
-              @endforeach
-              <li>
+              @endforeach             
                 <a href="{{ route('terms_and_conditions') }}" target="_self">
-                  {{ __('Terms and Conditions & Disclaimer') }}
+                  {{ __('Terms and Conditions') }}
                 </a>
               </li>
             </ul>
