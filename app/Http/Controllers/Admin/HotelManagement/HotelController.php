@@ -474,12 +474,39 @@ class HotelController extends Controller
 
     public function downloadVerificationDocument(int $id, string $field)
     {
+        $path = $this->verificationDocumentPath($id, $field);
+
+        return Storage::disk('local')->download($path);
+    }
+
+    public function previewVerificationDocument(int $id, string $field)
+    {
+        $path = $this->verificationDocumentPath($id, $field);
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+        ];
+
+        abort_unless(isset($mimeTypes[$extension]), 415);
+
+        return Response::file(Storage::disk('local')->path($path), [
+            'Content-Type' => $mimeTypes[$extension],
+            'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    private function verificationDocumentPath(int $id, string $field): string
+    {
         abort_unless(in_array($field, $this->verificationDocumentFields(), true), 404);
         $hotel = Hotel::findOrFail($id);
         $path = $hotel->{$field};
         abort_if(empty($path) || !Storage::disk('local')->exists($path), 404);
 
-        return Storage::disk('local')->download($path);
+        return $path;
     }
 
     private function verificationDocumentFields(): array

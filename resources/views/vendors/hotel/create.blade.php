@@ -124,7 +124,7 @@
                           <input type="file" class="img-input2" name="logo">
                         </div>
                       </div>
-                      <p class="mt-2 mb-0 text-warning">{{ __('Image Size 300X300') }}</p>
+                      <p class="mt-2 mb-0 text-warning">{{ __('Image dimensions: minimum 100x100 pixels, maximum 350x350 pixels.') }}</p>
                     </div>
                   </div>
                   <div class="col-lg-4">

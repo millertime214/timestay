@@ -209,6 +209,7 @@ Route::prefix('/admin')->middleware('auth:admin', 'Demo', 'adminLang')->group(fu
 
     Route::post('update-status', 'Admin\HotelManagement\HotelController@updateStatus')->name('admin.hotel_management.update_hotel_status');
     Route::post('verification/{id}', 'Admin\HotelManagement\HotelController@updateVerification')->name('admin.hotel_management.verification.update');
+    Route::get('verification/{id}/document/{field}/preview', 'Admin\HotelManagement\HotelController@previewVerificationDocument')->name('admin.hotel_management.verification.document.preview');
     Route::get('verification/{id}/document/{field}', 'Admin\HotelManagement\HotelController@downloadVerificationDocument')->name('admin.hotel_management.verification.document');
 
     Route::get('manage-counter-section/{id}', 'Admin\HotelManagement\HotelController@manageCounterInformation')->name('admin.hotel_management.manage_counter_section');

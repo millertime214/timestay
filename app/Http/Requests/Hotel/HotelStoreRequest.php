@@ -46,7 +46,7 @@ class HotelStoreRequest extends FormRequest
                 'logo' => [
                     'required',
                     new ImageMimeTypeRule(),
-                    'dimensions:width=300,height=300'
+                    'dimensions:min_width=100,min_height=100,max_width=350,max_height=350'
                 ],
                 'status' => 'required',
                 'stars' => 'required',
@@ -128,7 +128,7 @@ class HotelStoreRequest extends FormRequest
                     'logo' => [
                         'required',
                         new ImageMimeTypeRule(),
-                        'dimensions:width=300,height=300'
+                        'dimensions:min_width=100,min_height=100,max_width=350,max_height=350'
                     ],
                     'status' => 'required',
                     'stars' => 'required',
@@ -207,7 +207,7 @@ class HotelStoreRequest extends FormRequest
 
         $languages = Language::all();
 
-        $messageArray['logo.dimensions'] = __('The logo must be exactly 300x300 pixels.');
+        $messageArray['logo.dimensions'] = __('The logo dimensions must be between 100x100 and 350x350 pixels.');
 
         foreach ($languages as $language) {
             $code = $language->code;

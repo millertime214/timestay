@@ -46,6 +46,7 @@ class PickleballDomainTest extends TestCase
         $this->assertStringEndsWith('/vendor-site-agreement', route('vendor_site_agreement'));
         $this->assertStringEndsWith('/admin/hotel-management/verification/7', route('admin.hotel_management.verification.update', 7));
         $this->assertStringEndsWith('/admin/hotel-management/verification/7/document/business_permit_document', route('admin.hotel_management.verification.document', [7, 'business_permit_document']));
+        $this->assertStringEndsWith('/admin/hotel-management/verification/7/document/business_permit_document/preview', route('admin.hotel_management.verification.document.preview', [7, 'business_permit_document']));
     }
 
     public function test_legacy_translation_keys_render_pickleball_language(): void

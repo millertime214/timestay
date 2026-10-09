@@ -237,7 +237,17 @@
                             <div class="mb-2">
                               @foreach ($documentLabels as $field => $label)
                                 @if ($hotel->{$field})
-                                  <a class="d-block small" href="{{ route('admin.hotel_management.verification.document', [$hotel->id, $field]) }}"><i class="fas fa-file-download mr-1"></i>{{ $label }}</a>
+                                  <div class="d-flex align-items-center justify-content-between border rounded px-2 py-1 mb-1">
+                                    <span class="small mr-2"><i class="fas fa-file-alt text-primary mr-1"></i>{{ $label }}</span>
+                                    <span class="btn-group btn-group-sm" role="group" aria-label="{{ $label }}">
+                                      <a class="btn btn-outline-primary" href="{{ route('admin.hotel_management.verification.document.preview', [$hotel->id, $field]) }}" target="_blank" rel="noopener" title="{{ __('View document') }}">
+                                        <i class="fas fa-eye mr-1"></i>
+                                      </a>
+                                      <a class="btn btn-outline-secondary" href="{{ route('admin.hotel_management.verification.document', [$hotel->id, $field]) }}" title="{{ __('Download document') }}">
+                                        <i class="fas fa-download"></i>
+                                      </a>
+                                    </span>
+                                  </div>
                                 @else
                                   <span class="d-block small text-danger"><i class="fas fa-times-circle mr-1"></i>{{ $label }}: {{ __('Missing') }}</span>
                                 @endif
@@ -249,7 +259,7 @@
                                 <div class="alert alert-info py-1 px-2 small mb-2">
                                   {{ __('Administrator override: approval is allowed even when verification documents or agreement acceptance are missing.') }}
                                 </div>
-                                <textarea name="verification_notes" class="form-control form-control-sm mb-2" rows="2" placeholder="{{ __('Review notes (optional)') }}">{{ $hotel->verification_notes }}</textarea>
+                                <textarea name="verification_notes" class="form-control form-control-sm mb-2" rows="1" placeholder="{{ __('Review notes (optional)') }}">{{ $hotel->verification_notes }}</textarea>
                                 <div class="btn-group btn-group-sm">
                                   <button name="verification_status" value="approved" class="btn btn-success" type="submit">{{ __('Approve / Override') }}</button>
                                   <button name="verification_status" value="rejected" class="btn btn-danger" type="submit">{{ __('Reject') }}</button>
