@@ -11,7 +11,23 @@
 @section('style')
   <style>
     .pricing-area_v1 {
-      background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 8% 8%, rgba(47, 111, 237, .10), transparent 28%),
+        radial-gradient(circle at 92% 18%, rgba(20, 184, 166, .08), transparent 24%),
+        linear-gradient(180deg, #f6f9fd 0%, #ffffff 55%);
+    }
+
+    .pricing-hero {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto 45px;
+      padding: 36px 30px;
+      border: 1px solid #e4eaf1;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 22px 55px rgba(31, 55, 88, .08);
     }
 
     .pricing-kicker {
@@ -31,21 +47,107 @@
       color: #667085;
     }
 
-    .frontend-package-card {
-      height: calc(100% - 30px);
+    .pricing-benefits {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .pricing-benefits span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 13px;
+      border: 1px solid #e2e8f0;
+      border-radius: 50px;
       background: #fff;
-      box-shadow: 0 18px 45px rgba(16, 24, 40, .08);
+      color: #344054;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pricing-benefits i {
+      color: #16a36a;
+    }
+
+    .frontend-package-card {
+      position: relative;
+      height: calc(100% - 30px);
+      padding: 30px !important;
+      border: 1px solid #e3e9f0 !important;
+      background: #fff;
+      box-shadow: 0 14px 38px rgba(16, 24, 40, .07);
       transition: transform .25s ease, box-shadow .25s ease;
     }
 
+    .frontend-package-card::after {
+      display: none !important;
+    }
+
     .frontend-package-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 24px 55px rgba(16, 24, 40, .13);
+      border-color: rgba(47, 111, 237, .4) !important;
+      background: #fff !important;
+      transform: translateY(-7px) !important;
+      box-shadow: 0 24px 55px rgba(16, 24, 40, .12) !important;
     }
 
     .frontend-package-card.active {
-      border-width: 2px !important;
+      border: 2px solid var(--color-primary, #2f6fed) !important;
       box-shadow: 0 24px 60px rgba(47, 111, 237, .16);
+    }
+
+    .frontend-package-card :is(.card_title, .card_text, .price, .period, .card_list *, .show-more),
+    .frontend-package-card:hover :is(.card_title, .card_text, .price, .period, .card_list *, .show-more),
+    .frontend-package-card.active :is(.card_title, .card_text, .price, .period, .card_list *, .show-more) {
+      color: #243447 !important;
+    }
+
+    .frontend-package-card .card_top {
+      padding-bottom: 18px;
+      border-bottom: 1px solid #edf1f5;
+    }
+
+    .frontend-package-card .card_icon,
+    .frontend-package-card:hover .card_icon,
+    .frontend-package-card.active .card_icon {
+      --size: 58px;
+      color: var(--color-primary, #2f6fed);
+      background: rgba(47, 111, 237, .10);
+    }
+
+    .popular-ribbon {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 5px 10px;
+      border-radius: 50px;
+      color: #fff;
+      background: var(--color-primary, #2f6fed);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .plan-price-box,
+    .frontend-package-card:hover .plan-price-box,
+    .frontend-package-card.active .plan-price-box {
+      padding: 18px;
+      border: 1px solid #e5eaf0;
+      border-radius: 14px;
+      background: #f8fafc !important;
+    }
+
+    .price-label {
+      display: block;
+      margin-bottom: 3px;
+      color: #667085;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
     }
 
     .frontend-package-card .card_subtitle h4 {
@@ -53,10 +155,77 @@
       font-weight: 800;
     }
 
+    .discount-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .discount-chip {
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: #087443;
+      background: #dcfae6;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .features-heading {
+      color: #667085;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
     .frontend-package-card .card_list li {
       gap: 15px;
       padding: 10px 0;
       border-bottom: 1px solid #eef2f6;
+    }
+
+    .frontend-package-card .card_list i,
+    .frontend-package-card:hover .card_list i,
+    .frontend-package-card.active .card_list i {
+      color: #fff !important;
+      background: #16a36a !important;
+    }
+
+    .frontend-package-card .card_list i.not-active,
+    .frontend-package-card:hover .card_list i.not-active,
+    .frontend-package-card.active .card_list i.not-active {
+      color: #98a2b3 !important;
+      background: #f2f4f7 !important;
+    }
+
+    .frontend-package-card .btn-primary,
+    .frontend-package-card:hover .btn-primary,
+    .frontend-package-card.active .btn-primary {
+      color: #fff !important;
+      background: var(--color-primary, #2f6fed) !important;
+      box-shadow: 0 9px 22px rgba(47, 111, 237, .2) !important;
+    }
+
+    .pricing-note {
+      color: #667085;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 767px) {
+      .pricing-hero {
+        padding: 28px 18px;
+      }
+
+      .pricing-benefits {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .pricing-benefits span {
+        justify-content: center;
+      }
     }
 
     .pricing-empty-state {
@@ -94,11 +263,17 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div class="section-title title-center mb-50" data-aos="fade-up">
+          <div class="section-title title-center pricing-hero" data-aos="fade-up">
             <span class="pricing-kicker">{{ __('Vendor Packages') }}</span>
             <h2 class="title mb-15">{{ __('Choose the right plan for your pickleball business') }}</h2>
             <p class="pricing-intro mb-30">{{ __('Publish your sites and courts, manage reservations, and unlock vendor tools based on your selected package.') }}</p>
-            <div class="tabs-navigation tabs-navigation_v3">
+            <div class="pricing-benefits">
+              <span><i class="fas fa-check-circle"></i>{{ __('Flexible billing terms') }}</span>
+              <span><i class="fas fa-check-circle"></i>{{ __('Secure vendor checkout') }}</span>
+              <span><i class="fas fa-check-circle"></i>{{ __('Upgrade as you grow') }}</span>
+            </div>
+            @if (count($terms) > 1)
+            <div class="tabs-navigation tabs-navigation_v3 mt-25">
               <ul class="nav nav-tabs radius-md" data-hover="fancyHover">
 
                 @foreach ($terms as $term)
@@ -111,15 +286,16 @@
                 @endforeach
               </ul>
             </div>
+            @endif
           </div>
           <div class="tab-content" data-aos="fade-up">
 
+            @php
+              $packages = \App\Models\Package::where('status', '1')->get();
+            @endphp
             @foreach ($terms as $term)
               <div class="tab-pane slide {{ $loop->first ? 'active show' : '' }}" id="{{ strtolower($term) }}">
                 <div class="row justify-content-center">
-                  @php
-                    $packages = \App\Models\Package::where('status', '1')->get();
-                  @endphp
                   @foreach ($packages as $package)
                     @php
                       $permissions = $package->features;
@@ -129,18 +305,19 @@
                     @endphp
                     <div class="col-md-6 col-lg-4 item">
                       <div class="card frontend-package-card p-30 mb-30 radius-lg border {{ $package->recommended ? 'active' : '' }}">
+                        @if ($package->recommended == '1')
+                          <span class="popular-ribbon">{{ __('Most Popular') }}</span>
+                        @endif
                         <div class="card_top">
                           <div class="card_icon">
                             <i class="{{ $package->icon }}"></i>
                           </div>
                           <div class="pricing_card_header d-flex flex-column">
                             <h3 class="card_title mb-0">{{ __($package->title) }}</h3>
-                            @if ($package->recommended == '1')
-                              <span>{{ __('Popular') }}</span>
-                            @endif
                           </div>
                         </div>
-                        <div class="card_subtitle mt-15">
+                        <div class="card_subtitle plan-price-box mt-20">
+                          <span class="price-label">{{ (float) $package->price > 0 ? __('Starting at') : __('Plan price') }}</span>
                           <h4 class="mb-0">{{ $package->price == 0 ? __('Free') : symbolPrice($package->price) }}
                             @if ((float) $package->price > 0) / {{ __('Month') }} @endif
                           </h4>
@@ -156,12 +333,15 @@
                                 'yearly' => [__('Annual'), $package->annual_discount],
                             ];
                           @endphp
-                          @foreach ($termDiscounts as $termKey => [$discountTerm, $discount])
-                            @if ((float) $package->price > 0 && $package->isBillingTermEnabled($termKey) && (float) $discount > 0)
-                              <span class="badge badge-success mt-2 mr-1">{{ $discountTerm }}: {{ rtrim(rtrim(number_format($discount, 2), '0'), '.') }}% {{ __('off') }}</span>
-                            @endif
-                          @endforeach
+                          <div class="discount-list">
+                            @foreach ($termDiscounts as $termKey => [$discountTerm, $discount])
+                              @if ((float) $package->price > 0 && $package->isBillingTermEnabled($termKey) && (float) $discount > 0)
+                                <span class="discount-chip">{{ $discountTerm }}: {{ rtrim(rtrim(number_format($discount, 2), '0'), '.') }}% {{ __('off') }}</span>
+                              @endif
+                            @endforeach
+                          </div>
                         </div>
+                        <div class="features-heading mt-25">{{ __('Included with this plan') }}</div>
                         <ul class="card_list toggle-list list-unstyled mt-25" data-toggle-list="pricingToggle"
                           data-toggle-show="5">
                           <li>
@@ -343,12 +523,12 @@
                           @auth('vendor')
                             <a href="{{ route('vendor.plan.extend.checkout', $package->id) }}"
                               class="btn btn-lg btn-primary radius-sm w-100" title="{{ __('Apply Now') }}"
-                              target="_self">{{ __('Purchase') }}</a>
+                              target="_self">{{ __('Choose Plan') }}</a>
                           @endauth
                           @guest('vendor')
                             <a href="{{ route('vendor.login', ['redirectPath' => 'buy_plan', 'package' => $package->id]) }}"
                               class="btn btn-lg btn-primary radius-sm w-100" title="{{ __('Apply Now') }}"
-                              target="_self">{{ __('Purchase') }}</a>
+                              target="_self">{{ __('Choose Plan') }}</a>
                           @endguest
                         </div>
                       </div>
@@ -363,6 +543,7 @@
               </div>
             @endforeach
           </div>
+          <p class="pricing-note mt-20 mb-0"><i class="fal fa-info-circle mr-1"></i>{{ __('Billing term and final discounted total are confirmed securely during checkout.') }}</p>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+@include('frontend.pdf.room_booking_compact')
+@php return; @endphp
 <!DOCTYPE html>
 <html>
 
@@ -8,7 +10,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   {{-- title --}}
-  <title>{{ 'Room Booking Invoice | ' . config('app.name') }}</title>
+  <title>{{ 'Court Booking Invoice | ' . config('app.name') }}</title>
 
   {{-- fav icon --}}
   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/' . $websiteInfo->favicon) }}">
@@ -32,7 +34,7 @@
 
           <div class="mb-3">
             <h2 class="text-center">
-              {{ __('ROOM BOOKING INVOICE') }}
+              {{ __('COURT BOOKING INVOICE') }}
             </h2>
           </div>
 

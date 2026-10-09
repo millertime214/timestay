@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/push-notification/store-endpoint', 'FrontEnd\PushNotificationController@store');
 
+Route::get('/sitemap.xml', 'FrontEnd\SitemapController@index')->name('sitemap');
+Route::get('/robots.txt', 'FrontEnd\SitemapController@robots')->name('robots');
+
 // cron job for sending expiry mail
 Route::get('/subcheck', 'CronJobController@expired')->name('cron.expired');
 

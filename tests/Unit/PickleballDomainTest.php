@@ -44,9 +44,31 @@ class PickleballDomainTest extends TestCase
         $this->assertStringEndsWith('/court/championship-court/11', route('frontend.room.details', ['championship-court', 11]));
         $this->assertStringEndsWith('/terms-and-conditions', route('terms_and_conditions'));
         $this->assertStringEndsWith('/vendor-site-agreement', route('vendor_site_agreement'));
+        $this->assertStringEndsWith('/sitemap.xml', route('sitemap'));
+        $this->assertStringEndsWith('/robots.txt', route('robots'));
         $this->assertStringEndsWith('/admin/hotel-management/verification/7', route('admin.hotel_management.verification.update', 7));
         $this->assertStringEndsWith('/admin/hotel-management/verification/7/document/business_permit_document', route('admin.hotel_management.verification.document', [7, 'business_permit_document']));
         $this->assertStringEndsWith('/admin/hotel-management/verification/7/document/business_permit_document/preview', route('admin.hotel_management.verification.document.preview', [7, 'business_permit_document']));
+    }
+
+    public function test_google_sitemap_and_robots_are_available(): void
+    {
+        $controller = app(\App\Http\Controllers\FrontEnd\SitemapController::class);
+        $sitemap = $controller->index();
+
+        $this->assertSame(200, $sitemap->getStatusCode());
+        $this->assertSame('application/xml; charset=UTF-8', $sitemap->headers->get('Content-Type'));
+
+        $xml = simplexml_load_string($sitemap->getContent());
+        $this->assertNotFalse($xml);
+        $this->assertGreaterThan(0, count($xml->url));
+        $this->assertStringContainsString(route('frontend.hotels'), $sitemap->getContent());
+        $this->assertStringContainsString(route('frontend.rooms'), $sitemap->getContent());
+
+        $robots = $controller->robots();
+        $this->assertSame(200, $robots->getStatusCode());
+        $this->assertSame('text/plain; charset=UTF-8', $robots->headers->get('Content-Type'));
+        $this->assertStringContainsString('Sitemap: ' . route('sitemap'), $robots->getContent());
     }
 
     public function test_legacy_translation_keys_render_pickleball_language(): void
