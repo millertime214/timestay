@@ -15,6 +15,10 @@
   @endif
 @endsection
 
+@section('style')
+  @include('frontend.room.partials.daily-availability-styles')
+@endsection
+
 @section('content')
   <!--  Hero section start-->
   <section class="hero-banner hero-banner_v3 header-next">
@@ -166,9 +170,194 @@
         @endif
       @endif
     @endforeach
+  @endif 
+ 
+  <!-- room-area  start -->
+  @if ($secInfo->featured_room_section_status == 1)
+    <section class="product-area featured-product pb-75 pt-40">
+      <div class="container">
+        <div class="row">
+          <div class="col-12" data-aos="fade-up">
+            <div class="section-title title-inline mb-50">
+              <div>
+                <h2 class="title">
+                  {{ !empty($sectionContent->featured_room_section_title) ? $sectionContent->featured_room_section_title : __('Popular Courts') }}
+                </h2>
+              </div>
+              @if (count($room_contents_count) > count($room_contents))
+                <a href="{{ route('frontend.rooms') }}" class="btn btn-lg btn-primary rounded-pill"
+                  title="{{ __('View All Court') }}" target="_self">{{ __('View All Courts') }}</a>
+              @endif
+
+            </div>
+          </div>
+          <div class="col-12" data-aos="fade-up">
+            <div class="row">
+              @if (count($room_contents) < 1)
+                <div class="p-3 text-center bg-light radius-md">
+                  <h6 class="mb-0">{{ __('NO FEATURED COURT FOUND') }}</h6>
+                </div>
+               
+              @else
+               
+                @foreach ($room_contents as $room)
+                  <div class="col-xl-4 col-md-6">
+                    <div class="product-default border radius-md mb-25">
+                      <!-- product image -->
+                      <figure class="product_img">
+                        <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
+                          target="_self" title="{{ __('Link') }}" class="lazy-container ratio ratio-2-3 radius-sm">
+                          <img class="lazyload"
+                            src="{{ asset('assets/img/room/featureImage/' . $room->feature_image) }}" alt="Room">
+                        </a>
+                        @if (Auth::guard('web')->check())
+                          @php
+                            $user_id = Auth::guard('web')->user()->id;
+                            $checkWishList = checkroomWishList($room->id, $user_id);
+                          @endphp
+                        @else
+                          @php
+                            $checkWishList = false;
+                          @endphp
+                        @endif
+
+                        <a href="{{ $checkWishList == false ? route('addto.wishlist.room', $room->id) : route('remove.wishlist.room', $room->id) }}"
+                          class="btn btn-icon radius-sm {{ $checkWishList == false ? '' : 'active' }}"
+                          data-tooltip="tooltip" data-bs-placement="top"
+                          title="{{ $checkWishList == false ? __('Save to Wishlist') : __('Saved') }}">
+                          <i class="fal fa-heart"></i>
+                        </a>
+                        <div class="rank-star">
+                          @for ($i = 0; $i < $room->stars; $i++)
+                            <i class="fas fa-star"></i>
+                          @endfor
+                        </div>
+                      </figure>
+
+                      <div class="product_details">
+                        
+                        <div class="p-20">
+                          <div class="product_author mb-2">
+                            <a class="d-flex align-items-center gap-1"
+                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
+                              target="_self" title="{{ __('Link') }}">
+                              <img class="lazyload blur-up"
+                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"alt="{{ __('Image') }}">
+                              <span class="underline lc-1" data-tooltip="tooltip" data-bs-placement="bottom"
+                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
+                                aria-describedby="tooltip">
+                                {{ $room->hotelName }}
+                              </span>
+                            </a>
+                          </div>
+                          <div class="product_title">
+                            <h5 class="title lc-1 mb-2">
+                              <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
+                                target="_self" title="{{ __('Link') }}">{{ $room->title }}</a>
+                            </h5>
+                          </div>
+                          <div class="rome-count">
+                            <p>{{ __('Total Court') . ':' }}
+                              {{ totalHotelRoom($room->hotel_id) }}</p>
+                          </div>
+                          @php
+                            $city = null;
+                            $State = null;
+                            $country = null;
+
+                            if ($room->city_id) {
+                                $city = App\Models\Location\City::Where('id', $room->city_id)->first()->name;
+                            }
+                            if ($room->state_id) {
+                                $State = App\Models\Location\State::Where('id', $room->state_id)->first()->name;
+                            }
+                            if ($room->country_id) {
+                                $country = App\Models\Location\Country::Where('id', $room->country_id)->first()->name;
+                            }
+                          @endphp
+                          <ul class="list-unstyled mt-15">
+                            <li class="icon-start location mb-2 font-sm">
+                              <i class="fal fa-map-marker-alt"></i>
+                              <span>
+                                {{ @$city }}@if (@$State)
+                                  , {{ $State }}
+                                  @endif @if (@$country)
+                                    , {{ $country }}
+                                  @endif
+                              </span>
+                            </li>
+                            <!-- <li>
+                              <div class="ratings"dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : '' }}">
+                                <div class="product-ratings rate text-xsm">
+                                  <div class="rating" style="width: {{ $room->average_rating * 20 }}%;"></div>
+                                </div>
+                                <span>
+                                  {{ number_format($room->average_rating, 2) }}
+                                  ({{ totalRoomReview($room->id) }}
+                                  {{ totalRoomReview($room->id) > 1 ? __('Reviews') : __('Review') }})
+                                </span>
+                              </div>
+                            </li> -->
+                          </ul>
+                          
+                          @php
+                            $amenities = json_decode($room->amenities);
+                            $totalAmenities = count($amenities);
+                            $displayCount = 5;
+                          @endphp
+
+                          <ul class="product-icon_list mt-15 list-unstyled">
+                            @foreach ($amenities as $index => $amenitie)
+                              @php
+                                if ($index >= $displayCount) {
+                                    break;
+                                }
+                                $amin = App\Models\Amenitie::find($amenitie);
+                              @endphp
+                              <li class="list-item" data-tooltip="tooltip" data-bs-placement="bottom"
+                                aria-label="{{ $amin->title }}" data-bs-original-title="{{ $amin->title }}"
+                                aria-describedby="tooltip"><i class="{{ $amin->icon }}"></i></li>
+                            @endforeach
+
+                            @if ($totalAmenities > $displayCount)
+                              <li class="more_item_show_btn">
+                                (+{{ $totalAmenities - $displayCount }}<i class="fas fa-ellipsis-h"></i>)
+                                <div class="more_items_icons">
+                                  @foreach ($amenities as $index => $amenitie)
+                                    @php
+                                      if ($index < $displayCount) {
+                                          continue;
+                                      }
+                                      $amin = App\Models\Amenitie::find($amenitie);
+                                    @endphp
+                                    <a data-tooltip="tooltip" data-bs-placement="bottom"
+                                      aria-label="{{ $amin->title }}" data-bs-original-title="{{ $amin->title }}"
+                                      aria-describedby="tooltip" href="#"><i class="{{ $amin->icon }}"
+                                        title="{{ $amin->title }}"></i></a>
+                                  @endforeach
+                                </div>
+                              </li>
+                            @endif
+                          </ul>
+                        </div>
+                        <div class="product_bottom p-20 border-top">
+                          @include('frontend.room.partials.daily-availability')
+                        </div>
+                      </div>
+                    </div>
+                    <!-- product-default -->
+                  </div>
+                @endforeach
+              @endif
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   @endif
+  <!-- room-area  end -->
 
-
+  
   <!-- feature-area start -->
   @if ($secInfo->featured_section_status == 1)
     <section class="about-area about-area_v3 bg-primary-light">
@@ -221,6 +410,26 @@
     @endforeach
   @endif
 
+
+
+  @if (count($after_featured_room) > 0)
+    @foreach ($after_featured_room as $cusFeatureRoom)
+      @if (isset($homecusSec[$cusFeatureRoom->id]))
+        @if ($homecusSec[$cusFeatureRoom->id] == 1)
+          @php
+            $cusFeatureRoomContent = App\Models\HomePage\CustomSectionContent::where(
+                'custom_section_id',
+                $cusFeatureRoom->id,
+            )
+                ->where('language_id', $currentLanguageInfo->id)
+                ->first();
+          @endphp
+          @include('frontend.home.custom-section', ['data' => $cusFeatureRoomContent])
+        @endif
+      @endif
+    @endforeach
+  @endif
+
   <!-- Benifit start-->
   @if ($secInfo->benifit_section_status == 1)
     <section class="gallery-area gallery-area_v1 pt-100 pb-70">
@@ -268,7 +477,8 @@
     </section>
   @endif
   <!-- Benifit-area end -->
-  @if (count($after_benifit) > 0)
+
+   @if (count($after_benifit) > 0)
     @foreach ($after_benifit as $cusBenifit)
       @if (isset($homecusSec[$cusBenifit->id]))
         @if ($homecusSec[$cusBenifit->id] == 1)
@@ -283,221 +493,8 @@
     @endforeach
   @endif
 
-  <!-- room-area  start -->
-  @if ($secInfo->featured_room_section_status == 1)
-    <section class="product-area featured-product pb-75 pt-30">
-      <div class="container">
-        <div class="row">
-          <div class="col-12" data-aos="fade-up">
-            <div class="section-title title-inline mb-50">
-              <div>
-                <h2 class="title">
-                  {{ !empty($sectionContent->featured_room_section_title) ? $sectionContent->featured_room_section_title : __('Popular Courts') }}
-                </h2>
-              </div>
-              @if (count($room_contents_count) > count($room_contents))
-                <a href="javaScript:void(0)" class="btn btn-lg btn-primary rounded-pill"
-                  title="{{ __('View All Court') }}" target="_self">{{ __('View All Courts') }}</a>
-              @endif
 
-            </div>
-          </div>
-          <div class="col-12" data-aos="fade-up">
-            <div class="row">
-              @if (count($room_contents) < 1)
-                <div class="p-3 text-center bg-light radius-md">
-                  <h6 class="mb-0">{{ __('NO FEATURED COURT FOUND') }}</h6>
-                </div>
-               
-              @else
-               
-                @foreach ($room_contents as $room)
-                  <div class="col-xl-4 col-md-6">
-                    <div class="product-default border radius-md mb-25">
-                      <!-- product image -->
-                      <figure class="product_img">
-                        <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
-                          target="_self" title="{{ __('Link') }}" class="lazy-container ratio ratio-2-3 radius-sm">
-                          <img class="lazyload"
-                            src="{{ asset('assets/img/room/featureImage/' . $room->feature_image) }}" alt="Room">
-                        </a>
-                        @if (Auth::guard('web')->check())
-                          @php
-                            $user_id = Auth::guard('web')->user()->id;
-                            $checkWishList = checkroomWishList($room->id, $user_id);
-                          @endphp
-                        @else
-                          @php
-                            $checkWishList = false;
-                          @endphp
-                        @endif
-
-                        <a href="{{ $checkWishList == false ? route('addto.wishlist.room', $room->id) : route('remove.wishlist.room', $room->id) }}"
-                          class="btn btn-icon radius-sm {{ $checkWishList == false ? '' : 'active' }}"
-                          data-tooltip="tooltip" data-bs-placement="top"
-                          title="{{ $checkWishList == false ? __('Save to Wishlist') : __('Saved') }}">
-                          <i class="fal fa-heart"></i>
-                        </a>
-                        <div class="rank-star">
-                          @for ($i = 0; $i < $room->stars; $i++)
-                            <i class="fas fa-star"></i>
-                          @endfor
-                        </div>
-                      </figure>
-
-                      <div class="product_details">
-                        <div class="p-20">
-                          <div class="product_title">
-                            <h4 class="title lc-1 mb-0">
-                              <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
-                                target="_self" title="{{ __('Link') }}">{{ $room->title }}</a>
-                            </h4>
-                          </div>
-                          <div class="rome-count">
-                            <p>{{ __('Total Court') . ':' }}
-                              {{ totalHotelRoom($room->hotel_id) }}</p>
-                          </div>
-                          @php
-                            $city = null;
-                            $State = null;
-                            $country = null;
-
-                            if ($room->city_id) {
-                                $city = App\Models\Location\City::Where('id', $room->city_id)->first()->name;
-                            }
-                            if ($room->state_id) {
-                                $State = App\Models\Location\State::Where('id', $room->state_id)->first()->name;
-                            }
-                            if ($room->country_id) {
-                                $country = App\Models\Location\Country::Where('id', $room->country_id)->first()->name;
-                            }
-                          @endphp
-                          <ul class="list-unstyled mt-15">
-                            <li class="icon-start location mb-2">
-                              <i class="fal fa-map-marker-alt"></i>
-                              <span>
-                                {{ @$city }}@if (@$State)
-                                  , {{ $State }}
-                                  @endif @if (@$country)
-                                    , {{ $country }}
-                                  @endif
-                              </span>
-                            </li>
-                            <li>
-                              <div class="ratings"dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : '' }}">
-                                <div class="product-ratings rate text-xsm">
-                                  <div class="rating" style="width: {{ $room->average_rating * 20 }}%;"></div>
-                                </div>
-                                <span>
-                                  {{ number_format($room->average_rating, 2) }}
-                                  ({{ totalRoomReview($room->id) }}
-                                  {{ totalRoomReview($room->id) > 1 ? __('Reviews') : __('Review') }})
-                                </span>
-                              </div>
-                            </li>
-                          </ul>
-                          <div class="product_author mt-15">
-                            <a class="d-flex align-items-center gap-1"
-                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
-                              target="_self" title="{{ __('Link') }}">
-                              <img class="lazyload blur-up"
-                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"alt="{{ __('Image') }}">
-                              <span class="underline lc-1" data-tooltip="tooltip" data-bs-placement="bottom"
-                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
-                                aria-describedby="tooltip">
-                                {{ $room->hotelName }}
-                              </span>
-                            </a>
-                          </div>
-                          @php
-                            $amenities = json_decode($room->amenities);
-                            $totalAmenities = count($amenities);
-                            $displayCount = 5;
-                          @endphp
-
-                          <ul class="product-icon_list mt-15 list-unstyled">
-                            @foreach ($amenities as $index => $amenitie)
-                              @php
-                                if ($index >= $displayCount) {
-                                    break;
-                                }
-                                $amin = App\Models\Amenitie::find($amenitie);
-                              @endphp
-                              <li class="list-item" data-tooltip="tooltip" data-bs-placement="bottom"
-                                aria-label="{{ $amin->title }}" data-bs-original-title="{{ $amin->title }}"
-                                aria-describedby="tooltip"><i class="{{ $amin->icon }}"></i></li>
-                            @endforeach
-
-                            @if ($totalAmenities > $displayCount)
-                              <li class="more_item_show_btn">
-                                (+{{ $totalAmenities - $displayCount }}<i class="fas fa-ellipsis-h"></i>)
-                                <div class="more_items_icons">
-                                  @foreach ($amenities as $index => $amenitie)
-                                    @php
-                                      if ($index < $displayCount) {
-                                          continue;
-                                      }
-                                      $amin = App\Models\Amenitie::find($amenitie);
-                                    @endphp
-                                    <a data-tooltip="tooltip" data-bs-placement="bottom"
-                                      aria-label="{{ $amin->title }}" data-bs-original-title="{{ $amin->title }}"
-                                      aria-describedby="tooltip" href="#"><i class="{{ $amin->icon }}"
-                                        title="{{ $amin->title }}"></i></a>
-                                  @endforeach
-                                </div>
-                              </li>
-                            @endif
-                          </ul>
-                        </div>
-                        <div class="product_bottom p-20 border-top text-center">
-                          <ul class="product-price_list list-unstyled">
-                            @php
-                              $prices = App\Models\HourlyRoomPrice::where('room_id', $room->id)
-                                  ->where('hourly_room_prices.price', '!=', null)
-                                  ->join('booking_hours', 'hourly_room_prices.hour_id', '=', 'booking_hours.id')
-                                  ->orderBy('booking_hours.serial_number')
-                                  ->select('hourly_room_prices.*', 'booking_hours.serial_number')
-                                  ->get();
-                            @endphp
-                            @foreach ($prices as $price)
-                              <li class="radius-sm">
-                                <span class="h6 mb-1">{{ symbolPrice($price->price) }}</span>
-                                <span>{{ $price->hour }} {{ Str::of('Hrs')->plural($price->hour); }}</span>
-                              </li>
-                            @endforeach
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- product-default -->
-                  </div>
-                @endforeach
-              @endif
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  @endif
-  <!-- room-area  end -->
-  @if (count($after_featured_room) > 0)
-    @foreach ($after_featured_room as $cusFeatureRoom)
-      @if (isset($homecusSec[$cusFeatureRoom->id]))
-        @if ($homecusSec[$cusFeatureRoom->id] == 1)
-          @php
-            $cusFeatureRoomContent = App\Models\HomePage\CustomSectionContent::where(
-                'custom_section_id',
-                $cusFeatureRoom->id,
-            )
-                ->where('language_id', $currentLanguageInfo->id)
-                ->first();
-          @endphp
-          @include('frontend.home.custom-section', ['data' => $cusFeatureRoomContent])
-        @endif
-      @endif
-    @endforeach
-  @endif
-
+  
   <!-- Testimonial-area start -->
   @if ($secInfo->testimonial_section_status == 1)
     <section class="testimonial-area testimonial-area_v3 ptb-100 bg-img bg-cover"
@@ -638,7 +635,7 @@
 
   <!--cal to action-area start -->
   @if ($secInfo->call_to_action_section_status == 1)
-    <section class="newsletter-area newsletter-area_v2 pb-100" data-aos="fade-up">
+    <section class="newsletter-area newsletter-area_v2" data-aos="fade-up">
       <div class="container">
         <div class="newsletter-inner position-relative overflow-hidden z-1 px-3 ptb-30 radius-md bg-img bg-cover"
           data-bg-img="{{ asset('assets/img/homepage/' . $images->call_to_action_section_image) }}">

@@ -20,6 +20,10 @@
   @endif
 @endsection
 
+@section('style')
+  @include('frontend.room.partials.daily-availability-styles')
+@endsection
+
 @section('content')
 
   <!-- Page title start-->
@@ -158,12 +162,26 @@
 
                       </figure>
                       <div class="product_details">
+
                         <div class="p-20">
-                          <div class="product_title">
-                            <h4 class="title lc-1 mb-0">
+                          <div class="product_author mb-2">
+                            <a class="d-flex align-items-center gap-1"
+                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
+                              target="_self" title="{{ __('Link') }}">
+                              <img class="lazyload blur-up"
+                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"alt="{{ __('Image') }}">
+                              <span class="underline lc-1 font-md" data-tooltip="tooltip" data-bs-placement="bottom"
+                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
+                                aria-describedby="tooltip">
+                                {{ $room->hotelName }}
+                              </span>
+                            </a>
+                          </div>
+                          <div class="product_title mb-2">
+                            <h5 class="title lc-1 mb-0">
                               <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
                                 target="_self" title="{{ __('Link') }}">{{ $room->title }}</a>
-                            </h4>
+                            </h5>
                           </div>
                           @php
                             $city = null;
@@ -182,7 +200,7 @@
 
                           @endphp
                           <div class="list-unstyled mt-10">
-                            <li class="icon-start location mb-2">
+                            <li class="icon-start location mb-2 font-sm">
                               <i class="fal fa-map-marker-alt"></i>
                               <span>
                                 {{ @$city }}@if (@$State)
@@ -192,7 +210,7 @@
                                   @endif
                               </span>
                             </li>
-                            <li>
+                            <!-- <li>
                               <div class="ratings"dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : '' }}">
                                 <div class="product-ratings rate text-xsm">
                                   <div class="rating" style="width: {{ $room->average_rating * 20 }}%;"></div>
@@ -203,21 +221,9 @@
                                   {{ totalRoomReview($room->id) > 1 ? __('Reviews') : __('Review') }})
                                 </span>
                               </div>
-                            </li>
+                            </li> -->
                           </div>
-                          <div class="product_author mt-14">
-                            <a class="d-flex align-items-center gap-1"
-                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
-                              target="_self" title="{{ __('Link') }}">
-                              <img class="lazyload blur-up"
-                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"alt="{{ __('Image') }}">
-                              <span class="underline lc-1 font-sm" data-tooltip="tooltip" data-bs-placement="bottom"
-                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
-                                aria-describedby="tooltip">
-                                {{ $room->hotelName }}
-                              </span>
-                            </a>
-                          </div>
+                          
                           @php
                             $amenities = json_decode($room->amenities);
                             $totalAmenities = count($amenities);
@@ -260,23 +266,8 @@
                           </ul>
 
                         </div>
-                        <div class="product_bottom pt-20 pb-20 px-10 border-top text-center">
-                          <ul class="product-price_list list-unstyled">
-                            @php
-                              $prices = App\Models\HourlyRoomPrice::where('room_id', $room->id)
-                                  ->where('hourly_room_prices.price', '!=', null)
-                                  ->join('booking_hours', 'hourly_room_prices.hour_id', '=', 'booking_hours.id')
-                                  ->orderBy('booking_hours.serial_number')
-                                  ->select('hourly_room_prices.*', 'booking_hours.serial_number')
-                                  ->get();
-                            @endphp
-                            @foreach ($prices as $price)
-                              <li class="radius-sm">
-                                <span class="h6 mb-0">{{ symbolPrice($price->price) }}</span>
-                                <span class="time">{{ $price->hour }} {{ __('Hrs') }}</span>
-                              </li>
-                            @endforeach
-                          </ul>
+                        <div class="product_bottom pt-20 pb-20 px-10 border-top">
+                          @include('frontend.room.partials.daily-availability')
                         </div>
                       </div>
                     </div>
@@ -318,11 +309,25 @@
                       </figure>
                       <div class="product_details">
                         <div class="p-20">
-                          <div class="product_title">
-                            <h4 class="title lc-1 mb-0">
+                          <div class="product_author mb-2">
+                            <a class="d-flex align-items-center gap-1"
+                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
+                              target="_self" title="{{ __('Link') }}">
+                              <img class="lazyload blur-up"
+                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"
+                                alt="{{ __('Image') }}">
+                              <span class="underline lc-1 font-md" data-tooltip="tooltip" data-bs-placement="bottom"
+                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
+                                aria-describedby="tooltip">
+                                {{ $room->hotelName }}
+                              </span>
+                            </a>
+                          </div>
+                          <div class="product_title mb-2">
+                            <h5 class="title lc-1">
                               <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
                                 target="_self" title="{{ __('Link') }}">{{ $room->title }}</a>
-                            </h4>
+                            </h5>
                           </div>
                           @php
                             $city = null;
@@ -340,8 +345,8 @@
                             }
 
                           @endphp
-                          <div class="list-unstyled mt-10">
-                            <li class="icon-start location mb-2">
+                          <div class="list-unstyled mb-2">
+                            <li class="icon-start location mb-2 font-sm">
                               <i class="fal fa-map-marker-alt"></i>
                               <span>
                                 {{ @$city }}@if (@$State)
@@ -351,7 +356,7 @@
                                   @endif
                               </span>
                             </li>
-                            <li>
+                            <!-- <li>
                               <div class="ratings"dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : '' }}">
                                 <div class="product-ratings rate text-xsm">
                                   <div class="rating" style="width: {{ $room->average_rating * 20 }}%;"></div>
@@ -362,22 +367,9 @@
                                   {{ totalRoomReview($room->id) > 1 ? __('Reviews') : __('Review') }})
                                 </span>
                               </div>
-                            </li>
+                            </li> -->
                           </div>
-                          <div class="product_author mt-14">
-                            <a class="d-flex align-items-center gap-1"
-                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
-                              target="_self" title="{{ __('Link') }}">
-                              <img class="lazyload blur-up"
-                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"
-                                alt="{{ __('Image') }}">
-                              <span class="underline lc-1 font-sm" data-tooltip="tooltip" data-bs-placement="bottom"
-                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
-                                aria-describedby="tooltip">
-                                {{ $room->hotelName }}
-                              </span>
-                            </a>
-                          </div>
+                          
                           @php
                             $amenities = json_decode($room->amenities);
                             $totalAmenities = count($amenities);
@@ -418,24 +410,8 @@
                             @endif
                           </ul>
                         </div>
-                        <div class="product_bottom pt-20 pb-20 px-10 border-top text-center">
-                          <ul class="product-price_list list-unstyled">
-                            @php
-                              $prices = App\Models\HourlyRoomPrice::where('room_id', $room->id)
-                                  ->where('hourly_room_prices.price', '!=', null)
-                                  ->join('booking_hours', 'hourly_room_prices.hour_id', '=', 'booking_hours.id')
-                                  ->orderBy('booking_hours.serial_number')
-                                  ->select('hourly_room_prices.*', 'booking_hours.serial_number')
-                                  ->get();
-
-                            @endphp
-                            @foreach ($prices as $price)
-                              <li class="radius-sm">
-                                <span class="h6 mb-0">{{ symbolPrice($price->price) }}</span>
-                                <span class="time">{{ $price->hour }} {{ __('Hrs') }}</span>
-                              </li>
-                            @endforeach
-                          </ul>
+                        <div class="product_bottom pt-20 pb-20 px-10 border-top">
+                          @include('frontend.room.partials.daily-availability')
                         </div>
                       </div>
                     </div>

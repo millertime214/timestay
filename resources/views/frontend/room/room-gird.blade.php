@@ -20,6 +20,128 @@
   @endif
 @endsection
 
+@section('style')
+  <style>
+    .court-availability {
+      text-align: left;
+    }
+
+    .court-availability__heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .court-availability__title,
+    .court-availability__date {
+      display: block;
+    }
+
+    .court-availability__title {
+      color: var(--color-dark, #1b1b1b);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .court-availability__date,
+    .court-availability__hours {
+      color: #777;
+      font-size: 11px;
+    }
+
+    .court-availability__legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 4px 8px;
+      color: #666;
+      font-size: 10px;
+    }
+
+    .court-availability__legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .court-availability__legend i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .court-availability__legend .is-vacant {
+      background: #20a464;
+    }
+
+    .court-availability__legend .is-occupied {
+      background: #dc4c5b;
+    }
+
+    .court-availability__hours {
+      margin-bottom: 8px;
+    }
+
+    .court-availability__slots {
+      display: flex;
+      gap: 6px;
+      padding-bottom: 4px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .court-availability__slot {
+      flex: 0 0 104px;
+      padding: 7px 5px;
+      border: 1px solid;
+      border-radius: 7px;
+      text-align: center;
+    }
+
+    .court-availability__slot span,
+    .court-availability__slot strong {
+      display: block;
+      line-height: 1.25;
+    }
+
+    .court-availability__slot span {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .court-availability__slot strong {
+      margin-top: 3px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .court-availability__slot.is-vacant {
+      border-color: #b9e5cf;
+      background: #edf9f3;
+      color: #147a4a;
+    }
+
+    .court-availability__slot.is-occupied {
+      border-color: #f0c3c8;
+      background: #fff1f2;
+      color: #bd3342;
+    }
+
+    .court-availability__empty {
+      padding: 9px 10px;
+      border-radius: 7px;
+      background: #f5f6f8;
+      color: #777;
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+  @include('frontend.room.partials.daily-availability-styles')
+@endsection
+
 @section('content')
 
   <!-- Page title start-->
@@ -156,8 +278,21 @@
                       </figure>
                       <div class="product_details">
                         <div class="p-20">
+                          <div class="product_author mb-2">   
+                            <a class="d-flex align-items-center gap-1"
+                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
+                              target="_self" title="{{ __('Link') }}">
+                              <img class="lazyload blur-up"
+                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"alt="{{ __('Image') }}">
+                              <span class="underline lc-1 font-sm" data-tooltip="tooltip" data-bs-placement="bottom"
+                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
+                                aria-describedby="tooltip">
+                                {{ $room->hotelName }}
+                              </span>
+                            </a>
+                          </div>
                           <div class="product_title">
-                            <h4 class="title lc-1 mb-0">
+                            <h4 class="title lc-1 mb-2">
                               <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
                                 target="_self" title="{{ __('Link') }}">{{ $room->title }}</a>
                             </h4>
@@ -190,7 +325,7 @@
                               </span>
                             </li>
 
-                            <li>
+                            <!-- <li>
                               <div class="ratings" dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : '' }}">
                                 <div class="product-ratings rate text-xsm">
                                   <div class="rating" style="width: {{ $room->average_rating * 20 }}%;"></div>
@@ -200,21 +335,9 @@
                                   {{ totalRoomReview($room->id) > 1 ? __('Reviews') : __('Review') }})
                                 </span>
                               </div>
-                            </li>
+                            </li> -->
                           </div>
-                          <div class="product_author mt-14">   
-                            <a class="d-flex align-items-center gap-1"
-                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
-                              target="_self" title="{{ __('Link') }}">
-                              <img class="lazyload blur-up"
-                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"alt="{{ __('Image') }}">
-                              <span class="underline lc-1 font-sm" data-tooltip="tooltip" data-bs-placement="bottom"
-                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
-                                aria-describedby="tooltip">
-                                {{ $room->hotelName }}
-                              </span>
-                            </a>
-                          </div>
+                          
                           @php
                             $amenities = json_decode($room->amenities);
                             $totalAmenities = count($amenities);
@@ -257,23 +380,8 @@
                           </ul>
 
                         </div>
-                        <div class="product_bottom pt-20 pb-20 px-10 border-top text-center">
-                          <ul class="product-price_list list-unstyled">
-                            @php
-                              $prices = App\Models\HourlyRoomPrice::where('room_id', $room->id)
-                                  ->where('hourly_room_prices.price', '!=', null)
-                                  ->join('booking_hours', 'hourly_room_prices.hour_id', '=', 'booking_hours.id')
-                                  ->orderBy('booking_hours.serial_number')
-                                  ->select('hourly_room_prices.*', 'booking_hours.serial_number')
-                                  ->get();
-                            @endphp
-                            @foreach ($prices as $price)
-                              <li class="radius-sm">
-                                <span class="h6 mb-0">{{ symbolPrice($price->price) }}</span>
-                                <span class="time">{{ $price->hour }} {{ __('Hrs') }}</span>
-                              </li>
-                            @endforeach
-                          </ul>
+                        <div class="product_bottom pt-20 pb-20 px-10 border-top">
+                          @include('frontend.room.partials.daily-availability')
                         </div>
                       </div>
                     </div>
@@ -315,6 +423,20 @@
                       </figure>
                       <div class="product_details">
                         <div class="p-20">
+                          <div class="product_author mb-2">
+                            <a class="d-flex align-items-center gap-1"
+                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
+                              target="_self" title="{{ __('Link') }}">
+                              <img class="lazyload blur-up"
+                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"
+                                alt="{{ __('Image') }}">
+                              <span class="underline lc-1 font-sm" data-tooltip="tooltip" data-bs-placement="bottom"
+                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
+                                aria-describedby="tooltip">
+                                {{ $room->hotelName }}
+                              </span>
+                            </a>
+                          </div>
                           <div class="product_title">
                             <h4 class="title lc-1 mb-0">
                               <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
@@ -337,7 +459,7 @@
                             }
 
                           @endphp
-                          <div class="list-unstyled mt-10">
+                          <div class="list-unstyled mb-2">
                             <li class="icon-start location mb-2">
                               <i class="fal fa-map-marker-alt"></i>
                               <span>
@@ -348,7 +470,7 @@
                                   @endif
                               </span>
                             </li>
-                            <li>
+                            <!-- <li>
                               <div class="ratings"dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : '' }}">
                                 <div class="product-ratings rate text-xsm">
                                   <div class="rating" style="width: {{ $room->average_rating * 20 }}%;"></div>
@@ -359,22 +481,9 @@
                                   {{ totalRoomReview($room->id) > 1 ? __('Reviews') : __('Review') }})
                                 </span>
                               </div>
-                            </li>
+                            </li> -->
                           </div>
-                          <div class="product_author mt-14">
-                            <a class="d-flex align-items-center gap-1"
-                              href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
-                              target="_self" title="{{ __('Link') }}">
-                              <img class="lazyload blur-up"
-                                src="{{ asset('assets/img/hotel/logo/' . $room->hotelImage) }}"
-                                alt="{{ __('Image') }}">
-                              <span class="underline lc-1 font-sm" data-tooltip="tooltip" data-bs-placement="bottom"
-                                aria-label="{{ $room->hotelName }}" data-bs-original-title="{{ $room->hotelName }}"
-                                aria-describedby="tooltip">
-                                {{ $room->hotelName }}
-                              </span>
-                            </a>
-                          </div>
+                          
                           @php
                             $amenities = json_decode($room->amenities);
                             $totalAmenities = count($amenities);
@@ -415,24 +524,8 @@
                             @endif
                           </ul>
                         </div>
-                        <div class="product_bottom pt-20 pb-20 px-10 border-top text-center">
-                          <ul class="product-price_list list-unstyled">
-                            @php
-                              $prices = App\Models\HourlyRoomPrice::where('room_id', $room->id)
-                                  ->where('hourly_room_prices.price', '!=', null)
-                                  ->join('booking_hours', 'hourly_room_prices.hour_id', '=', 'booking_hours.id')
-                                  ->orderBy('booking_hours.serial_number')
-                                  ->select('hourly_room_prices.*', 'booking_hours.serial_number')
-                                  ->get();
-
-                            @endphp
-                            @foreach ($prices as $price)
-                              <li class="radius-sm">
-                                <span class="h6 mb-0">{{ symbolPrice($price->price) }}</span>
-                                <span class="time">{{ $price->hour }} {{ __('Hrs') }}</span>
-                              </li>
-                            @endforeach
-                          </ul>
+                        <div class="product_bottom pt-20 pb-20 px-10 border-top">
+                          @include('frontend.room.partials.daily-availability')
                         </div>
                       </div>
                     </div>
@@ -486,25 +579,25 @@
   <!-- Listing-area end -->
 
   <form action="{{ route('frontend.rooms') }}" id="searchForm" method="GET">
-    <input type="hidden" name="title" id="title"value="{{ request()->input('title') }}">
-    <input type="hidden" name="address" id="address"value="{{ request()->input('address') }}">
-    <input type="hidden" name="category" id="category"value="{{ request()->input('category') }}">
-    <input type="hidden" name="max_val" id="max_val"value="{{ request()->input('max_val') }}">
-    <input type="hidden" name="min_val" id="min_val"value="{{ request()->input('min_val') }}">
-    <input type="hidden" name="ratings" id="ratings"value="{{ request()->input('ratings') }}">
-    <input type="hidden" name="amenitie" id="amenitie"value="{{ request()->input('amenitie') }}">
-    <input type="hidden" name="sort" id="sort"value="{{ request()->input('sort') }}">
-    <input type="hidden" name="hotelId" id="hotelId"value="{{ request()->input('hotelId') }}">
-    <input type="hidden" name="country" id="country"value="{{ request()->input('country') }}">
-    <input type="hidden" name="state" id="state"value="{{ request()->input('state') }}">
-    <input type="hidden" name="city" id="city"value="{{ request()->input('city') }}">
-    <input type="hidden" name="checkInDates" id="checkInDates"value="{{ request()->input('checkInDates') }}">
-    <input type="hidden" name="checkInTimes" id="checkInTimes"value="{{ request()->input('checkInTimes') }}">
-    <input type="hidden" name="hour" id="hour"value="{{ request()->input('hour') }}">
-    <input type="hidden" name="stars" id="stars"value="{{ request()->input('stars') }}">
-    <input type="hidden" name="adult" id="adult"value="{{ request()->input('adult') }}">
-    <input type="hidden" name="children" id="children"value="{{ request()->input('children') }}">
-    <input type="hidden" name="page" id="page"value="">
+    <input type="hidden" name="title" id="title" value="{{ request()->input('title') }}">
+    <input type="hidden" name="address" id="address" value="{{ request()->input('address') }}">
+    <input type="hidden" name="category" id="category" value="{{ request()->input('category') }}">
+    <input type="hidden" name="max_val" id="max_val" value="{{ request()->input('max_val') }}">
+    <input type="hidden" name="min_val" id="min_val" value="{{ request()->input('min_val') }}">
+    <input type="hidden" name="ratings" id="ratings" value="{{ request()->input('ratings') }}">
+    <input type="hidden" name="amenitie" id="amenitie" value="{{ request()->input('amenitie') }}">
+    <input type="hidden" name="sort" id="sort" value="{{ request()->input('sort') }}">
+    <input type="hidden" name="hotelId" id="hotelId" value="{{ request()->input('hotelId') }}">
+    <input type="hidden" name="country" id="country" value="{{ request()->input('country') }}">
+    <input type="hidden" name="state" id="state" value="{{ request()->input('state') }}">
+    <input type="hidden" name="city" id="city" value="{{ request()->input('city') }}">
+    <input type="hidden" name="checkInDates" id="checkInDates" value="{{ request()->input('checkInDates') }}">
+    <input type="hidden" name="checkInTimes" id="checkInTimes" value="{{ request()->input('checkInTimes') }}">
+    <input type="hidden" name="hour" id="hour" value="{{ request()->input('hour') }}">
+    <input type="hidden" name="stars" id="stars" value="{{ request()->input('stars') }}">
+    <input type="hidden" name="adult" id="adult" value="{{ request()->input('adult') }}">
+    <input type="hidden" name="children" id="children" value="{{ request()->input('children') }}">
+    <input type="hidden" name="page" id="page" value="">
     <input type="hidden" id="location_val" name="location_val" value="{{ request()->input('location') }}">
   </form>
   @include('frontend.partials.map-modal')

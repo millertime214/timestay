@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Models\Location\City;
 use App\Models\Package;
 use App\Models\RoomContent;
+use App\Support\CourtDailyAvailability;
 
 class HomeController extends Controller
 {
@@ -165,6 +166,15 @@ class HomeController extends Controller
       ->inRandomOrder()
       ->limit(6)
       ->get();
+
+    if ($themeVersion == 3) {
+      $availabilityCardData = CourtDailyAvailability::cardData(
+        $information['room_contents'],
+        $request->input('checkInDates')
+      );
+      $information['dailyAvailability'] = $availabilityCardData['availability'];
+      $information['courtAvailabilityEligibility'] = $availabilityCardData['eligibility'];
+    }
 
     $information['room_contents_count']  = RoomContent::join('rooms', 'rooms.id', '=', 'room_contents.room_id')
       ->Join('room_features', 'rooms.id', '=', 'room_features.room_id')

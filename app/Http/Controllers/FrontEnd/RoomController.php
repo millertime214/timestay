@@ -26,6 +26,7 @@ use App\Models\Location\State;
 use App\Models\RoomCategory;
 use App\Models\RoomReview;
 use App\Models\Visitor;
+use App\Support\CourtDailyAvailability;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -565,6 +566,12 @@ class RoomController extends Controller
         $information['room_contents'] = $room_contents;
         $information['featured_contents'] = $featured_contents;
         $information['currentPageData'] = $currentPageData;
+        $availabilityCardData = CourtDailyAvailability::cardData(
+            $featured_contents->concat($currentPageData),
+            $checkInDates
+        );
+        $information['dailyAvailability'] = $availabilityCardData['availability'];
+        $information['courtAvailabilityEligibility'] = $availabilityCardData['eligibility'];
         $information['perPage'] = $perPage;
         $information['bookingHours'] =  BookingHour::orderBy('hour', 'asc')->get();
         $information['amenities'] =  Amenitie::Where('language_id', $language->id)->get();
@@ -1207,6 +1214,12 @@ class RoomController extends Controller
         $information['room_contents'] = $room_contents;
         $information['featured_contents'] = $featured_contents;
         $information['currentPageData'] = $currentPageData;
+        $availabilityCardData = CourtDailyAvailability::cardData(
+            $featured_contents->concat($currentPageData),
+            $checkInDates
+        );
+        $information['dailyAvailability'] = $availabilityCardData['availability'];
+        $information['courtAvailabilityEligibility'] = $availabilityCardData['eligibility'];
 
         $information['perPage'] = $perPage;
         $information['adultNumber'] = Room::where('status', 1)->max('adult');
