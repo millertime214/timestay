@@ -1,3 +1,139 @@
+# DinkSite — Pickleball Sites and Court Booking
+
+DinkSite is a multi-vendor pickleball marketplace built with Laravel. Customers can discover Sites and Courts, review real-time court availability, make hourly reservations, and register for Open Play sessions. Vendors manage their Sites, Courts, schedules, bookings, payment accounts, and subscriptions, while administrators oversee verification, packages, payments, content, and marketplace operations.
+
+## Application Roles
+
+### Customers
+
+- Browse active Sites and Courts using grid or map views.
+- Search by location, category, amenities, rating, date, time, and booking duration.
+- View hourly Court availability from its opening time through closing time.
+- See vacant, occupied, blocked, and Open Play schedule periods.
+- Save Courts to a wishlist and submit reviews.
+- Book Courts through the configured online, offline, or vendor e-wallet payment methods.
+- Register multiple players for eligible Open Play sessions.
+- View booking history, invoices, and payment status from the customer account.
+
+### Vendors and Site Owners
+
+- Register and manage a vendor account.
+- Create and maintain Sites and their Courts.
+- Configure Court operating hours, hourly prices, amenities, images, and booking settings.
+- Add vendor bookings or block unavailable Court periods.
+- Schedule multi-hour Open Play sessions with title, category, price per player, maximum capacity, and player details.
+- Review bookings, transactions, schedules, rosters, and dashboard activity.
+- Configure customer-facing vendor e-wallet accounts and submit their verification documents.
+- Purchase or extend subscription packages using supported billing terms.
+- Use package-controlled features such as Open Play and Live Court Display when included in the active package.
+
+### Administrators
+
+- Manage customers, vendors, Sites, Courts, bookings, and marketplace content.
+- Review Site verification documents and approve or reject Site verification.
+- Review vendor e-wallet verification information and supporting documents.
+- Configure subscription packages, enabled billing terms, discounts, limits, and feature entitlements.
+- Configure payment gateways, including subscription e-wallet instructions and QR codes.
+- Review subscription payment logs, customer transactions, and booking activity.
+- Manage homepage content, SEO settings, languages, email settings, and other platform configuration.
+
+## Court Availability and Booking Rules
+
+Court cards on the homepage and Courts grid/map views display a compact day-calendar from the Court's configured opening time through closing time. The selected search date is used when present; otherwise, availability is shown for the current date in the configured marketplace timezone.
+
+Availability combines:
+
+- Confirmed or pending bookings that have not been rejected.
+- Vendor-created blocked periods.
+- Open Play schedule periods.
+- Overnight operating hours and 24-hour Courts.
+
+Hourly periods use the same overlap rule as checkout: a reservation occupies a period when it starts before the period ends and ends after the period starts. Availability is recalculated and enforced again during checkout and final booking persistence.
+
+Public availability is displayed only when all of the following are true:
+
+1. The Site has a matching active vendor account.
+2. The Site is active and administrator-approved.
+3. The vendor has a current subscription package.
+
+When a requirement is missing, the Court card shows the appropriate Site-owner registration, Site verification, or subscription notice instead of exposing the schedule.
+
+## Site Verification
+
+Vendors may save a Site before uploading verification documents, but an unverified Site cannot accept public bookings. Verification supports the Site agreement and private document storage for the business permit, business registration, and mayor's permit. Administrators can securely inspect the submitted files before approving or rejecting the Site.
+
+## Subscription Packages
+
+- Packages use a monthly base price with enabled monthly, semi-annual, or annual purchase terms.
+- Administrators can activate terms and configure term-specific discounts.
+- The selected billing term, calculated total, start date, and expiration are persisted with the membership.
+- Package limits and feature entitlements are enforced in controllers as well as the user interface.
+- Free packages bypass payment controls and use the platform's internal free-package defaults.
+- Subscription e-wallet payments use administrator-managed offline gateway records and retain payer information separately from internal transaction identifiers.
+
+## Open Play
+
+Vendors can schedule multi-hour Open Play periods for a Court. A session can include a title, category, price per player, maximum number of players, poster, and schedule details. Customers provide the required player information during registration, and the server validates session eligibility and remaining capacity inside a locked transaction before completing the booking.
+
+Open Play is available only when the vendor's current package includes the feature. Expired or deleted sessions return the normal not-found response, while a valid session belonging to an inactive or unverified Site displays an eligibility notice.
+
+## Payments and Transactions
+
+The application retains its established booking and subscription payment integrations. Customer bookings can use configured gateways, offline payments, or a verified vendor e-wallet. Vendor subscription e-wallet payments use the administrator-managed offline gateway workflow. Transaction records preserve booking references, gateway references, payer details, and verification status for reconciliation.
+
+## SEO and Public Routes
+
+The public marketplace includes configurable metadata, localized content, Google-compatible sitemap output, and robots directives. Primary public routes include:
+
+- `/` — Homepage and featured Courts.
+- `/sites` — Site listings.
+- `/site/{slug}/{id}` — Site details.
+- `/courts` — Court grid or map listing.
+- `/court/{slug}/{id}` — Court details, schedule, and booking.
+- `/pricing` — Vendor subscription packages.
+- `/sitemap.xml` — Search-engine sitemap.
+- `/robots.txt` — Crawler directives.
+
+Legacy Sports hub and court URLs remain supported through redirects and compatibility mappings.
+
+## Compatibility Architecture
+
+The user-facing domain uses **Sites** and **Courts**, while the established database and integrations retain the legacy `hotels` and `rooms` tables. The `Site` and `Court` model aliases extend the existing `Hotel` and `Room` models. This preserves historical bookings, payments, routes, and third-party integrations while presenting pickleball terminology throughout the application.
+
+## Technical Requirements
+
+- PHP `^8.2`
+- Laravel `^9.52.16`
+- Composer
+- Node.js and npm
+- A supported SQL database configured through `.env`
+
+## Local Setup
+
+1. Install PHP dependencies with `composer install`.
+2. Copy `.env.example` to `.env` and configure the application URL, database, mail, timezone, and payment settings.
+3. Generate the application key with `php artisan key:generate`.
+4. Apply the schema with `php artisan migrate`.
+5. Install frontend dependencies with `npm install`.
+6. Build development assets with `npm run development` or production assets with `npm run production`.
+7. Start the application with `php artisan serve`, or configure the project through Apache/XAMPP.
+
+The default database seeder does not create application records. Existing installation data or separately prepared administration records are required to configure the marketplace.
+
+## Useful Validation Commands
+
+```bash
+php artisan view:cache
+php artisan test --filter=CourtDailyAvailabilityTest
+php artisan test --filter=PickleballDomainTest
+```
+
+## Laravel Framework Information
+
+The original Laravel documentation is retained below.
+
+---
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
