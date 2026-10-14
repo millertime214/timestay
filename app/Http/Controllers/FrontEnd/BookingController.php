@@ -33,6 +33,27 @@ class BookingController extends Controller
             return response()->json(__('This Site is not verified and cannot accept bookings.'), 422);
         }
 
+        $selectedPrice = HourlyRoomPrice::with('bookingHour')
+            ->where('room_id', $room->id)
+            ->find($request->price);
+
+        if (!$selectedPrice) {
+            return response()->json(__('Please select a valid booking price for this Court.'), 422);
+        }
+
+        $selectedHours = (float) optional($selectedPrice->bookingHour)->hour;
+        if ($selectedHours <= 0 || (float) $request->hour !== $selectedHours) {
+            return response()->json(__('The selected booking duration is invalid.'), 422);
+        }
+
+        $normalizedCheckInTime = $this->normalizeBookingTime($request->checkInTime);
+        $normalizedCheckOutTime = $this->normalizeBookingTime($request->check_out_time);
+        $startsAt = Carbon::parse($request->checkInDate.' '.$normalizedCheckInTime);
+        $expectedCheckOutTime = $startsAt->copy()->addMinutes((int) round($selectedHours * 60))->format('H:i:s');
+        if ($normalizedCheckOutTime !== $expectedCheckOutTime) {
+            return response()->json(__('The selected checkout time is invalid.'), 422);
+        }
+
         $rule = [
             'price' => 'required',
 
@@ -57,13 +78,13 @@ class BookingController extends Controller
             );
         }
 
-        $closing_time = $room->close_time;
-        $opening_time = $room->open_time;
-
-        $checkOutTime = Carbon::createFromTimeString($request->check_out_time);
-        $openingTime = Carbon::createFromTimeString($opening_time);
-        $closingTime = Carbon::createFromTimeString($closing_time);
-        if (!$checkOutTime->between($openingTime, $closingTime)) {
+        $openingTime = Carbon::parse($request->checkInDate.' '.$room->open_time);
+        $closingTime = Carbon::parse($request->checkInDate.' '.$room->close_time);
+        if ($closingTime->lessThanOrEqualTo($openingTime)) {
+            $closingTime->addDay();
+        }
+        $selectedEnd = $startsAt->copy()->addMinutes((int) round($selectedHours * 60));
+        if ($startsAt->lessThan($openingTime) || $selectedEnd->greaterThan($closingTime)) {
             return response()->json('Selected time exceeds venue closing hours.', 422);
         }
 
@@ -101,7 +122,7 @@ class BookingController extends Controller
 //            }
 
         $request->session()->put('room_id', $request->room_id);
-        $request->session()->put('checkInTime', checkInTimeFormate($request->checkInTime));
+        $request->session()->put('checkInTime', $normalizedCheckInTime);
         $request->session()->put('checkInDate', $request->checkInDate);
         $request->session()->put('check_out_time', $request->check_out_time);
         $request->session()->put('hour', $request->hour);
@@ -112,8 +133,14 @@ class BookingController extends Controller
         Session::forget('takeService');
         Session::forget('roomDiscount');
 
+        $checkoutUrl = route('frontend.room.checkout');
+
+        if (!$request->ajax() && !$request->expectsJson()) {
+            return redirect()->to($checkoutUrl);
+        }
+
         return response()->json([
-            'redirect_url' => route('frontend.room.checkout')
+            'redirect_url' => $checkoutUrl
         ], 200);
     }
 
@@ -121,10 +148,10 @@ class BookingController extends Controller
     {
         $bookingExists = Booking::where('room_id', $roomId)->where('check_in_date',$startDate)
             ->where('check_in_time', '<', $endTime)
-            ->where('check_out_time', '>',  checkInTimeFormate($startTime))
+            ->where('check_out_time', '>', $this->normalizeBookingTime($startTime))
             ->exists();
 
-        $startsAt = Carbon::parse($startDate . ' ' . checkInTimeFormate($startTime));
+        $startsAt = Carbon::parse($startDate . ' ' . $this->normalizeBookingTime($startTime));
         $endsAt = Carbon::parse($startDate . ' ' . $endTime);
         if ($endsAt->lessThanOrEqualTo($startsAt)) {
             $endsAt->addDay();
@@ -148,6 +175,11 @@ class BookingController extends Controller
 //
 //        return !$isAvailable; // Returns true if the room is available, false if there is a conflict
 
+    }
+
+    private function normalizeBookingTime(string $time): string
+    {
+        return Carbon::parse($time)->format('H:i:s');
     }
 
     public function checkout(Request $request)

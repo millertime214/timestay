@@ -314,6 +314,43 @@
     line-height: 1.15;
   }
 
+  .court-availability__checkout-form {
+    margin: 0;
+  }
+
+  .court-availability__selection {
+    min-height: 18px;
+    margin-top: 8px;
+    color: var(--calendar-muted);
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .court-availability__selection.is-error {
+    color: #c0392b;
+  }
+
+  .court-availability__continue {
+    width: 100%;
+    margin-top: 7px;
+  }
+
+  button.court-availability__event {
+    width: calc(100% - 10px);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+  }
+
+  button.court-availability__event:hover,
+  button.court-availability__event:focus-visible {
+    border-color: #20a464;
+    box-shadow: 0 0 0 2px rgba(32, 164, 100, .16);
+    transform: translateY(-1px);
+    outline: 0;
+  }
+
   .court-availability__event > i {
     grid-row: 1 / span 2;
     align-self: center;
@@ -338,10 +375,28 @@
     color: #147a4a;
   }
 
+  button.court-availability__event.is-vacant.is-selected {
+    border-color: #0f6840;
+    background: #20a464;
+    color: #fff;
+    box-shadow: 0 0 0 2px rgba(32, 164, 100, .24), inset 0 0 0 1px rgba(255, 255, 255, .28);
+    transform: translateY(-1px);
+  }
+
+  button.court-availability__event.is-vacant.is-selected > i::before {
+    content: "\f00c";
+  }
+
   .court-availability__event.is-occupied {
     border-color: #386ab8;
     background: #4778c7;
     color: #fff;
+  }
+
+  .court-availability__event.is-unpriced {
+    border-color: #d7d9dd;
+    background: #f4f5f6;
+    color: #777c82;
   }
 
   .court-availability__hours {
@@ -368,3 +423,76 @@
     text-align: center;
   }
 </style>
+
+@once
+<script>
+  document.addEventListener('click', function (event) {
+    const slot = event.target.closest('[data-availability-slot]');
+    if (!slot) return;
+
+    const form = slot.closest('[data-multi-slot-form]');
+    const slots = Array.from(form.querySelectorAll('[data-availability-entry]'));
+    const clickedIndex = slots.indexOf(slot);
+    const currentStart = Number(form.dataset.selectionStart ?? -1);
+
+    if (slot.classList.contains('is-selected') && currentStart === clickedIndex &&
+        slots.filter(item => item.classList.contains('is-selected')).length === 1) {
+      resetCourtSelection(form, slots);
+      return;
+    }
+
+    const startIndex = currentStart < 0 || clickedIndex < currentStart ? clickedIndex : currentStart;
+    const endIndex = currentStart < 0 || clickedIndex < currentStart ? clickedIndex : clickedIndex;
+    const range = slots.slice(startIndex, endIndex + 1);
+
+    if (range.length !== endIndex - startIndex + 1 || range.some(item => !item.matches('[data-availability-slot]'))) {
+      resetCourtSelection(form, slots, '{{ __('Selected hours must be consecutive and vacant.') }}');
+      return;
+    }
+
+    slots.forEach(function (item) {
+      item.classList.remove('is-selected');
+      item.setAttribute('aria-pressed', 'false');
+    });
+    range.forEach(function (item) {
+      item.classList.add('is-selected');
+      item.setAttribute('aria-pressed', 'true');
+    });
+    form.dataset.selectionStart = startIndex;
+
+    const duration = range.reduce((total, item) => total + Number(item.dataset.hours), 0);
+    const durationKey = Number(duration.toFixed(2)).toString();
+    const prices = JSON.parse(form.dataset.priceOptions || '{}');
+    const selectedPrice = prices[durationKey];
+    const summary = form.querySelector('[data-selection-summary]');
+    const submit = form.querySelector('[data-selection-submit]');
+
+    form.querySelector('[name="checkInDate"]').value = range[0].dataset.date;
+    form.querySelector('[name="checkInTime"]').value = range[0].dataset.start;
+    form.querySelector('[name="check_out_time"]').value = range[range.length - 1].dataset.end;
+    form.querySelector('[name="hour"]').value = durationKey;
+    form.querySelector('[name="price"]').value = selectedPrice ? selectedPrice.id : '';
+
+    summary.classList.toggle('is-error', !selectedPrice);
+    summary.textContent = selectedPrice
+      ? range[0].querySelector('small').textContent.split(' - ')[0] + ' - ' + range[range.length - 1].querySelector('small').textContent.split(' - ').pop() + ' (' + durationKey + ' {{ __('hours') }})'
+      : '{{ __('No booking price is configured for the selected duration. Select a different number of hours.') }}';
+    submit.disabled = !selectedPrice;
+  });
+
+  function resetCourtSelection(form, slots, message) {
+    slots.forEach(function (item) {
+      item.classList.remove('is-selected');
+      item.setAttribute('aria-pressed', 'false');
+    });
+    delete form.dataset.selectionStart;
+    ['checkInDate', 'checkInTime', 'check_out_time', 'hour', 'price'].forEach(function (name) {
+      form.querySelector('[name="' + name + '"]').value = '';
+    });
+    const summary = form.querySelector('[data-selection-summary]');
+    summary.classList.toggle('is-error', Boolean(message));
+    summary.textContent = message || '{{ __('Select one or more consecutive vacant hours.') }}';
+    form.querySelector('[data-selection-submit]').disabled = true;
+  }
+</script>
+@endonce

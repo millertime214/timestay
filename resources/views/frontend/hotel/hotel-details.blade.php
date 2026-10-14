@@ -20,9 +20,12 @@
   @if (!empty($hotel))
     {{ $hotel->title }}
   @endif
+   
 @endsection
 
 @section('content')
+
+@include('frontend.room.partials.daily-availability-styles')
   <!-- Page title start-->
   @includeIf('frontend.partials.breadcrumb', [
       'breadcrumb' => $bgImg->breadcrumb,
@@ -313,7 +316,11 @@
                             @endforeach
                           </ul>
                         </div>
+                        
                       </div>
+                       <div class="product_bottom pt-20 pb-20 px-10 border-top">
+                          @include('frontend.room.partials.daily-availability')
+                        </div>
                     </div>
                     <!-- product-default -->
                   </div>
@@ -324,7 +331,7 @@
             </div>
           </div>
         @endif
-        
+
       <div class="hotel-single-details" data-aos="fade-up">
         <!-- Product description -->
         <div class="hotel-desc">
@@ -580,7 +587,7 @@
 @section('script')
   <script>
     var latitude = "{{ $hotel->latitude }}";
-    var longitude = "{{ $hotel->longitude }}"; 
+    var longitude = "{{ $hotel->longitude }}";
   </script>
   <script src="{{ asset('assets/front/js/hotel-single-map.js') }}"></script>
 @endsection

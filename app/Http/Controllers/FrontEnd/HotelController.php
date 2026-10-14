@@ -21,6 +21,7 @@ use App\Models\Room;
 use App\Models\RoomContent;
 use App\Models\RoomReview;
 use App\Models\Vendor;
+use App\Support\CourtDailyAvailability;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -1143,6 +1144,13 @@ class HotelController extends Controller
 
         $information['rooms'] = $rooms;
         $information['totalRooms'] = $totalRooms;
+        $availabilityCardData = CourtDailyAvailability::cardData(
+            $rooms,
+            request()->input('checkInDates')
+        );
+        $information['dailyAvailability'] = $availabilityCardData['availability'];
+        $information['courtAvailabilityEligibility'] = $availabilityCardData['eligibility'];
+
         return view('frontend.hotel.hotel-details', $information);
     }
 }

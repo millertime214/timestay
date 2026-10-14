@@ -6,6 +6,7 @@ use App\Models\BasicSettings\Basic;
 use App\Models\Booking;
 use App\Models\CourtBlockedSlot;
 use App\Models\Hotel;
+use App\Models\HourlyRoomPrice;
 use App\Models\Membership;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -107,6 +108,18 @@ class CourtDailyAvailability
             return [];
         }
 
+        $hourlyPrices = HourlyRoomPrice::query()
+            ->join('booking_hours', 'hourly_room_prices.hour_id', '=', 'booking_hours.id')
+            ->whereIn('hourly_room_prices.room_id', $roomIds)
+            ->whereNotNull('hourly_room_prices.price')
+            ->get([
+                'hourly_room_prices.id',
+                'hourly_room_prices.room_id',
+                'booking_hours.hour',
+            ])
+            ->groupBy('room_id')
+            ->map(fn ($prices) => $prices->keyBy(fn ($price) => (string) (float) $price->hour));
+
         $bookings = Booking::query()
             ->whereIn('room_id', $roomIds)
             ->where('payment_status', '!=', 2)
@@ -122,7 +135,7 @@ class CourtDailyAvailability
             ->get(['room_id', 'starts_at', 'ends_at'])
             ->groupBy('room_id');
 
-        return $rooms->unique('id')->mapWithKeys(function ($room) use ($bookings, $blockedSlots, $date, $timezone, $timeFormat) {
+        return $rooms->unique('id')->mapWithKeys(function ($room) use ($bookings, $blockedSlots, $hourlyPrices, $date, $timezone, $timeFormat) {
             $intervals = collect($bookings->get($room->id, []))->map(fn ($booking) => [
                 'start' => $booking->getRawOriginal('check_in_date_time'),
                 'end' => $booking->getRawOriginal('check_out_date_time'),
@@ -140,11 +153,26 @@ class CourtDailyAvailability
                 $timezone
             );
 
+            $roomPrices = $hourlyPrices->get($room->id, collect());
+            $priceOptions = $roomPrices->mapWithKeys(fn ($price) => [
+                (string) (float) $price->hour => [
+                    'id' => $price->id,
+                    'hours' => (float) $price->hour,
+                ],
+            ])->all();
+            $schedule['slots'] = collect($schedule['slots'])->map(function ($slot) use ($roomPrices) {
+                $price = $roomPrices->get((string) (float) $slot['hours']);
+                $slot['price_id'] = $price?->id;
+
+                return $slot;
+            })->all();
+
             return [$room->id => [
                 'date' => $date->format('M d, Y'),
                 'open' => $schedule['open'],
                 'close' => $schedule['close'],
                 'slots' => $schedule['slots'],
+                'price_options' => $priceOptions,
             ]];
         })->all();
     }
@@ -196,6 +224,10 @@ class CourtDailyAvailability
                 'start' => $cursor->format($format),
                 'end' => $slotEnd->format($format),
                 'label' => $cursor->format($format).' - '.$slotEnd->format($format),
+                'date' => $cursor->toDateString(),
+                'start_time' => $cursor->format('H:i:s'),
+                'end_time' => $slotEnd->format('H:i:s'),
+                'hours' => $cursor->floatDiffInHours($slotEnd),
                 'occupied' => $occupied,
             ];
         }

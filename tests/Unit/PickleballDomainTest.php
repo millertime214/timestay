@@ -192,4 +192,42 @@ class PickleballDomainTest extends TestCase
         $this->assertNotContains('packageLimitsCheck:hotel,store', $siteRoute->gatherMiddleware());
         $this->assertNotContains('packageLimitsCheck:room,store', $courtRoute->gatherMiddleware());
     }
+
+    public function test_vendor_booking_reports_are_available_and_protected(): void
+    {
+        $reportRoute = Route::getRoutes()->getByName('vendor.reports.index');
+        $exportRoute = Route::getRoutes()->getByName('vendor.reports.export');
+
+        $this->assertNotNull($reportRoute);
+        $this->assertNotNull($exportRoute);
+        $this->assertSame('vendor/reports', $reportRoute->uri());
+        $this->assertSame('vendor/reports/export', $exportRoute->uri());
+        $this->assertContains('auth:vendor', $reportRoute->gatherMiddleware());
+        $this->assertContains('auth:vendor', $exportRoute->gatherMiddleware());
+    }
+
+    public function test_open_play_matchmaker_schema_and_vendor_routes_are_available(): void
+    {
+        $generateRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.rounds.generate');
+        $completeRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.matches.complete');
+        $addPlayerRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.players.store');
+
+        $this->assertTrue(Schema::hasColumns('open_play_roster_entries', [
+            'court_blocked_slot_id', 'booking_id', 'player_index', 'skill_rating',
+            'queue_position', 'matches_played', 'wait_rounds', 'active',
+        ]));
+        $this->assertTrue(Schema::hasColumns('open_play_matches', [
+            'court_blocked_slot_id', 'vendor_id', 'round_number', 'court_number',
+            'skill_group', 'status', 'team_one_score', 'team_two_score', 'winner_team', 'completed_at',
+        ]));
+        $this->assertTrue(Schema::hasColumns('open_play_match_players', [
+            'open_play_match_id', 'open_play_roster_entry_id', 'team',
+        ]));
+        $this->assertNotNull($generateRoute);
+        $this->assertNotNull($completeRoute);
+        $this->assertNotNull($addPlayerRoute);
+        $this->assertContains('auth:vendor', $generateRoute->gatherMiddleware());
+        $this->assertContains('auth:vendor', $completeRoute->gatherMiddleware());
+        $this->assertContains('auth:vendor', $addPlayerRoute->gatherMiddleware());
+    }
 }

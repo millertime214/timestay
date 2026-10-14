@@ -261,10 +261,17 @@
           </a>
         </li>
 
+        <li class="nav-item {{ request()->routeIs('vendor.reports.*') ? 'active' : '' }}">
+          <a href="{{ route('vendor.reports.index', ['language' => $defaultLang->code]) }}">
+            <i class="fal fa-chart-bar"></i>
+            <p>{{ __('Reports') }}</p>
+          </a>
+        </li>
+
         <li class="nav-item @if (request()->routeIs('vendor.ewallets.*')) active @endif">
           <a href="{{ route('vendor.ewallets.index') }}">
             <i class="fas fa-wallet"></i>
-            <p>{{ __('E-wallet Payment Methods') }}</p>
+            <p>{{ __('Payment Methods') }}</p>
           </a>
         </li>
 

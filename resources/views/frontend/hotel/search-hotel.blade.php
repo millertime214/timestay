@@ -27,7 +27,7 @@
                 @endphp
               @endif
 
-              <a href="{{ $checkWishList == false ? route('addto.wishlist.hotel', $hotel_content->id) : route('remove.wishlist.hotel', $hotel_content->id) }}"
+              <a class="d-none" href="{{ $checkWishList == false ? route('addto.wishlist.hotel', $hotel_content->id) : route('remove.wishlist.hotel', $hotel_content->id) }}"
                 class="btn btn-icon radius-sm {{ $checkWishList == false ? '' : 'active' }} " data-tooltip="tooltip"
                 data-bs-placement="top" title="{{ $checkWishList == false ? __('Save to Wishlist') : __('Saved') }}">
                 <i class="fal fa-bookmark"></i>
@@ -171,7 +171,7 @@
                 @endphp
               @endif
 
-              <a href="{{ $checkWishList == false ? route('addto.wishlist.hotel', $hotel_content->id) : route('remove.wishlist.hotel', $hotel_content->id) }}"
+              <a class="d-none" href="{{ $checkWishList == false ? route('addto.wishlist.hotel', $hotel_content->id) : route('remove.wishlist.hotel', $hotel_content->id) }}"
                 class="btn btn-icon radius-sm {{ $checkWishList == false ? '' : 'active' }} " data-tooltip="tooltip"
                 data-bs-placement="top" title="{{ $checkWishList == false ? __('Save to Wishlist') : __('Saved') }}">
                 <i class="fal fa-bookmark"></i>

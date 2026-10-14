@@ -163,12 +163,39 @@
                           </td>
                           <td>{{ __($booking->payment_method) }}</td>
                           <td>
-                            <h2 class="d-inline-block">
-                              <span
-                                class="badge badge-{{ $booking->payment_status == '1' ? 'success' : ($booking->payment_status == '0' ? 'warning' : 'danger') }}">
-                                {{ ucfirst($booking->payment_status == '1' ? 'Completed' : ($booking->payment_status == '0' ? 'Pending' : 'Rejected')) }}
-                              </span>
-                            </h2>
+                            @if ((int) $booking->payment_status === 0 && $booking->payment_method !== 'Iyzico')
+                           
+                              <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('Update Payment Status') }}">
+                                <form action="{{ route('vendor.room_bookings.update_payment_status') }}" method="POST"
+                                  onsubmit="return confirm('{{ __('Mark this booking as paid?') }}')">
+                                  @csrf
+                                  <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                  <input type="hidden" name="payment_status" value="1">
+                                  <button type="submit" class="btn btn-success btn-sm" title="{{ __('Mark Paid') }}">
+                                    <i class="fas fa-check mr-1"></i>
+                                  </button>
+                                </form>
+                                <form action="{{ route('vendor.room_bookings.update_payment_status') }}" method="POST"
+                                  class="ml-1" onsubmit="return confirm('{{ __('Reject this payment?') }}')">
+                                  @csrf
+                                  <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                  <input type="hidden" name="payment_status" value="2">
+                                  <button type="submit" class="btn btn-danger btn-sm" title="{{ __('Reject Payment') }}">
+                                    <i class="fas fa-times mr-1"></i>
+                                  </button>
+                                </form>
+                              </div>
+                              <div class="float-left px-2">
+                                <span class="badge badge-warning mt-1">{{ __('Pending') }}</span>
+                              </div>
+                            @else
+                             <h2 class="d-inline-block">
+                                <span class="badge badge-{{ $booking->payment_status == '1' ? 'success' : ($booking->payment_status == '0' ? 'warning' : 'danger') }}">
+                                  {{ $booking->payment_status == '1' ? __('Completed') : ($booking->payment_status == '0' ? __('Pending') : __('Rejected')) }}
+                                </span>
+                              </h2>
+                              
+                            @endif
                           </td>
                           <td>
                             <div class="dropdown">

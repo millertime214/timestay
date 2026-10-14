@@ -197,6 +197,9 @@ Route::prefix('vendor')->middleware('auth:vendor', 'Demo', 'Deactive', 'email.ve
 
   Route::get('/court-schedule', 'Vendor\CourtScheduleController@index')->name('vendor.court_schedule.index');
   Route::get('/court-schedule/open-play/{id}', 'Vendor\CourtScheduleController@showOpenPlay')->name('vendor.court_schedule.open_play.show');
+  Route::post('/court-schedule/open-play/{id}/players', 'Vendor\CourtScheduleController@addOpenPlayPlayer')->name('vendor.court_schedule.open_play.players.store');
+  Route::post('/court-schedule/open-play/{id}/rounds', 'Vendor\CourtScheduleController@generateOpenPlayRound')->name('vendor.court_schedule.open_play.rounds.generate');
+  Route::post('/court-schedule/open-play/matches/{id}/complete', 'Vendor\CourtScheduleController@completeOpenPlayMatch')->name('vendor.court_schedule.open_play.matches.complete');
   Route::post('/court-schedule/blocks', 'Vendor\CourtScheduleController@store')->name('vendor.court_schedule.store');
   Route::post('/court-schedule/open-play', 'Vendor\CourtScheduleController@storeOpenPlay')->name('vendor.court_schedule.open_play.store');
   Route::delete('/court-schedule/blocks/{id}', 'Vendor\CourtScheduleController@destroy')->name('vendor.court_schedule.destroy');
@@ -286,6 +289,9 @@ Route::prefix('vendor')->middleware('auth:vendor', 'Demo', 'Deactive', 'email.ve
   });
 
   Route::get('/transcation', 'Vendor\VendorController@transcation')->name('vendor.transcation');
+
+  Route::get('/reports', 'Vendor\ReportController@index')->name('vendor.reports.index');
+  Route::get('/reports/export', 'Vendor\ReportController@export')->name('vendor.reports.export');
 
   #====support tickets ============
   Route::get('support/ticket/create', 'Vendor\SupportTicketController@create')->name('vendor.support_ticket.create');

@@ -126,7 +126,7 @@
                               <br>
 
                           </td>
-                          <td>{{ symbolPrice($charge) }}</td>
+                          <td>{{ symbolPrice(number_format($charge, 2)) }}</td>
                         </tr>
                       @else
                         @php
@@ -145,7 +145,7 @@
                             <label for="additional_service_{{ $id }}">{{ @$serviceTitile[0]->title }}
                               <br>
                           </td>
-                          <td>{{ symbolPrice($charge) }}</td>
+                          <td>{{ symbolPrice(number_format($charge, 2)) }}</td>
                         </tr>
                       @endif
                     @endforeach
@@ -185,12 +185,14 @@
                     <ul class="list-unstyled">
                       <li>
                         <i class="fal fa-clock"></i>
-                        <span>{{ $openPlaySlot ? $openPlaySlot->starts_at->floatDiffInHours($openPlaySlot->ends_at) : $roomPrice->hour }} {{ __('Hr/s') }}</span>
+                        <span>{{ $openPlaySlot ? $openPlaySlot->starts_at->floatDiffInHours($openPlaySlot->ends_at) : number_format($roomPrice->hour, 2) }} {{ __('Hr/s') }}</span>
                       </li>
                       <li>
                         <i class="fal fa-usd-circle"></i>
-                        <span>{{ symbolPrice(number_format($openPlaySlot ? $openPlaySlot->price_per_player : $roomPrice->price, 2)) }}
-                          @if ($openPlaySlot) {{ __('per player') }} × {{ $players }} @endif
+                        <span>{{ symbolPrice(number_format($openPlaySlot ? $openPlaySlot->price_per_player : number_format($roomPrice->price, 2), 2)) }}
+                          @if ($openPlaySlot)
+                           {{ __('per player') }} × {{ $players }} 
+                           @endif
                         </span>
                       </li>
                     </ul>
@@ -232,17 +234,17 @@
                     </li>
                     <li class="d-flex justify-content-between">
                       <p class="mb-0 font-medium color-dark fw-medium">{{ __('Additional Service Charge') }} </p>
-                      <p class="mb-0 price"><span class="operator color-green">+</span>{{ symbolPrice($serviceCharge) }}
+                      <p class="mb-0 price"><span class="operator color-green">+</span>{{ symbolPrice(number_format($serviceCharge, 2)  ) }}
                       </p>
                     </li>
                     <li class="d-flex justify-content-between">
                       <p class="mb-0 font-medium color-dark fw-medium ">{{ __('Discount') }}</p>
                       <p class="mb-0 price"><span
-                          class="operator minus color-red">-</span>{{ symbolPrice($roomDiscount) }}</p>
+                          class="operator minus color-red">-</span>{{ symbolPrice(number_format($roomDiscount, 2)) }}</p>
                     </li>
                     <li class="d-flex justify-content-between">
                       <p class="mb-0 font-medium color-dark fw-medium">{{ __('Subtotal') }}</p>
-                      <p class="mb-0 price">{{ symbolPrice($totalAmount - $roomDiscount) }}</p>
+                      <p class="mb-0 price">{{ symbolPrice(number_format($totalAmount - $roomDiscount, 2)) }}</p>
                     </li>
 
                     <li class="d-flex justify-content-between d-none">
@@ -279,7 +281,7 @@
                 <div class="form-group mb-20">
                   <select name="gateway" id="gateway" class="select2 form-control payment-gateway">
                     <option value="" selected="" disabled>{{ __('Choose a Payment Method') }}</option>
-                    @foreach ($onlineGateways as $onlineGateway)
+                    <!-- @foreach ($onlineGateways as $onlineGateway)
                       <option @selected(old('gateway') == $onlineGateway->keyword) value="{{ $onlineGateway->keyword }}">
                         {{ __($onlineGateway->name) }}</option>
                     @endforeach
@@ -289,7 +291,7 @@
                         <option @selected(old('gateway') == $offlineGateway->id) value="{{ $offlineGateway->id }}">
                           {{ __($offlineGateway->name) }}</option>
                       @endforeach
-                    @endif
+                    @endif -->
 
                     @if ($vendorEwallets->isNotEmpty())
                       <optgroup label="{{ __('Vendor E-wallets') }}">
@@ -439,7 +441,10 @@
                       <input class="form-control ewallet-input" name="payer_phone"
                         value="{{ $walletSelected ? old('payer_phone') : '' }}"
                         maxlength="50" {{ $walletSelected ? '' : 'disabled' }}>
-                      @if ($walletSelected) @error('payer_phone')<p class="text-danger">{{ $message }}</p>@enderror @endif
+                      @if ($walletSelected) 
+                      @error('payer_phone')<p class="text-danger">{{ $message }}</p>
+                      @enderror 
+                      @endif
                     </div>
                     <p class="text-muted">{{ __('Your booking will remain pending until the vendor verifies the payment.') }}</p>
                   </div>

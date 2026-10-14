@@ -40,6 +40,10 @@ class CourtDailyAvailabilityTest extends TestCase
 
         $this->assertCount(3, $schedule['slots']);
         $this->assertSame([false, true, true], array_column($schedule['slots'], 'occupied'));
+        $this->assertSame('2026-10-12', $schedule['slots'][0]['date']);
+        $this->assertSame('06:00:00', $schedule['slots'][0]['start_time']);
+        $this->assertSame('07:00:00', $schedule['slots'][0]['end_time']);
+        $this->assertSame(1.0, $schedule['slots'][0]['hours']);
     }
 
     public function test_an_interval_ending_at_an_hour_boundary_does_not_occupy_the_next_hour(): void

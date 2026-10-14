@@ -80,7 +80,7 @@
                           <span class="term-total d-block mt-1">{{ $option['price'] == 0 ? __('Free') : format_price($option['price']) }}</span>
                           @if ($option['discount'] > 0)
                             <small class="badge badge-success mt-1">{{ rtrim(rtrim(number_format($option['discount'], 2), '0'), '.') }}% {{ __('discount') }}</small>
-                            <small class="d-block"><del>{{ format_price($option['subtotal']) }}</del></small>
+                            <small class="d-block"><del>{{ format_price(number_format($option['subtotal'], 2)) }}</del></small>
                           @endif
                         </label>
                       </div>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="checkout-summary__row checkout-summary__total">
                   <span class="checkout-summary__label">{{ __('Total Cost') }}</span>
-                  <span class="checkout-summary__value" id="billing-total">{{ $billingOptions[$selectedBillingTerm]['price'] == 0 ? __('Free') : format_price($billingOptions[$selectedBillingTerm]['price']) }}</span>
+                  <span class="checkout-summary__value" id="billing-total">{{ number_format($billingOptions[$selectedBillingTerm]['price'], 2) == 0 ? __('Free') : format_price(number_format($billingOptions[$selectedBillingTerm]['price'], 2)) }}</span>
                 </div>
               </div>
               @if ($package->price != 0)
@@ -132,8 +132,10 @@
                 </li>
               @endif
               
-              <p>When payment is successfully submitted, fill in the Transaction ID / Reference Number below:</p>
-              <div id="instructions" class="text-left pl-4"></div>
+              
+              <div id="instructions" class="text-left pl-4">
+                
+              </div>
               <div id="ewallet-payment-details" class="text-left d-none">
                 <div class="form-group">
                   <label class="text-white">{{ __('Your E-wallet Account Name') }} *</label>

@@ -1,9 +1,15 @@
+
+"use strict";
 var map;
 var geocoder;
 var currentMarker = null;
 
 window.initMap = function () {
   map = new google.maps.Map(document.getElementById('map'), {
+    center: {
+      lat: 21.4241,
+      lng: 39.8173
+    },
     zoom: 18
   });
 

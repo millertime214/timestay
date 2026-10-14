@@ -15,4 +15,9 @@ class HourlyRoomPrice extends Model
         'hour_id',
         'price',
     ];
+
+    public function bookingHour()
+    {
+        return $this->belongsTo(BookingHour::class, 'hour_id');
+    }
 }

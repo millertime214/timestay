@@ -62,7 +62,9 @@
         letter-spacing:.16em;
         text-transform:uppercase;
       }.court-display h1{
-        font-size:2rem;line-height:1.1;margin:3px 0 0;color:#fff;
+        font-size:2rem;
+        line-height:1.1;margin:3px 0 0;
+        color:#fff;
     }
       .court-display__summary{
         display:flex;
@@ -70,25 +72,96 @@
       }
       .court-display__summary div{
         min-width:92px;
-        padding:9px 14px;border-radius:12px;background:#12263d;text-align:center;
+        padding:9px 14px;
+        border-radius:12px;
+        background:#12263d;
+        text-align:center;
       }
         .court-display__summary strong{
-          display:block;font-size:1.55rem;line-height:1;color:#fff;}
+          display:block;
+          font-size:1.55rem;
+          line-height:1;
+          color:#fff;
+        }
         .court-display__summary span{
-          display:block;margin-top:4px;color:#92a9c1;font-size:.72rem;
-          text-transform:uppercase;letter-spacing:.08em;}
-          .court-display__clock{text-align:right;
+          display:block;
+          margin-top:4px;
+          color:#92a9c1;
+          font-size:.72rem;
+          text-transform:uppercase;
+          letter-spacing:.08em;
+        }
+          .court-display__clock{
+            text-align:right;
         }.court-display__clock strong{
-          display:block;font-size:1.9rem;line-height:1;color:#fff;font-variant-numeric:tabular-nums;
+          display:block;
+          font-size:1.9rem;
+          line-height:1;
+          color:#fff;
+          font-variant-numeric:tabular-nums;
         }
         .court-display__clock span{
           color:#92a9c1;
-        }.court-display__actions{display:flex;gap:8px;
+        }.court-display__actions{
+          display:flex;
+          gap:8px;
       }
       .court-display__actions button,
       .court-display__actions a
       {
-        width:42px;height:42px;border:0;border-radius:10px;background:#19314c;color:#fff;display:grid;place-items:center;cursor:pointer}.court-display__grid{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));grid-auto-rows:minmax(300px,1fr);gap:18px;padding:20px 24px}.court-card{background:#0e2035;border:2px solid #1d3855;border-radius:18px;padding:22px;display:flex;flex-direction:column;min-height:300px}.court-card.is-active{border-color:#f6a723;box-shadow:0 0 0 1px rgba(246,167,35,.16),0 18px 50px rgba(0,0,0,.2)}.court-card.is-available{border-color:#22b573}.court-card__top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.court-card__name{margin:0;color:#fff;font-size:1.65rem}.court-card__badge{padding:7px 11px;border-radius:999px;background:#17432f;color:#70e7a8;font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}.is-active .court-card__badge{background:#503815;color:#ffd27b}.court-card__main{padding:26px 0 20px}.court-card__label{color:#92a9c1;font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}.court-card__booking{font-size:1.45rem;font-weight:800;color:#fff;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.court-card__countdown{font-size:2.8rem;font-weight:900;color:#ffc45b;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums}.court-card__available{font-size:2.5rem;font-weight:900;color:#55dc98;margin-top:12px}.court-card__period{color:#b6c6d8;margin-top:5px}.court-card__upcoming{margin-top:auto;border-top:1px solid #213a55;padding-top:15px}.court-card__upcoming-title{color:#7892ad;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}.court-card__next{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:10px;color:#dce8f4;padding:5px 0}.court-card__next span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.court-card__type{color:#7f9ab5;font-size:.72rem;text-transform:uppercase}.court-card__empty{color:#7892ad}.court-display__loading{grid-column:1/-1;display:grid;place-items:center;font-size:1.2rem;color:#91a9c0}.court-display__footer{display:flex;justify-content:space-between;padding:9px 28px;background:#091827;color:#7892ad;font-size:.78rem}.court-display__live-dot{font-size:.55rem;color:#30d985;margin-right:5px}@media(max-width:900px){.court-display__header{grid-template-columns:1fr auto}.court-display__summary{order:3;grid-column:1/-1}.court-display__clock{display:none}.court-display__grid{grid-template-columns:1fr;grid-auto-rows:auto}.court-card{min-height:330px}}@media(min-width:1600px){.court-display__grid{grid-template-columns:repeat(3,1fr)}.court-card__name{font-size:2rem}.court-card__countdown{font-size:3.4rem}}
+        width:42px;height:42px;
+        border:0;
+        border-radius:10px;
+        background:#19314c;
+        color:#fff;
+        display:grid;
+        place-items:center;cursor:pointer;
+      }
+      .court-display__grid{
+        flex:1;
+        min-height:0;
+        overflow:auto;
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+        grid-auto-rows:minmax(300px,1fr);gap:18px;padding:20px 24px;
+      }
+      .court-card{background:#0e2035;border:2px solid #1d3855;
+      border-radius:18px;padding:22px;display:flex;flex-direction:column;min-height:300px;
+    }.court-card.is-active{
+      border-color:#f6a723;
+      box-shadow:0 0 0 1px rgba(246,167,35,.16),0 18px 50px rgba(0,0,0,.2);
+    }
+    .court-card.is-available{
+      border-color:#22b573;
+    }
+    .court-card__top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .court-card__name{
+      margin:0;color:#fff;font-size:1.65rem;
+    }.court-card__badge{
+      padding:7px 11px;
+      border-radius:999px;
+      background:#17432f;
+      color:#70e7a8;
+      font-weight:800;
+      font-size:.72rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .is-active .court-card__badge{
+      background:#503815;color:#ffd27b;
+    }
+    .court-card__main{
+      padding:26px 0 20px;
+    }
+    .court-card__label{color:#92a9c1;font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+  }.court-card__booking{
+    font-size:1.45rem;font-weight:800;color:#fff;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}.court-card__countdown{font-size:2.8rem;font-weight:900;color:#ffc45b;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums}.court-card__available{font-size:2.5rem;font-weight:900;color:#55dc98;margin-top:12px}.court-card__period{color:#b6c6d8;margin-top:5px}.court-card__upcoming{margin-top:auto;border-top:1px solid #213a55;padding-top:15px}.court-card__upcoming-title{color:#7892ad;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}.court-card__next{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:10px;color:#dce8f4;padding:5px 0}.court-card__next span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.court-card__type{color:#7f9ab5;font-size:.72rem;text-transform:uppercase}.court-card__empty{color:#7892ad}.court-display__loading{grid-column:1/-1;display:grid;place-items:center;font-size:1.2rem;color:#91a9c0}.court-display__footer{display:flex;justify-content:space-between;padding:9px 28px;background:#091827;color:#7892ad;font-size:.78rem}.court-display__live-dot{font-size:.55rem;color:#30d985;margin-right:5px}@media(max-width:900px){.court-display__header{grid-template-columns:1fr auto}.court-display__summary{order:3;grid-column:1/-1}.court-display__clock{display:none}.court-display__grid{grid-template-columns:1fr;grid-auto-rows:auto}.court-card{min-height:330px}}@media(min-width:1600px){.court-display__grid{grid-template-columns:repeat(3,1fr)}.court-card__name{font-size:2rem}.court-card__countdown{font-size:3.4rem}}
   </style>
 @endsection
 

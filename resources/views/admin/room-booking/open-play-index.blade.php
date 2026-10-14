@@ -48,7 +48,7 @@
                     <span class="badge badge-warning">{{ __('Not Included') }}</span>
                   @endif
                 </td>
-                <td>{{ $slot->starts_at->format('M d, Y h:i A') }}<br>{{ __('to') }} {{ $slot->ends_at->format('M d, Y h:i A') }}</td>
+                <td>{{ $slot->starts_at->format('M d @ h:i A') }}<br>{{ __('to') }} {{ $slot->ends_at->format(' h:i A') }}</td>
                 <td>{{ symbolPrice($slot->price_per_player) }}</td>
                 <td>{{ $slot->registrations_count }}</td>
                 <td>

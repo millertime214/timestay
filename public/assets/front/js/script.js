@@ -898,6 +898,47 @@ $('#roomCheckoutForm').on('submit', function (event) {
     });
 });
 
+$(document).on('submit', '.court-availability__checkout-form', function (event) {
+    event.preventDefault();
+
+    const form = this;
+    const button = form.querySelector('button[type="submit"]');
+    const buttonLabel = button ? button.querySelector('span') : null;
+    const originalText = buttonLabel ? buttonLabel.textContent : '';
+
+    if (button) {
+        button.disabled = true;
+        if (buttonLabel) {
+            buttonLabel.textContent = 'Opening checkout...';
+        }
+    }
+
+    $.ajax({
+        url: form.action,
+        method: form.method,
+        data: new FormData(form),
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function (response) {
+            window.location.href = response.redirect_url;
+        },
+        error: function (xhr) {
+            const response = xhr.responseJSON;
+            const message = response && response.message ? response.message :
+                (typeof response === 'string' ? response : 'This time slot is no longer available.');
+            toastr['error'](message);
+
+            if (button) {
+                button.disabled = false;
+                if (buttonLabel) {
+                    buttonLabel.textContent = originalText;
+                }
+            }
+        }
+    });
+});
+
 $(document).ready(function () {
     $('#vendorContactForm').on('submit', function (e) {
 

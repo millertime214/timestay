@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ asset('assets/admin/css/fontawesome-iconpicker.min.css') }}">
 
 {{--  icon picker css --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/fonts.min.css') }}">
+<link rel="stylesheet" href="{{ rtrim(url('/'), '/') }}/assets/admin/css/fonts.min.css">
 
 {{-- bootstrap css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap.min.css') }}">

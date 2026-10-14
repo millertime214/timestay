@@ -123,6 +123,11 @@
                         class="selectgroup-input"@if (is_array($permissions) && in_array('Open Play', $permissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Open Play') }}</span>
                     </label>
+                    <label class="selectgroup-item">
+                      <input type="checkbox" name="features[]" value="Pickleball Match Maker"
+                        class="selectgroup-input"@if (is_array($permissions) && in_array('Pickleball Match Maker', $permissions)) checked @endif>
+                      <span class="selectgroup-button">{{ __('Pickleball Match Maker') }}</span>
+                    </label>
                   </div>
                   <p id="err_features" class="mb-0 text-danger em"></p>
                 </div>

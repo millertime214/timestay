@@ -36,11 +36,27 @@ class CourtBlockedSlot extends Model
         return $this->hasMany(Booking::class, 'open_play_slot_id');
     }
 
+    public function rosterEntries()
+    {
+        return $this->hasMany(OpenPlayRosterEntry::class);
+    }
+
+    public function matches()
+    {
+        return $this->hasMany(OpenPlayMatch::class);
+    }
+
     public function registeredPlayerCount(): int
     {
-        return (int) $this->registrations()
+        $bookedPlayers = (int) $this->registrations()
             ->where('payment_status', '!=', 2)
             ->sum('adult');
+        $manualPlayers = (int) $this->rosterEntries()
+            ->whereNull('booking_id')
+            ->where('active', true)
+            ->count();
+
+        return $bookedPlayers + $manualPlayers;
     }
 
     public function remainingPlayerCount(): int

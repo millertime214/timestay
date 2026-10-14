@@ -63,9 +63,9 @@
               <li><i class="fas fa-check-circle"></i><span>{{ $limitLabel($plan->number_of_images_per_hotel, 'Image per Site', 'Images per Site') }}</span></li>
               <li><i class="fas fa-check-circle"></i><span>{{ $limitLabel($plan->number_of_images_per_room, 'Image per Court', 'Images per Court') }}</span></li>
               <li><i class="fas fa-check-circle"></i><span>{{ $limitLabel($plan->number_of_bookings, 'Booking', 'Bookings') }}</span></li>
-              @foreach (['Add Booking From Dashboard', 'Edit Booking From Dashboard', 'Support Tickets', 'Live Court Display', 'Open Play'] as $feature)
+              @foreach (['Add Booking From Dashboard' => 'Add Booking From Dashboard', 'Edit Booking From Dashboard' => 'Edit Booking From Dashboard', 'Support Tickets' => 'Support Tickets', 'Live Court Display' => 'Live Court Display', 'Open Play' => 'Open Play', 'Pickleball Match Maker' => 'Automated Match Maker'] as $feature => $label)
                 @php $included = in_array($feature, $permissions); @endphp
-                <li class="{{ $included ? '' : 'is-disabled' }}"><i class="fas fa-{{ $included ? 'check-circle' : 'times-circle' }}"></i><span>{{ __($feature) }}</span></li>
+                <li class="{{ $included ? '' : 'is-disabled' }}"><i class="fas fa-{{ $included ? 'check-circle' : 'times-circle' }}"></i><span>{{ __($label) }}</span></li>
               @endforeach
               @if (!is_null($plan->custom_features))
                 @foreach (array_filter(array_map('trim', explode("\n", $plan->custom_features))) as $feature)<li><i class="fas fa-check-circle"></i><span>{{ $feature }}</span></li>@endforeach

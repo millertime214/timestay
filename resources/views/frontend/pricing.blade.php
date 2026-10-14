@@ -318,9 +318,9 @@
                         </div>
                         <div class="card_subtitle plan-price-box mt-20">
                           <span class="price-label">{{ (float) $package->price > 0 ? __('Starting at') : __('Plan price') }}</span>
-                          <h4 class="mb-0">{{ $package->price == 0 ? __('Free') : symbolPrice($package->price) }}
+                          <h3 class="mb-0">{{ $package->price == 0 ? __('Free') : symbolPrice(number_format($package->price, 2)) }}
                             @if ((float) $package->price > 0) / {{ __('Month') }} @endif
-                          </h4>
+                          </h3>
                           @if ((float) $package->price > 0)
                             <small>{{ __('Choose from the available payment terms during purchase.') }}</small>
                           @else

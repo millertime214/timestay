@@ -14,4 +14,5 @@
   </div>
 
   @include('shared.open-play.roster')
+  @include('vendors.room-booking.partials.open-play-matchmaker')
 @endsection

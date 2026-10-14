@@ -6,6 +6,8 @@
   $playerCount = $slot->registrations->sum(function ($registration) {
       return (int) $registration->payment_status !== 2 ? max((int) $registration->adult, 0) : 0;
   });
+  $manualPlayers = $slot->rosterEntries->whereNull('booking_id')->where('active', true)->values();
+  $totalPlayerCount = $playerCount + $manualPlayers->count();
 @endphp
 
 <div class="row mb-4">
@@ -36,7 +38,7 @@
           </div>
           <div class="col-md-6 mb-3">
             <strong>{{ __('Registrations / Players / Capacity') }}</strong>
-            <div>{{ $slot->registrations->count() }} / {{ $playerCount }} / {{ $slot->max_players }}</div>
+            <div>{{ $slot->registrations->count() }} / {{ $totalPlayerCount }} / {{ $slot->max_players }}</div>
           </div>
           @if ($slot->reason)
             <div class="col-12">
@@ -65,7 +67,7 @@
           </tr>
         </thead>
         <tbody>
-          @forelse ($slot->registrations as $registration)
+          @foreach ($slot->registrations as $registration)
             <tr>
               <td>#{{ $registration->order_number }}</td>
               <td>
@@ -77,8 +79,9 @@
                 @forelse ($registration->open_play_players ?: [] as $player)
                   <div class="mb-1">
                     <strong>{{ $player['name'] ?? __('Player') }}</strong>
+                    @include('shared.open-play.gender-badge', ['gender' => $player['gender'] ?? null])
                     <span class="text-muted">
-                      &mdash; {{ $player['gender'] ?? '--' }} / {{ $player['category'] ?? '--' }} / {{ $player['skill_level'] ?? '--' }}{{ isset($player['skill_level']) ? '/10' : '' }}
+                      &mdash; {{ $player['category'] ?? '--' }} / {{ $player['skill_level'] ?? '--' }}{{ isset($player['skill_level']) ? '/10' : '' }}
                     </span>
                   </div>
                 @empty
@@ -95,9 +98,23 @@
                 <span class="badge badge-{{ $statusClass }}">{{ $statusLabel }}</span>
               </td>
             </tr>
-          @empty
+          @endforeach
+          @foreach ($manualPlayers as $player)
+            <tr>
+              <td><span class="badge badge-info">{{ __('Manual') }}</span></td>
+              <td><strong>{{ $player->name }}</strong></td>
+              <td>
+                <strong>{{ $player->name }}</strong>
+                @include('shared.open-play.gender-badge', ['gender' => $player->gender])
+                <span class="text-muted">&mdash; {{ $player->category ?: '--' }} / {{ $player->skill_rating }}/10</span>
+              </td>
+              <td>{{ symbolPrice(0) }}</td>
+              <td><span class="badge badge-secondary">{{ __('Manual Entry') }}</span></td>
+            </tr>
+          @endforeach
+          @if ($slot->registrations->isEmpty() && $manualPlayers->isEmpty())
             <tr><td colspan="5" class="text-center">{{ __('No players have registered for this session yet.') }}</td></tr>
-          @endforelse
+          @endif
         </tbody>
       </table>
     </div>

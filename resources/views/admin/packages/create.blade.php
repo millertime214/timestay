@@ -81,6 +81,10 @@
                  <input type="checkbox" name="features[]" value="Open Play" class="selectgroup-input">
                  <span class="selectgroup-button">{{ __('Open Play') }}</span>
                </label>
+               <label class="selectgroup-item">
+                 <input type="checkbox" name="features[]" value="Pickleball Match Maker" class="selectgroup-input">
+                 <span class="selectgroup-button">{{ __('Pickleball Match Maker') }}</span>
+               </label>
              </div>
              <p id="err_features" class="mb-0 text-danger em"></p>
            </div>

@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -35,6 +36,84 @@ use Purifier;
 
 class RoomBookingController extends Controller
 {
+    public function updatePaymentStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'booking_id' => ['required', 'integer'],
+            'payment_status' => ['required', 'in:1,2'],
+        ]);
+
+        $vendorId = (int) Auth::guard('vendor')->id();
+        $newStatus = (int) $validated['payment_status'];
+        $booking = null;
+        $statusChanged = false;
+
+        DB::transaction(function () use ($validated, $vendorId, $newStatus, &$booking, &$statusChanged) {
+            $booking = Booking::query()
+                ->where('vendor_id', $vendorId)
+                ->lockForUpdate()
+                ->findOrFail($validated['booking_id']);
+
+            // Paid and rejected payments are final here to prevent duplicate credits.
+            if ((int) $booking->payment_status !== 0) {
+                return;
+            }
+
+            $transaction = Transaction::query()
+                ->where('booking_id', $booking->id)
+                ->where('transcation_type', 'room_booking')
+                ->where('vendor_id', $vendorId)
+                ->lockForUpdate()
+                ->first();
+
+            $preBalance = $transaction?->pre_balance;
+            $afterBalance = $transaction?->after_balance;
+
+            if ($newStatus === 1 && (!$transaction || (int) $transaction->payment_status !== 1)) {
+                $vendor = Vendor::query()->lockForUpdate()->findOrFail($vendorId);
+                $preBalance = $vendor->amount;
+                $vendor->amount = (float) $vendor->amount + (float) $booking->grand_total;
+                $vendor->save();
+                $afterBalance = $vendor->amount;
+            }
+
+            $booking->update(['payment_status' => $newStatus]);
+            $statusChanged = true;
+
+            Transaction::updateOrCreate(
+                [
+                    'booking_id' => $booking->id,
+                    'transcation_type' => 'room_booking',
+                    'vendor_id' => $vendorId,
+                ],
+                [
+                    'transcation_id' => $booking->payment_transaction_id ?: (string) round(microtime(true) * 1000),
+                    'user_id' => $booking->user_id,
+                    'payment_status' => $newStatus,
+                    'payment_method' => $booking->payment_method,
+                    'grand_total' => $booking->grand_total,
+                    'commission' => 0,
+                    'gateway_type' => $booking->gateway_type,
+                    'currency_symbol' => $booking->currency_symbol,
+                    'currency_symbol_position' => $booking->currency_symbol_position,
+                    'pre_balance' => $preBalance,
+                    'after_balance' => $afterBalance,
+                ]
+            );
+        });
+
+        if ($statusChanged && $booking && (int) $booking->payment_status === 1 && !$booking->invoice) {
+            $bookingProcess = new BookingController();
+            $invoice = $bookingProcess->generateInvoice($booking);
+            $booking->update(['invoice' => $invoice]);
+            $bookingProcess->prepareMailForCustomer($booking);
+        }
+
+        Session::flash('success', __('Payment status updated successfully') . '!');
+
+        return redirect()->back();
+    }
+
     public function index(Request $request)
     {
         $language = Language::query()->where('code', '=', $request->language)->firstOrFail();
