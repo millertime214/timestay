@@ -320,6 +320,9 @@ class HomeController extends Controller
 
     $data['terms'] = Package::query()->where('status', '1')->exists() ? ['Plans'] : [];
 
+    $data['pricingFeatureSlides'] = \App\Models\PricingFeatureSlide::where('language_id', $language->id)
+      ->where('status', true)->orderBy('serial_number')->orderBy('id')->get();
+
     $data['pageHeading'] = $misc->getPageHeading($language);
 
     return view('frontend.pricing', $data);

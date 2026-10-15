@@ -244,4 +244,18 @@ class PickleballDomainTest extends TestCase
         $this->assertContains('auth:vendor', $rotationDisplayRoute->gatherMiddleware());
         $this->assertContains('auth:vendor', $rotationDataRoute->gatherMiddleware());
     }
+
+    public function test_pricing_feature_slider_schema_and_admin_routes_are_available(): void
+    {
+        $indexRoute = Route::getRoutes()->getByName('admin.pages.pricing_feature_slider');
+        $storeRoute = Route::getRoutes()->getByName('admin.pages.pricing_feature_slider.store');
+
+        $this->assertTrue(Schema::hasColumns('pricing_feature_slides', [
+            'language_id', 'title', 'description', 'image', 'serial_number', 'status',
+        ]));
+        $this->assertNotNull($indexRoute);
+        $this->assertNotNull($storeRoute);
+        $this->assertContains('permission:Pages', $indexRoute->gatherMiddleware());
+        $this->assertContains('permission:Pages', $storeRoute->gatherMiddleware());
+    }
 }

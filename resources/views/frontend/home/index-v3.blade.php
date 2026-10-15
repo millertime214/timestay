@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @section('pageHeading')
-  {{ __('Home') }}
+  {{ __('Find Your Nearest Pickleball Courts') }}
 @endsection
 @section('metaKeywords')
   @if (!empty($seoInfo))

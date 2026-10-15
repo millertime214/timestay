@@ -63,7 +63,7 @@
               <li><i class="fas fa-check-circle"></i><span>{{ $limitLabel($plan->number_of_images_per_hotel, 'Image per Site', 'Images per Site') }}</span></li>
               <li><i class="fas fa-check-circle"></i><span>{{ $limitLabel($plan->number_of_images_per_room, 'Image per Court', 'Images per Court') }}</span></li>
               <li><i class="fas fa-check-circle"></i><span>{{ $limitLabel($plan->number_of_bookings, 'Booking', 'Bookings') }}</span></li>
-              @foreach (['Add Booking From Dashboard' => 'Add Booking From Dashboard', 'Edit Booking From Dashboard' => 'Edit Booking From Dashboard', 'Support Tickets' => 'Support Tickets', 'Live Court Display' => 'Live Court Display', 'Open Play' => 'Open Play', 'Pickleball Match Maker' => 'Automated Match Maker'] as $feature => $label)
+              @foreach (['Add Booking From Dashboard' => 'Add Booking From Dashboard', 'Edit Booking From Dashboard' => 'Edit Booking From Dashboard', 'Support Tickets' => 'Support Tickets', 'Live Court Display' => 'Live Court Display', 'Open Play' => 'Open Play', 'Pickleball Match Maker' => 'Automated Match Maker', 'Rotation Player Display' => 'Rotation Player Display', 'Tournament Display' => 'Tournament Display'] as $feature => $label)
                 @php $included = in_array($feature, $permissions); @endphp
                 <li class="{{ $included ? '' : 'is-disabled' }}"><i class="fas fa-{{ $included ? 'check-circle' : 'times-circle' }}"></i><span>{{ __($label) }}</span></li>
               @endforeach

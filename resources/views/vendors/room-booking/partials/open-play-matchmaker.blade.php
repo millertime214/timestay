@@ -64,7 +64,7 @@
               <i class="fas fa-sitemap mr-1"></i>{{ $matches->isEmpty() ? __('Generate Tournament Bracket') : __('Regenerate Tournament Bracket') }}
             </button>
           </form>
-          @if ($matches->isNotEmpty())
+          @if ($matches->isNotEmpty() && $canUseTournamentDisplay)
             <a class="btn btn-dark mt-2 mt-md-0" target="_blank" rel="noopener" href="{{ route('vendor.court_schedule.open_play.tournament_display', $slot->id) }}">
               <i class="fas fa-tv mr-1"></i>{{ __('Open Tournament Monitor') }}
             </a>
@@ -94,7 +94,7 @@
           </div>
         </div>
       </form>
-        @if ($matches->isNotEmpty())
+        @if ($matches->isNotEmpty() && $canUseRotationDisplay)
           <a class="btn btn-dark mb-4" target="_blank" rel="noopener" href="{{ route('vendor.court_schedule.open_play.rotation_display', $slot->id) }}">
             <i class="fas fa-tv mr-1"></i>{{ __('Open Play Rotation Monitor') }}
           </a>

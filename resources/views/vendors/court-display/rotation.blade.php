@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/' . $websiteInfo->favicon) }}">
   <title>{{ $slot->title ?: __('Open Play Rotation') }}</title>
   <style>
     :root{color-scheme:dark;--bg:#07111e;--panel:#102238;--panel2:#162c45;--line:#294762;--text:#f4f8fc;--muted:#91a8bd;--green:#42df96;--blue:#54a8ff;--gold:#ffc85a;--red:#ff7b82}*{box-sizing:border-box;
@@ -16,11 +17,12 @@
   }
     .header{
       align-items:center;border-bottom:1px solid var(--line);
-      display:flex;
+      display:grid;
       gap:28px;
-      justify-content:space-between;
+      grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
       padding:20px 28px;
     }
+    .monitor-logo{align-items:center;display:flex;justify-content:center;min-width:130px}.monitor-logo img{display:block;max-height:72px;max-width:210px;object-fit:contain;width:auto}.monitor-logo__fallback{color:var(--text);font-size:1.25rem;font-weight:900;letter-spacing:.08em;text-align:center;text-transform:uppercase}
     .live{
       color:var(--green);
       font-size:.78rem;
@@ -174,9 +176,7 @@ display:grid;font-weight:900;height:28px;place-items:center;width:28px;
 .winner{
   color:var(--green);
 }
-.updated
-font-size:.75rem;margin-top:5px;
-}
+.updated{font-size:.75rem;margin-top:5px}
 @media(max-width:1100px)
 {
   .stats{grid-template-columns:repeat(3,1fr);
@@ -189,7 +189,7 @@ font-size:.75rem;margin-top:5px;
 }
 }
 @media(max-width:700px){
-  .header{align-items:flex-start;flex-direction:column;padding:18px}
+  .header{align-items:start;grid-template-columns:1fr;padding:18px}.monitor-logo{grid-row:1;justify-self:center}.monitor-logo img{max-height:58px;max-width:180px}.header>div:first-child{grid-row:2}.meta{grid-row:3}
   .meta{text-align:left;
   }
   .stats{
@@ -215,6 +215,14 @@ font-size:.75rem;margin-top:5px;
       <h1 id="title">{{ $slot->title ?: __('Open Play Rotation') }}</h1>
       <div id="session"></div>
     </div>
+    <a class="monitor-logo" href="{{ route('index') }}" target="_blank" aria-label="{{ __('Home') }}">
+      @if (!empty($websiteInfo->logo))
+        <img src="{{ asset('assets/img/' . $websiteInfo->logo) }}" alt="{{ $websiteInfo->website_title ?? __('Site logo') }}">
+      @else
+        <span class="monitor-logo__fallback">{{ $websiteInfo->website_title ?? config('app.name') }}</span>
+      @endif
+    </a>
+    
       <div class="meta">
         <div class="clock" id="clock">
 

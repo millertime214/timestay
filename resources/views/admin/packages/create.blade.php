@@ -85,6 +85,14 @@
                  <input type="checkbox" name="features[]" value="Pickleball Match Maker" class="selectgroup-input">
                  <span class="selectgroup-button">{{ __('Pickleball Match Maker') }}</span>
                </label>
+               <label class="selectgroup-item">
+                 <input type="checkbox" name="features[]" value="Rotation Player Display" class="selectgroup-input">
+                 <span class="selectgroup-button">{{ __('Rotation Player Display') }}</span>
+               </label>
+               <label class="selectgroup-item">
+                 <input type="checkbox" name="features[]" value="Tournament Display" class="selectgroup-input">
+                 <span class="selectgroup-button">{{ __('Tournament Display') }}</span>
+               </label>
              </div>
              <p id="err_features" class="mb-0 text-danger em"></p>
            </div>

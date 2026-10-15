@@ -742,6 +742,12 @@ Route::prefix('/admin')->middleware('auth:admin', 'Demo', 'adminLang')->group(fu
 
   //website pages all-route
   Route::prefix('pages')->middleware('permission:Pages')->group(function () {
+    Route::prefix('/pricing-feature-slider')->group(function () {
+      Route::get('', 'Admin\PricingFeatureSliderController@index')->name('admin.pages.pricing_feature_slider');
+      Route::post('/store', 'Admin\PricingFeatureSliderController@store')->name('admin.pages.pricing_feature_slider.store');
+      Route::post('/update', 'Admin\PricingFeatureSliderController@update')->name('admin.pages.pricing_feature_slider.update');
+      Route::post('/{id}/delete', 'Admin\PricingFeatureSliderController@destroy')->name('admin.pages.pricing_feature_slider.delete');
+    });
     // home-page route
     Route::prefix('/home-page')->group(function () {
 

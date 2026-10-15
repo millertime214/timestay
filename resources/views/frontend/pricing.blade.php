@@ -236,6 +236,60 @@
       color: #667085;
       text-align: center;
     }
+    .pricing-feature-showcase{background:#fff;padding:0 0 110px;}
+    .pricing-feature-showcase .showcase-heading{
+      max-width:720px;margin:0 auto 35px;text-align:center;
+    }
+    .pricing-gallery-wrapper{
+      height:520px;margin:0 auto 85px;max-width:1050px;position:relative;
+    }
+    .pricing-feature-main{
+      border-radius:18px;height:100%;overflow:hidden;box-shadow:0 18px 46px rgba(16,24,40,.16);
+    }
+    .pricing-feature-main .swiper-slide{
+      position:relative;
+  }
+  .pricing-feature-main img{
+    display:block;height:100%;object-fit:cover;width:100%;
+  }
+  .pricing-feature-caption{
+    background:linear-gradient(transparent,rgba(5,15,28,.88));
+    bottom:0;
+    color:#fff;
+    left:0;
+    padding:70px 32px 28px;
+    position:absolute;
+    width:100%;
+    z-index:2;
+  }
+  .pricing-feature-caption h3{
+    color: #e1ff01;
+    font-size: 37px;
+    margin-bottom: 35px;
+  }
+    .pricing-feature-caption p{color:rgba(255,255,255,.82);
+    margin:0;max-width:700px;
+  }
+  .pricing-feature-main .slider-btn {
+    align-items:center;
+    background:var(--color-primary,#2f6fed);
+    border-radius:50%;color:#fff;
+    display:flex;font-size:24px;
+    height:44px;
+    justify-content:center;
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px;
+    z-index:4;
+    }
+    .pricing-feature-prev{
+      left:24px;
+    }
+    .pricing-feature-next{
+      right:24px;
+    }.pricing-feature-thumbs{bottom:-48px;left:50%;padding:0 10px;position:absolute;transform:translateX(-50%);width:min(720px,100%);z-index:5}.pricing-feature-thumb{border:3px solid #fff;border-radius:10px;cursor:pointer;height:96px;overflow:hidden;box-shadow:0 7px 18px rgba(16,24,40,.18)}.pricing-feature-thumb img{height:100%;object-fit:cover;width:100%}.pricing-feature-thumbs .swiper-slide-thumb-active .pricing-feature-thumb{border-color:var(--color-primary,#2f6fed)}
+    @media(max-width:767px){.pricing-feature-showcase{padding-bottom:75px}.pricing-gallery-wrapper{height:360px;margin-bottom:70px}.pricing-feature-caption{padding:55px 18px 18px}.pricing-feature-caption h3{font-size:20px}.pricing-feature-thumb{height:72px}.pricing-feature-main .slider-btn{height:38px;width:38px}.pricing-feature-prev{left:12px}.pricing-feature-next{right:12px}}
   </style>
 @endsection
 
@@ -502,6 +556,9 @@
                                 class=" @if (is_array($permissions) && in_array('Open Play', $permissions)) fal fa-check @else fal fa-times not-active @endif"></i>
                               {{ __('Open Play') }}</span>
                           </li>
+                          <li><span><i class="@if (is_array($permissions) && in_array('Pickleball Match Maker', $permissions)) fal fa-check @else fal fa-times not-active @endif"></i>{{ __('Pickleball Match Maker') }}</span></li>
+                          <li><span><i class="@if (is_array($permissions) && in_array('Rotation Player Display', $permissions)) fal fa-check @else fal fa-times not-active @endif"></i>{{ __('Rotation Player Display') }}</span></li>
+                          <li><span><i class="@if (is_array($permissions) && in_array('Tournament Display', $permissions)) fal fa-check @else fal fa-times not-active @endif"></i>{{ __('Tournament Display') }}</span></li>
 
 
                           @if (!is_null($package->custom_features))
@@ -548,4 +605,39 @@
       </div>
     </div>
   </section>
+
+  @if ($pricingFeatureSlides->isNotEmpty())
+    <section class="pricing-feature-showcase">
+      <div class="container">
+        <div class="showcase-heading" data-aos="fade-up"><span class="pricing-kicker">{{ __('Platform Features') }}</span><h2>{{ __('See what your package can unlock') }}</h2><p>{{ __('Explore the tools available to help venues manage courts, players, and bookings.') }}</p></div>
+        <div class="pricing-gallery-wrapper" data-aos="fade-up">
+          <div class="swiper pricing-feature-main">
+            <div class="swiper-wrapper">
+              @foreach ($pricingFeatureSlides as $slide)
+                <div class="swiper-slide"><img src="{{ asset('assets/img/pricing-features/'.$slide->image) }}" alt="{{ $slide->title }}" loading="lazy"><div class="pricing-feature-caption"><h3>{{ $slide->title }}</h3>@if($slide->description)<p>{{ $slide->description }}</p>@endif</div></div>
+              @endforeach
+            </div>
+            <div class="pricing-feature-prev slider-btn"><i class="fal fa-angle-left"></i></div>
+            <div class="pricing-feature-next slider-btn"><i class="fal fa-angle-right"></i></div>
+          </div>
+          <div class="swiper pricing-feature-thumbs">
+            <div class="swiper-wrapper">
+              @foreach ($pricingFeatureSlides as $slide)
+                <div class="swiper-slide"><div class="pricing-feature-thumb"><img src="{{ asset('assets/img/pricing-features/'.$slide->image) }}" alt="{{ $slide->title }}"></div></div>
+              @endforeach
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  @endif
+@endsection
+
+@section('script')
+  @if ($pricingFeatureSlides->isNotEmpty())
+    <script>
+      const pricingFeatureThumbs=new Swiper('.pricing-feature-thumbs',{spaceBetween:10,slidesPerView:2,freeMode:true,watchSlidesProgress:true,breakpoints:{575:{slidesPerView:3},768:{slidesPerView:4}}});
+      new Swiper('.pricing-feature-main',{spaceBetween:16,speed:1000,rewind:true,autoplay:{delay:3500,disableOnInteraction:false,pauseOnMouseEnter:true},navigation:{nextEl:'.pricing-feature-next',prevEl:'.pricing-feature-prev'},thumbs:{swiper:pricingFeatureThumbs}});
+    </script>
+  @endif
 @endsection

@@ -937,6 +937,7 @@
                     'admin.pages.home_page.additional_section.create',
                     'admin.pages.home_page.additional_section.edit',
                     'admin.pages.contact_page',
+                    'admin.pages.pricing_feature_slider',
                 ])) active @endif">
             <a data-toggle="collapse" href="#pages">
               <i class="la flaticon-file"></i>
@@ -1085,6 +1086,11 @@
                       </li>
                     </ul>
                   </div>
+                </li>
+                <li class="{{ request()->routeIs('admin.pages.pricing_feature_slider') ? 'active' : '' }}">
+                  <a href="{{ route('admin.pages.pricing_feature_slider', ['language' => $defaultLang->code]) }}">
+                    <span class="sub-item">{{ __('Pricing Feature Slider') }}</span>
+                  </a>
                 </li>
                 {{-- About page --}}
                 <li class="submenu">

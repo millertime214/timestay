@@ -3,15 +3,21 @@
 @section('content')
   <div class="court-display" id="court-display" data-endpoint="{{ route('vendor.court_display.data') }}">
     <header class="court-display__header">
-      <div>
+      <div class="d-flex">
+        <div>
         <div class="court-display__eyebrow">{{ __('Live Operations') }}</div>
         <h1>{{ __('Court Display') }}</h1>
+        </div>
+        <div class="court-display__logo" aria-label="{{ __('Site logo') }}">
+        @if (!empty($site->logo))<img src="{{ asset('assets/img/hotel/logo/' . $site->logo) }}" alt="{{ optional($site->hotel_contents->first())->title ?: __('Site logo') }}">@else<span>{{ optional(optional($site)->hotel_contents?->first())->title ?: ($websiteInfo->website_title ?? config('app.name')) }}</span>@endif
+      </div>
       </div>
       <div class="court-display__summary">
         <div><strong id="active-count">0</strong><span>{{ __('Active') }}</span></div>
         <div><strong id="available-count">0</strong><span>{{ __('Available') }}</span></div>
         <div><strong id="upcoming-count">0</strong><span>{{ __('Upcoming') }}</span></div>
       </div>
+      
       <div class="court-display__clock w-50" style="min-width:200px;">
         <strong id="display-time">--:--:--</strong>
         <span id="display-date">---</span>
@@ -48,13 +54,14 @@
       }
       .court-display__header{
         display:grid;
-        grid-template-columns:minmax(230px,1fr) auto auto auto;
+        grid-template-columns:minmax(230px,1fr) auto auto auto auto;
         gap:28px;
         align-items:center;
         padding:22px 30px;
         background:#0b1b2e;
         border-bottom:1px solid #20354e;
       }
+      .court-display__logo{align-items:center;display:flex;justify-content:center;min-width:120px}.court-display__logo img{display:block;max-height:64px;max-width:185px;object-fit:contain}.court-display__logo span{color:#fff;font-size:1rem;font-weight:900;letter-spacing:.07em;text-align:center;text-transform:uppercase}
       .court-display__eyebrow{
         color:#5dc4ff;
         font-size:.78rem;
@@ -161,7 +168,7 @@
     .court-card__label{color:#92a9c1;font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
   }.court-card__booking{
     font-size:1.45rem;font-weight:800;color:#fff;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}.court-card__countdown{font-size:2.8rem;font-weight:900;color:#ffc45b;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums}.court-card__available{font-size:2.5rem;font-weight:900;color:#55dc98;margin-top:12px}.court-card__period{color:#b6c6d8;margin-top:5px}.court-card__upcoming{margin-top:auto;border-top:1px solid #213a55;padding-top:15px}.court-card__upcoming-title{color:#7892ad;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}.court-card__next{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:10px;color:#dce8f4;padding:5px 0}.court-card__next span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.court-card__type{color:#7f9ab5;font-size:.72rem;text-transform:uppercase}.court-card__empty{color:#7892ad}.court-display__loading{grid-column:1/-1;display:grid;place-items:center;font-size:1.2rem;color:#91a9c0}.court-display__footer{display:flex;justify-content:space-between;padding:9px 28px;background:#091827;color:#7892ad;font-size:.78rem}.court-display__live-dot{font-size:.55rem;color:#30d985;margin-right:5px}@media(max-width:900px){.court-display__header{grid-template-columns:1fr auto}.court-display__summary{order:3;grid-column:1/-1}.court-display__clock{display:none}.court-display__grid{grid-template-columns:1fr;grid-auto-rows:auto}.court-card{min-height:330px}}@media(min-width:1600px){.court-display__grid{grid-template-columns:repeat(3,1fr)}.court-card__name{font-size:2rem}.court-card__countdown{font-size:3.4rem}}
+}.court-card__countdown{font-size:2.8rem;font-weight:900;color:#ffc45b;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums}.court-card__available{font-size:2.5rem;font-weight:900;color:#55dc98;margin-top:12px}.court-card__period{color:#b6c6d8;margin-top:5px}.court-card__upcoming{margin-top:auto;border-top:1px solid #213a55;padding-top:15px}.court-card__upcoming-title{color:#7892ad;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}.court-card__next{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:10px;color:#dce8f4;padding:5px 0}.court-card__next span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.court-card__type{color:#7f9ab5;font-size:.72rem;text-transform:uppercase}.court-card__empty{color:#7892ad}.court-display__loading{grid-column:1/-1;display:grid;place-items:center;font-size:1.2rem;color:#91a9c0}.court-display__footer{display:flex;justify-content:space-between;padding:9px 28px;background:#091827;color:#7892ad;font-size:.78rem}.court-display__live-dot{font-size:.55rem;color:#30d985;margin-right:5px}@media(max-width:1100px){.court-display__header{grid-template-columns:1fr auto}.court-display__logo{grid-column:1/-1;grid-row:1}.court-display__header>div:first-child{grid-row:2}.court-display__summary{grid-column:1/-1;grid-row:3}.court-display__clock{display:none}.court-display__actions{grid-column:2;grid-row:2}.court-display__grid{grid-template-columns:1fr;grid-auto-rows:auto}.court-card{min-height:330px}}@media(min-width:1600px){.court-display__grid{grid-template-columns:repeat(3,1fr)}.court-card__name{font-size:2rem}.court-card__countdown{font-size:3.4rem}}
   </style>
 @endsection
 

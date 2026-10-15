@@ -7,6 +7,7 @@ use App\Http\Helpers\VendorPermissionHelper;
 use App\Models\Booking;
 use App\Models\BasicSettings\Basic;
 use App\Models\CourtBlockedSlot;
+use App\Models\Hotel;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +18,14 @@ class CourtDisplayController extends Controller
 
     public function index()
     {
-        $this->authorizeFeature();
+        $vendorId = $this->authorizeFeature();
+        $site = Hotel::with('hotel_contents')
+            ->where('vendor_id', $vendorId)
+            ->whereHas('room', fn ($query) => $query->where('status', 1))
+            ->orderBy('id')
+            ->first();
 
-        return view('vendors.court-display.index');
+        return view('vendors.court-display.index', compact('site'));
     }
 
     public function data()

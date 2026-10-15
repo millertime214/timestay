@@ -67,6 +67,8 @@ class CourtScheduleController extends Controller
             (int) Auth::guard('vendor')->id(),
             'Pickleball Match Maker'
         );
+        $canUseRotationDisplay = VendorPermissionHelper::hasPackageFeature((int) Auth::guard('vendor')->id(), 'Rotation Player Display');
+        $canUseTournamentDisplay = VendorPermissionHelper::hasPackageFeature((int) Auth::guard('vendor')->id(), 'Tournament Display');
         if ($canUseMatchmaker) {
             app(OpenPlayMatchmaker::class)->syncRoster($slot);
         }
@@ -81,7 +83,7 @@ class CourtScheduleController extends Controller
             ? $slot->matches()->with('players')->where('bracket_number', '<', $latestBracket)->orderByDesc('bracket_number')->orderByDesc('round_number')->get()
             : collect();
 
-        return view('vendors.room-booking.open-play-details', compact('slot', 'language', 'canUseMatchmaker', 'matches', 'previousTournamentMatches', 'latestBracket'));
+        return view('vendors.room-booking.open-play-details', compact('slot', 'language', 'canUseMatchmaker', 'canUseRotationDisplay', 'canUseTournamentDisplay', 'matches', 'previousTournamentMatches', 'latestBracket'));
     }
 
     public function generateOpenPlayRound(Request $request, int $id)
@@ -197,13 +199,16 @@ class CourtScheduleController extends Controller
 
     public function tournamentDisplay(int $id)
     {
-        $slot = $this->tournamentSlot($id);
+        $this->authorizePackageFeature('Tournament Display');
+        $slot = $this->tournamentSlot($id)->loadMissing('court.hotel.hotel_contents');
+        $site = optional($slot->court)->hotel;
 
-        return view('vendors.court-display.tournament', compact('slot'));
+        return view('vendors.court-display.tournament', compact('slot', 'site'));
     }
 
     public function tournamentData(int $id)
     {
+        $this->authorizePackageFeature('Tournament Display');
         $slot = $this->tournamentSlot($id);
         $bracketNumber = (int) $slot->matches()->max('bracket_number');
         $matches = $slot->matches()->where('bracket_number', $bracketNumber)->with('players')->orderBy('round_number')->orderBy('bracket_position')->get();
@@ -237,6 +242,7 @@ class CourtScheduleController extends Controller
 
     public function rotationDisplay(int $id)
     {
+        $this->authorizePackageFeature('Rotation Player Display');
         $slot = $this->rotationSlot($id);
 
         return view('vendors.court-display.rotation', compact('slot'));
@@ -244,6 +250,7 @@ class CourtScheduleController extends Controller
 
     public function rotationData(int $id)
     {
+        $this->authorizePackageFeature('Rotation Player Display');
         $slot = $this->rotationSlot($id);
         app(OpenPlayMatchmaker::class)->syncRoster($slot);
         $timezone = optional(Basic::first())->timezone ?: config('app.timezone', 'UTC');
@@ -483,5 +490,14 @@ class CourtScheduleController extends Controller
             ->where('slot_type', 'open_play')
             ->where('play_format', 'rotation')
             ->findOrFail($id);
+    }
+
+    private function authorizePackageFeature(string $feature): void
+    {
+        abort_unless(
+            VendorPermissionHelper::hasPackageFeature((int) Auth::guard('vendor')->id(), $feature),
+            403,
+            __('Your current package does not include :feature.', ['feature' => $feature])
+        );
     }
 }
