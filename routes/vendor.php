@@ -200,6 +200,10 @@ Route::prefix('vendor')->middleware('auth:vendor', 'Demo', 'Deactive', 'email.ve
   Route::post('/court-schedule/open-play/{id}/players', 'Vendor\CourtScheduleController@addOpenPlayPlayer')->name('vendor.court_schedule.open_play.players.store');
   Route::post('/court-schedule/open-play/{id}/rounds', 'Vendor\CourtScheduleController@generateOpenPlayRound')->name('vendor.court_schedule.open_play.rounds.generate');
   Route::post('/court-schedule/open-play/matches/{id}/complete', 'Vendor\CourtScheduleController@completeOpenPlayMatch')->name('vendor.court_schedule.open_play.matches.complete');
+  Route::get('/court-schedule/open-play/{id}/tournament-display', 'Vendor\CourtScheduleController@tournamentDisplay')->name('vendor.court_schedule.open_play.tournament_display');
+  Route::get('/court-schedule/open-play/{id}/tournament-data', 'Vendor\CourtScheduleController@tournamentData')->name('vendor.court_schedule.open_play.tournament_data');
+  Route::get('/court-schedule/open-play/{id}/rotation-display', 'Vendor\CourtScheduleController@rotationDisplay')->name('vendor.court_schedule.open_play.rotation_display');
+  Route::get('/court-schedule/open-play/{id}/rotation-data', 'Vendor\CourtScheduleController@rotationData')->name('vendor.court_schedule.open_play.rotation_data');
   Route::post('/court-schedule/blocks', 'Vendor\CourtScheduleController@store')->name('vendor.court_schedule.store');
   Route::post('/court-schedule/open-play', 'Vendor\CourtScheduleController@storeOpenPlay')->name('vendor.court_schedule.open_play.store');
   Route::delete('/court-schedule/blocks/{id}', 'Vendor\CourtScheduleController@destroy')->name('vendor.court_schedule.destroy');

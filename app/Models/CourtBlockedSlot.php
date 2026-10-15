@@ -11,7 +11,7 @@ class CourtBlockedSlot extends Model
 
     protected $fillable = [
         'vendor_id', 'room_id', 'starts_at', 'ends_at', 'reason', 'slot_type', 'title', 'category', 'price_per_player',
-        'max_players', 'poster',
+        'max_players', 'poster', 'play_format',
     ];
 
     protected $casts = [

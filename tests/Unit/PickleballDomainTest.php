@@ -211,6 +211,10 @@ class PickleballDomainTest extends TestCase
         $generateRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.rounds.generate');
         $completeRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.matches.complete');
         $addPlayerRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.players.store');
+        $tournamentDisplayRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.tournament_display');
+        $tournamentDataRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.tournament_data');
+        $rotationDisplayRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.rotation_display');
+        $rotationDataRoute = Route::getRoutes()->getByName('vendor.court_schedule.open_play.rotation_data');
 
         $this->assertTrue(Schema::hasColumns('open_play_roster_entries', [
             'court_blocked_slot_id', 'booking_id', 'player_index', 'skill_rating',
@@ -219,15 +223,25 @@ class PickleballDomainTest extends TestCase
         $this->assertTrue(Schema::hasColumns('open_play_matches', [
             'court_blocked_slot_id', 'vendor_id', 'round_number', 'court_number',
             'skill_group', 'status', 'team_one_score', 'team_two_score', 'winner_team', 'completed_at',
+            'bracket_number', 'bracket_position', 'next_match_id',
         ]));
+        $this->assertTrue(Schema::hasColumn('court_blocked_slots', 'play_format'));
         $this->assertTrue(Schema::hasColumns('open_play_match_players', [
             'open_play_match_id', 'open_play_roster_entry_id', 'team',
         ]));
         $this->assertNotNull($generateRoute);
         $this->assertNotNull($completeRoute);
         $this->assertNotNull($addPlayerRoute);
+        $this->assertNotNull($tournamentDisplayRoute);
+        $this->assertNotNull($tournamentDataRoute);
+        $this->assertNotNull($rotationDisplayRoute);
+        $this->assertNotNull($rotationDataRoute);
         $this->assertContains('auth:vendor', $generateRoute->gatherMiddleware());
         $this->assertContains('auth:vendor', $completeRoute->gatherMiddleware());
         $this->assertContains('auth:vendor', $addPlayerRoute->gatherMiddleware());
+        $this->assertContains('auth:vendor', $tournamentDisplayRoute->gatherMiddleware());
+        $this->assertContains('auth:vendor', $tournamentDataRoute->gatherMiddleware());
+        $this->assertContains('auth:vendor', $rotationDisplayRoute->gatherMiddleware());
+        $this->assertContains('auth:vendor', $rotationDataRoute->gatherMiddleware());
     }
 }

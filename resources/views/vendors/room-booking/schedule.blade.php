@@ -127,6 +127,15 @@
               @enderror
             </div>
             <div class="form-group">
+              <label>{{ __('Play Format') }} *</label>
+              <select name="play_format" class="form-control" required>
+                <option value="rotation" @selected(old('play_format', 'rotation') === 'rotation')>{{ __('Match Making Play Rotation') }}</option>
+                <option value="single_elimination" @selected(old('play_format') === 'single_elimination')>{{ __('Single Elimination Tournament') }}</option>
+              </select>
+              <small class="form-text text-muted">{{ __('Tournament mode forms doubles teams and advances each match winner to the final.') }}</small>
+              @error('play_format')<p class="text-danger mt-2">{{ $message }}</p>@enderror
+            </div>
+            <div class="form-group">
               <label>{{ __('Poster or Banner') }}</label>
               <input type="file" name="poster" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
               <small class="form-text text-muted">{{ __('Optional. JPG, JPEG, PNG, or WEBP up to 5 MB.') }}</small>
@@ -217,6 +226,7 @@
                         <br>
                       @endif
                       <strong>{{ $slot->title ?: __('Open Play') }}</strong>@if ($slot->category)<br><span class="badge badge-info">{{ $slot->category }}</span>@endif
+                      <br><span class="badge badge-secondary">{{ $slot->play_format === 'single_elimination' ? __('Single Elimination') : __('Play Rotation') }}</span>
                     </td>
                     <td>{{ optional($slot->court->room_content->where('language_id', optional($language)->id)->first())->title ?: __('Court') . ' #' . $slot->room_id }}</td>
                     <td>{{ $slot->starts_at->format('M d, Y h:i A') }}<br>{{ __('to') }} {{ $slot->ends_at->format('M d, Y h:i A') }}

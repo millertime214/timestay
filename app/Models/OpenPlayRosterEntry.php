@@ -29,4 +29,10 @@ class OpenPlayRosterEntry extends Model
     {
         return $this->belongsTo(Booking::class);
     }
+
+    public function matches()
+    {
+        return $this->belongsToMany(OpenPlayMatch::class, 'open_play_match_players')
+            ->withPivot('team')->withTimestamps();
+    }
 }

@@ -2,7 +2,7 @@
   <div class="card-header d-flex align-items-center justify-content-between">
     <div>
       <div class="card-title mb-1">{{ __('Pickleball Match Maker & Play Rotation') }}</div>
-      <small class="text-muted">{{ __('Balances teams, prioritizes waiting players, separates skill queues, and reduces repeated partners.') }}</small>
+      <small class="text-muted">{{ $slot->play_format === 'single_elimination' ? __('Creates a doubles bracket and advances winners through the final.') : __('Balances teams, prioritizes waiting players, separates skill queues, and reduces repeated partners.') }}</small>
     </div>
   </div>
   <div class="card-body">
@@ -54,6 +54,24 @@
         </form>
       </div>
 
+      @if ($slot->play_format === 'single_elimination')
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+          <form method="POST" action="{{ route('vendor.court_schedule.open_play.rounds.generate', $slot->id) }}">
+            @csrf
+            <input type="hidden" name="language" value="{{ optional($language)->code }}">
+            <input type="hidden" name="court_count" value="1">
+            <button class="btn btn-primary" type="submit" @disabled($slot->rosterEntries->count() < 4 || ($matches->contains('status', 'scheduled') && $matches->whereNotNull('team_one_score')->isNotEmpty()))>
+              <i class="fas fa-sitemap mr-1"></i>{{ $matches->isEmpty() ? __('Generate Tournament Bracket') : __('Regenerate Tournament Bracket') }}
+            </button>
+          </form>
+          @if ($matches->isNotEmpty())
+            <a class="btn btn-dark mt-2 mt-md-0" target="_blank" rel="noopener" href="{{ route('vendor.court_schedule.open_play.tournament_display', $slot->id) }}">
+              <i class="fas fa-tv mr-1"></i>{{ __('Open Tournament Monitor') }}
+            </a>
+          @endif
+        </div>
+      @else
+      <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
       <form method="POST" action="{{ route('vendor.court_schedule.open_play.rounds.generate', $slot->id) }}" class="mb-4">
         @csrf
         <input type="hidden" name="language" value="{{ optional($language)->code }}">
@@ -76,6 +94,13 @@
           </div>
         </div>
       </form>
+        @if ($matches->isNotEmpty())
+          <a class="btn btn-dark mb-4" target="_blank" rel="noopener" href="{{ route('vendor.court_schedule.open_play.rotation_display', $slot->id) }}">
+            <i class="fas fa-tv mr-1"></i>{{ __('Open Play Rotation Monitor') }}
+          </a>
+        @endif
+      </div>
+      @endif
 
       <div class="row mb-4">
         <div class="col-md-4"><div class="border rounded p-3"><strong>{{ $slot->rosterEntries->count() }}</strong><br><small>{{ __('Active Players') }}</small></div></div>
@@ -95,11 +120,11 @@
         </table>
       </div>
 
-      <h5 id="generated-rounds">{{ __('Generated Rounds') }}</h5>
+      <h5 id="generated-rounds">{{ $slot->play_format === 'single_elimination' ? __('Tournament Bracket') : __('Generated Rounds') }}</h5>
       @forelse ($matches->groupBy('round_number') as $roundNumber => $roundMatches)
         <div class="border rounded p-3 mb-3">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <strong>{{ __('Round') }} {{ $roundNumber }}</strong>
+            <strong>{{ $slot->play_format === 'single_elimination' && $roundNumber === $matches->max('round_number') ? __('Final') : __('Round') . ' ' . $roundNumber }}</strong>
             <span class="badge badge-{{ $roundMatches->contains('status', 'scheduled') ? 'primary' : 'success' }}">
               {{ $roundMatches->contains('status', 'scheduled') ? __('In Progress') : __('Completed') }}
             </span>
@@ -131,7 +156,7 @@
                     @elseif (!is_null($match->team_one_score) && !is_null($match->team_two_score))
                       <div class="alert alert-light border mt-3 mb-0 text-center"><strong>{{ __('Final Score') }}: {{ $match->team_one_score }} - {{ $match->team_two_score }}</strong></div>
                     @else
-                      <div class="alert alert-light border mt-3 mb-0 text-center"><strong>{{ __('Completed without score') }}</strong></div>
+                      <div class="alert alert-light border mt-3 mb-0 text-center"><strong>{{ $match->winner_team ? __('Advanced by bye') : __('No teams assigned') }}</strong></div>
                     @endif
                   </div>
                 </div>
@@ -142,6 +167,7 @@
       @empty
         <div class="alert alert-info">{{ __('No rounds have been generated yet.') }}</div>
       @endforelse
+
     @endif
   </div>
 </div>

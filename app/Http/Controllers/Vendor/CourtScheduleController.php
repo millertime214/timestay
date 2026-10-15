@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\VendorPermissionHelper;
 use App\Models\Booking;
+use App\Models\BasicSettings\Basic;
 use App\Models\CourtBlockedSlot;
 use App\Models\Language;
 use App\Models\OpenPlayMatch;
@@ -70,9 +71,17 @@ class CourtScheduleController extends Controller
             app(OpenPlayMatchmaker::class)->syncRoster($slot);
         }
         $slot->load(['rosterEntries' => fn ($query) => $query->where('active', true)->orderByDesc('wait_rounds')->orderBy('queue_position')]);
-        $matches = $slot->matches()->with('players')->orderByDesc('round_number')->orderBy('court_number')->get();
+        $latestBracket = (int) $slot->matches()->max('bracket_number');
+        $matchQuery = $slot->matches()->with('players');
+        if ($slot->play_format === 'single_elimination') {
+            $matchQuery->where('bracket_number', $latestBracket);
+        }
+        $matches = $matchQuery->orderByDesc('round_number')->orderBy('court_number')->get();
+        $previousTournamentMatches = $slot->play_format === 'single_elimination' && $latestBracket > 1
+            ? $slot->matches()->with('players')->where('bracket_number', '<', $latestBracket)->orderByDesc('bracket_number')->orderByDesc('round_number')->get()
+            : collect();
 
-        return view('vendors.room-booking.open-play-details', compact('slot', 'language', 'canUseMatchmaker', 'matches'));
+        return view('vendors.room-booking.open-play-details', compact('slot', 'language', 'canUseMatchmaker', 'matches', 'previousTournamentMatches', 'latestBracket'));
     }
 
     public function generateOpenPlayRound(Request $request, int $id)
@@ -86,14 +95,22 @@ class CourtScheduleController extends Controller
         $slot = CourtBlockedSlot::where('vendor_id', Auth::guard('vendor')->id())
             ->where('slot_type', 'open_play')->findOrFail($id);
 
-        app(OpenPlayMatchmaker::class)->generate(
-            $slot,
-            (int) $data['court_count'],
-            (bool) ($data['skill_separated'] ?? false)
-        );
+        $matchmaker = app(OpenPlayMatchmaker::class);
+        if ($slot->play_format === 'single_elimination') {
+            $matchmaker->generateTournament($slot);
+        } else {
+            $matchmaker->generate($slot, (int) $data['court_count'], (bool) ($data['skill_separated'] ?? false));
+        }
 
-        Session::flash('success', __('The next balanced Open Play round was generated.'));
-        return redirect()->route('vendor.court_schedule.open_play.show', ['id' => $slot->id, 'language' => $request->input('language')]);
+        $message = $slot->play_format === 'single_elimination'
+            ? __('A new tournament bracket was generated. Previous tournament results were retained.')
+            : __('The next balanced Open Play round was generated.');
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()->json(['message' => $message]);
+        }
+        Session::flash('success', $message);
+        return redirect()->route('vendor.court_schedule.open_play.show', ['id' => $slot->id, 'language' => $request->input('language')])
+            ->withFragment('generated-rounds');
     }
 
     public function addOpenPlayPlayer(Request $request, int $id)
@@ -147,21 +164,153 @@ class CourtScheduleController extends Controller
         ], [
             'team_two_score.different' => __('Open Play matches cannot be saved with a tied score.'),
         ]);
-        $match = OpenPlayMatch::where('vendor_id', Auth::guard('vendor')->id())->findOrFail($id);
-        abort_if($match->status === 'completed', 409, __('This match result has already been recorded.'));
-        $match->update([
-            'status' => 'completed',
-            'team_one_score' => $data['team_one_score'],
-            'team_two_score' => $data['team_two_score'],
-            'winner_team' => $data['team_one_score'] > $data['team_two_score'] ? 1 : 2,
-            'completed_at' => now(),
-        ]);
+        $match = DB::transaction(function () use ($id, $data) {
+            $match = OpenPlayMatch::where('vendor_id', Auth::guard('vendor')->id())->lockForUpdate()->findOrFail($id);
+            abort_if($match->status === 'completed', 409, __('This match result has already been recorded.'));
+            abort_unless($match->players()->wherePivot('team', 1)->exists() && $match->players()->wherePivot('team', 2)->exists(), 409, __('Both teams must be known before recording a result.'));
+            $match->update([
+                'status' => 'completed',
+                'team_one_score' => $data['team_one_score'],
+                'team_two_score' => $data['team_two_score'],
+                'winner_team' => $data['team_one_score'] > $data['team_two_score'] ? 1 : 2,
+                'completed_at' => now(),
+            ]);
+            $match->load(['players', 'nextMatch']);
+            if ($match->slot->play_format === 'single_elimination') {
+                $matchmaker = app(OpenPlayMatchmaker::class);
+                $matchmaker->advanceTournamentWinner($match);
+                $matchmaker->advanceAutomaticByes($match->slot);
+            }
 
+            return $match;
+        });
+
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()->json(['message' => __('Match result saved successfully.')]);
+        }
         Session::flash('success', __('Match result saved successfully.'));
         return redirect()->route('vendor.court_schedule.open_play.show', [
             'id' => $match->court_blocked_slot_id,
             'language' => $request->input('language'),
         ])->withFragment('generated-rounds');
+    }
+
+    public function tournamentDisplay(int $id)
+    {
+        $slot = $this->tournamentSlot($id);
+
+        return view('vendors.court-display.tournament', compact('slot'));
+    }
+
+    public function tournamentData(int $id)
+    {
+        $slot = $this->tournamentSlot($id);
+        $bracketNumber = (int) $slot->matches()->max('bracket_number');
+        $matches = $slot->matches()->where('bracket_number', $bracketNumber)->with('players')->orderBy('round_number')->orderBy('bracket_position')->get();
+        $roundCount = (int) $matches->max('round_number');
+
+        return response()->json([
+            'title' => $slot->title ?: __('Open Play Tournament'),
+            'bracket_number' => $bracketNumber,
+            'status' => optional($matches->first(fn ($match) => $match->round_number === $roundCount && $match->status === 'completed' && $match->winner_team))->status ? 'completed' : 'live',
+            'rounds' => $matches->groupBy('round_number')->map(function ($roundMatches, $round) use ($roundCount) {
+                return [
+                    'number' => (int) $round,
+                    'label' => $round == $roundCount ? __('Final') : ($round == $roundCount - 1 ? __('Semifinal') : __('Round') . ' ' . $round),
+                    'matches' => $roundMatches->map(function ($match) {
+                        $team = fn ($number) => $match->players->where('pivot.team', $number)->pluck('name')->values()->all();
+                        return [
+                            'id' => $match->id,
+                            'position' => $match->bracket_position,
+                            'status' => $match->status,
+                            'team_one' => $team(1),
+                            'team_two' => $team(2),
+                            'team_one_score' => $match->team_one_score,
+                            'team_two_score' => $match->team_two_score,
+                            'winner_team' => $match->winner_team,
+                        ];
+                    })->values(),
+                ];
+            })->values(),
+        ]);
+    }
+
+    public function rotationDisplay(int $id)
+    {
+        $slot = $this->rotationSlot($id);
+
+        return view('vendors.court-display.rotation', compact('slot'));
+    }
+
+    public function rotationData(int $id)
+    {
+        $slot = $this->rotationSlot($id);
+        app(OpenPlayMatchmaker::class)->syncRoster($slot);
+        $timezone = optional(Basic::first())->timezone ?: config('app.timezone', 'UTC');
+        $now = Carbon::now($timezone);
+        $players = $slot->rosterEntries()->where('active', true)
+            ->withCount(['matches as completed_games_count' => fn ($query) => $query->where('open_play_matches.status', 'completed')])
+            ->orderByDesc('wait_rounds')->orderBy('matches_played')->orderBy('queue_position')->get();
+        $scheduledMatches = $slot->matches()->where('status', 'scheduled')->with('players')
+            ->orderBy('round_number')->orderBy('court_number')->get();
+        $currentRound = (int) ($scheduledMatches->max('round_number') ?: $slot->matches()->max('round_number'));
+        $currentMatches = $scheduledMatches->where('round_number', $currentRound)->values();
+        $onCourtIds = $currentMatches->flatMap(fn ($match) => $match->players->pluck('id'))->unique();
+        $waiting = $players->reject(fn ($player) => $onCourtIds->contains($player->id))->values();
+        $nextCapacity = max($currentMatches->count(), 1) * 4;
+        $playerData = fn ($player) => [
+            'id' => $player->id,
+            'name' => $player->name,
+            'category' => $player->category ?: __('Unrated'),
+            'rating' => $player->skill_rating,
+            'games_completed' => (int) ($player->completed_games_count ?? 0),
+            'games_assigned' => (int) $player->matches_played,
+            'wait_rounds' => (int) $player->wait_rounds,
+        ];
+        $recentResults = $slot->matches()->where('status', 'completed')->whereNotNull('winner_team')
+            ->with('players')->orderByDesc('completed_at')->take(4)->get();
+
+        return response()->json([
+            'title' => $slot->title ?: __('Open Play Rotation'),
+            'court' => optional(optional($slot->court)->room_content->first())->title ?: __('Court') . ' #' . $slot->room_id,
+            'server_time' => $now->format('Y-m-d\TH:i:s'),
+            'starts_at' => Carbon::parse($slot->getRawOriginal('starts_at'), $timezone)->format('M d, h:i A'),
+            'ends_at' => Carbon::parse($slot->getRawOriginal('ends_at'), $timezone)->format('M d, h:i A'),
+            'session_status' => $now->lt(Carbon::parse($slot->getRawOriginal('starts_at'), $timezone)) ? 'upcoming' : ($now->gte(Carbon::parse($slot->getRawOriginal('ends_at'), $timezone)) ? 'ended' : 'live'),
+            'current_round' => $currentRound,
+            'active_players' => $players->count(),
+            'players_on_court' => $onCourtIds->count(),
+            'waiting_count' => $waiting->count(),
+            'completed_matches' => $slot->matches()->where('status', 'completed')->whereNotNull('winner_team')->count(),
+            'average_games' => $players->count() ? round($players->avg('completed_games_count'), 1) : 0,
+            'current_matches' => $currentMatches->map(function ($match) use ($players, $playerData) {
+                $serializeTeam = fn ($team) => $match->players->where('pivot.team', $team)->map(function ($player) use ($players, $playerData) {
+                    return $playerData($players->firstWhere('id', $player->id) ?: $player);
+                })->values();
+                return [
+                    'id' => $match->id,
+                    'complete_url' => route('vendor.court_schedule.open_play.matches.complete', $match->id),
+                    'court_number' => $match->court_number,
+                    'skill_group' => $match->skill_group,
+                    'team_one' => $serializeTeam(1),
+                    'team_two' => $serializeTeam(2),
+                ];
+            }),
+            'next_up' => $waiting->take($nextCapacity)->map($playerData)->values(),
+            'waiting' => $waiting->slice($nextCapacity)->map($playerData)->values(),
+            'recent_results' => $recentResults->map(function ($match) {
+                $names = fn ($team) => $match->players->where('pivot.team', $team)->pluck('name')->values();
+                return [
+                    'round' => $match->round_number,
+                    'court_number' => $match->court_number,
+                    'team_one' => $names(1),
+                    'team_two' => $names(2),
+                    'team_one_score' => $match->team_one_score,
+                    'team_two_score' => $match->team_two_score,
+                    'winner_team' => $match->winner_team,
+                ];
+            }),
+        ]);
     }
 
     public function store(Request $request)
@@ -209,6 +358,7 @@ class CourtScheduleController extends Controller
         $data = array_merge([
             'title' => __('Open Play'),
             'category' => null,
+            'play_format' => 'rotation',
         ], $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'category' => ['required', 'string', 'max:100'],
@@ -217,6 +367,7 @@ class CourtScheduleController extends Controller
             'ends_at' => ['required', 'date', 'after:starts_at'],
             'price_per_player' => ['required', 'numeric', 'min:0.01', 'max:999999.99'],
             'max_players' => ['required', 'integer', 'min:1', 'max:1000'],
+            'play_format' => ['required', 'in:rotation,single_elimination'],
             'poster' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'reason' => ['nullable', 'string', 'max:255'],
         ]));
@@ -261,6 +412,7 @@ class CourtScheduleController extends Controller
             'price_per_player' => $data['price_per_player'],
             'max_players' => $data['max_players'],
             'poster' => $posterName,
+            'play_format' => $data['play_format'],
         ]);
 
         Session::flash('success', __('Open Play hours added successfully.'));
@@ -308,5 +460,28 @@ class CourtScheduleController extends Controller
             403,
             __('Your current package does not include Pickleball Match Maker.')
         );
+    }
+
+    private function tournamentSlot(int $id): CourtBlockedSlot
+    {
+        $this->authorizeOpenPlay();
+        $this->authorizeMatchmaker();
+
+        return CourtBlockedSlot::where('vendor_id', Auth::guard('vendor')->id())
+            ->where('slot_type', 'open_play')
+            ->where('play_format', 'single_elimination')
+            ->findOrFail($id);
+    }
+
+    private function rotationSlot(int $id): CourtBlockedSlot
+    {
+        $this->authorizeOpenPlay();
+        $this->authorizeMatchmaker();
+
+        return CourtBlockedSlot::with('court.room_content')
+            ->where('vendor_id', Auth::guard('vendor')->id())
+            ->where('slot_type', 'open_play')
+            ->where('play_format', 'rotation')
+            ->findOrFail($id);
     }
 }

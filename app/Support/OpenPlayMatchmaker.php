@@ -134,6 +134,118 @@ class OpenPlayMatchmaker
         });
     }
 
+    public function generateTournament(CourtBlockedSlot $slot): Collection
+    {
+        return DB::transaction(function () use ($slot) {
+            $slot = CourtBlockedSlot::query()->lockForUpdate()->findOrFail($slot->id);
+            $players = $this->syncRoster($slot)->sortByDesc('skill_rating')->values();
+
+            $latestBracket = (int) $slot->matches()->max('bracket_number');
+            $currentMatches = $slot->matches()->where('bracket_number', $latestBracket)->get();
+            if ($currentMatches->contains('status', 'scheduled')) {
+                $hasRecordedResults = $currentMatches->contains(fn ($match) => !is_null($match->team_one_score) || !is_null($match->team_two_score));
+                if ($hasRecordedResults) {
+                    throw ValidationException::withMessages([
+                        'round' => __('Complete the current tournament before regenerating its bracket.'),
+                    ]);
+                }
+
+                // An untouched bracket can be rebuilt safely, for example after
+                // late player arrivals or a corrected seed layout.
+                $slot->matches()->where('bracket_number', $latestBracket)->delete();
+            }
+            $bracketNumber = $currentMatches->contains('status', 'scheduled') ? max($latestBracket, 1) : $latestBracket + 1;
+            if ($players->count() < 4 || $players->count() % 2 !== 0) {
+                throw ValidationException::withMessages([
+                    'round' => __('A single-elimination doubles tournament requires an even number of at least four active players.'),
+                ]);
+            }
+
+            $teams = collect();
+            while ($players->isNotEmpty()) {
+                $teams->push(collect([$players->shift(), $players->pop()]));
+            }
+            $teams = $teams->sortByDesc(fn ($team) => $team->sum('skill_rating'))->values();
+            $bracketSize = 1;
+            while ($bracketSize < $teams->count()) {
+                $bracketSize *= 2;
+            }
+            $roundCount = (int) log($bracketSize, 2);
+            $nodes = [];
+
+            for ($round = $roundCount; $round >= 1; $round--) {
+                $matchCount = intdiv($bracketSize, 2 ** $round);
+                for ($position = 1; $position <= $matchCount; $position++) {
+                    $next = $round < $roundCount ? $nodes[$round + 1][(int) ceil($position / 2)] : null;
+                    $nodes[$round][$position] = OpenPlayMatch::create([
+                        'court_blocked_slot_id' => $slot->id,
+                        'bracket_number' => $bracketNumber,
+                        'vendor_id' => $slot->vendor_id,
+                        'round_number' => $round,
+                        'court_number' => $position,
+                        'bracket_position' => $position,
+                        'next_match_id' => $next?->id,
+                        'status' => 'scheduled',
+                    ]);
+                }
+            }
+
+            for ($position = 1; $position <= intdiv($bracketSize, 2); $position++) {
+                $match = $nodes[1][$position];
+                $matchCount = intdiv($bracketSize, 2);
+                $teamOne = $teams->get($position - 1);
+                $teamTwo = $teams->get($matchCount + $position - 1);
+                if ($teamOne) {
+                    $match->players()->attach($teamOne->pluck('id')->mapWithKeys(fn ($id) => [$id => ['team' => 1]])->all());
+                }
+                if ($teamTwo) {
+                    $match->players()->attach($teamTwo->pluck('id')->mapWithKeys(fn ($id) => [$id => ['team' => 2]])->all());
+                }
+            }
+
+            $this->advanceAutomaticByes($slot, $bracketNumber);
+            return $slot->matches()->where('bracket_number', $bracketNumber)->with('players')->orderBy('round_number')->orderBy('bracket_position')->get();
+        });
+    }
+
+    public function advanceTournamentWinner(OpenPlayMatch $match): void
+    {
+        if (!$match->next_match_id || !$match->winner_team) {
+            return;
+        }
+
+        $side = $match->bracket_position % 2 === 1 ? 1 : 2;
+        $winnerIds = $match->players()->wherePivot('team', $match->winner_team)->pluck('open_play_roster_entries.id');
+        $match->nextMatch->players()->attach($winnerIds->mapWithKeys(fn ($id) => [$id => ['team' => $side]])->all());
+    }
+
+    public function advanceAutomaticByes(CourtBlockedSlot $slot, ?int $bracketNumber = null): void
+    {
+        $bracketNumber = $bracketNumber ?: (int) $slot->matches()->max('bracket_number');
+        $matches = $slot->matches()->where('bracket_number', $bracketNumber)->with(['players', 'nextMatch'])->orderBy('round_number')->orderBy('bracket_position')->get();
+        foreach ($matches as $match) {
+            $match->load('players');
+            if ($match->status === 'completed') {
+                continue;
+            }
+            $feeders = $slot->matches()->where('bracket_number', $bracketNumber)->where('next_match_id', $match->id)->get();
+            $ready = $match->round_number === 1 || ($feeders->count() === 2 && $feeders->every(fn ($feeder) => $feeder->status === 'completed'));
+            if (!$ready || $match->players->count() > 2) {
+                continue;
+            }
+
+            $team = $match->players->groupBy('pivot.team')->keys()->first();
+            $match->update([
+                'status' => 'completed',
+                'winner_team' => $team ? (int) $team : null,
+                'completed_at' => now(),
+            ]);
+            $match->load(['players', 'nextMatch']);
+            $this->advanceTournamentWinner($match);
+            $match->nextMatch?->load('players');
+        }
+    }
+
     public static function balanceTeams(Collection $players, array $partnerHistory = [], array $opponentHistory = []): array
     {
         $players = $players->values();
