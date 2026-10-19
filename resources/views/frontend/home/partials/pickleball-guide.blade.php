@@ -66,7 +66,7 @@
 
     <div class="home-pickleball-guide__owner mt-5" data-aos="fade-up">
       <div>
-        <span class="subtitle">{{ __('For Pickleball businesses') }}</span>
+        <span class="subtitle text-yellow">{{ __('For Pickleball businesses') }}</span>
         <h3 class="mt-2 mb-2">{{ __('Own or manage a Pickleball Site?') }}</h3>
         <p class="mb-0">
           {{ __('Create a vendor account to publish your Site and Courts, manage availability, receive booking requests, schedule Open Play, and access eligible rotation, tournament, and live-display tools. Sites must be active and approved before they can accept public bookings.') }}

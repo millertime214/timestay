@@ -84,7 +84,11 @@
         </button>
         </form>
     @else
-        <div class="court-availability__empty">Operating hours are not configured.</div>
+        <div class="court-availability__empty">
+            {{ $availability && $availability['open'] && $availability['close']
+                ? __('No remaining time slots are available for this date.')
+                : __('Operating hours are not configured.') }}
+        </div>
     @endif
     @else
         <div class="court-availability__notice is-{{ str_replace('_required', '', $eligibilityStatus) }}">

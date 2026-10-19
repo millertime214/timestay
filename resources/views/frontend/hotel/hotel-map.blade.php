@@ -122,7 +122,7 @@
                             <a href="{{ route('frontend.hotel.details', ['slug' => $hotel_content->slug, 'id' => $hotel_content->id]) }}"
                               target="_self" title="{{ __('Link') }}">
                               <img class="lazyload rounded-circle"
-                                data-src="{{ asset('assets/img/hotel/logo/' . $hotel_content->logo) }}" alt="Hotel">
+                                data-src="{{ asset('assets/img/hotel/logo/' . $hotel_content->logo) }}" alt="{{ $hotel_content->title }} logo">
                             </a>
                           </figure>
                           @if (Auth::guard('web')->check())
@@ -270,7 +270,7 @@
                             <a href="{{ route('frontend.hotel.details', ['slug' => $hotel_content->slug, 'id' => $hotel_content->id]) }}"
                               target="_self" title="{{ __('Link') }}">
                               <img class="lazyload rounded-circle"
-                                data-src="{{ asset('assets/img/hotel/logo/' . $hotel_content->logo) }}" alt="Hotel">
+                                data-src="{{ asset('assets/img/hotel/logo/' . $hotel_content->logo) }}" alt="{{ $hotel_content->title }} logo">
                             </a>
                           </figure>
                           @if (Auth::guard('web')->check())

@@ -95,6 +95,7 @@ class CourtDailyAvailability
         $settings = Basic::query()->select('timezone', 'time_format')->first();
         $timezone = $settings->timezone ?? config('app.timezone', 'UTC');
         $timeFormat = (int) ($settings->time_format ?? 12);
+        $now = Carbon::now($timezone);
         $date = self::resolveDate($requestedDate, $timezone);
         $dayStart = $date->copy()->startOfDay();
         $dayEnd = $dayStart->copy()->addDay();
@@ -135,7 +136,7 @@ class CourtDailyAvailability
             ->get(['room_id', 'starts_at', 'ends_at'])
             ->groupBy('room_id');
 
-        return $rooms->unique('id')->mapWithKeys(function ($room) use ($bookings, $blockedSlots, $hourlyPrices, $date, $timezone, $timeFormat) {
+        return $rooms->unique('id')->mapWithKeys(function ($room) use ($bookings, $blockedSlots, $hourlyPrices, $date, $timezone, $timeFormat, $now) {
             $intervals = collect($bookings->get($room->id, []))->map(fn ($booking) => [
                 'start' => $booking->getRawOriginal('check_in_date_time'),
                 'end' => $booking->getRawOriginal('check_out_date_time'),
@@ -160,12 +161,14 @@ class CourtDailyAvailability
                     'hours' => (float) $price->hour,
                 ],
             ])->all();
-            $schedule['slots'] = collect($schedule['slots'])->map(function ($slot) use ($roomPrices) {
+            $schedule['slots'] = collect($schedule['slots'])
+                ->reject(fn ($slot) => Carbon::parse($slot['date'].' '.$slot['start_time'], $timezone)->lt($now))
+                ->map(function ($slot) use ($roomPrices) {
                 $price = $roomPrices->get((string) (float) $slot['hours']);
                 $slot['price_id'] = $price?->id;
 
                 return $slot;
-            })->all();
+                })->values()->all();
 
             return [$room->id => [
                 'date' => $date->format('M d, Y'),

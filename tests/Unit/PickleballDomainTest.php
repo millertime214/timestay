@@ -42,6 +42,7 @@ class PickleballDomainTest extends TestCase
         $this->assertStringEndsWith('/courts', route('frontend.rooms'));
         $this->assertStringEndsWith('/site/central-pickleball/7', route('frontend.hotel.details', ['central-pickleball', 7]));
         $this->assertStringEndsWith('/court/championship-court/11', route('frontend.room.details', ['championship-court', 11]));
+        $this->assertStringEndsWith('/court/championship-court/11/availability', route('frontend.room.details.availability', ['championship-court', 11]));
         $this->assertStringEndsWith('/terms-and-conditions', route('terms_and_conditions'));
         $this->assertStringEndsWith('/vendor-site-agreement', route('vendor_site_agreement'));
         $this->assertStringEndsWith('/sitemap.xml', route('sitemap'));

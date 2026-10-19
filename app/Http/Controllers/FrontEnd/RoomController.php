@@ -1332,6 +1332,15 @@ class RoomController extends Controller
         $information['roomContent'] = $roomContent;
         $information['roomImages'] = RoomImage::Where('room_id', $id)->get();
 
+        $availabilityCardData = CourtDailyAvailability::cardData(
+            collect([$roomContent]),
+            request()->input('checkInDates', request()->input('checkInDate'))
+        );
+        $information['dailyAvailability'] = $availabilityCardData['availability'];
+        $information['courtAvailabilityEligibility'] = $availabilityCardData['eligibility'];
+        $venueTimezone = optional(Basic::query()->select('timezone')->first())->timezone ?: config('app.timezone', 'UTC');
+        $information['venueToday'] = Carbon::now($venueTimezone)->format('Y-m-d');
+
         $room_content = RoomContent::where('language_id', $language->id)->where('room_id', $id)->first();
         if (is_null($room_content)) {
             Session::flash('error', 'No Court information found for ' . $language->name . ' language');
@@ -1534,6 +1543,30 @@ class RoomController extends Controller
         } 
 
         return view('frontend.room.room-details', $information);
+    }
+
+    public function availability(Request $request, string $slug, int $id)
+    {
+        $request->validate([
+            'checkInDates' => 'required|date',
+        ]);
+
+        $room = Room::query()
+            ->where('status', 1)
+            ->whereHas('hotel', fn ($query) => $query->where('status', 1))
+            ->findOrFail($id);
+        $availabilityCardData = CourtDailyAvailability::cardData(
+            collect([$room]),
+            $request->input('checkInDates')
+        );
+        $dailyAvailability = $availabilityCardData['availability'];
+        $courtAvailabilityEligibility = $availabilityCardData['eligibility'];
+
+        return view('frontend.room.partials.daily-availability', compact(
+            'room',
+            'dailyAvailability',
+            'courtAvailabilityEligibility'
+        ));
     }
 
     public function getPrice(Request $request, $slug, $id)

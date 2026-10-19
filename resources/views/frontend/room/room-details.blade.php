@@ -23,6 +23,10 @@
   @endif
 @endsection
 
+@section('style')
+  @include('frontend.room.partials.daily-availability-styles')
+@endsection
+
 @section('content')
   <!-- Breadcrumb start -->
   @includeIf('frontend.partials.breadcrumb', [
@@ -810,11 +814,29 @@
             @if ($siteHasRegisteredVendor && $siteIsBookable)
             <div class="widget widget-booking border radius-md mb-40">
               <div class="p-20 border-bottom">
-                <h4 class="title">
-                  {{ __('Book Here') }}
-                </h4>
+                <h4 class="title mb-1">{{ __('Court Availability') }}</h4>
+                <p class="mb-0">{{ __('Choose a date, then select one or more consecutive vacant hours.') }}</p>
               </div>
-              <form id="roomCheckoutForm" class="subscription" action="{{ route('frontend.room.go.checkout') }}"
+              @php
+                $detailAvailability = $dailyAvailability[$roomContent->id] ?? null;
+                $availabilityDate = data_get($detailAvailability, 'slots.0.date', request()->input('checkInDates', $venueToday));
+              @endphp
+              <form class="p-20 border-bottom bg-primary-light" method="GET" data-court-availability-date-form
+                action="{{ route('frontend.room.details', ['slug' => $roomContent->slug, 'id' => $roomContent->id]) }}"
+                data-availability-endpoint="{{ route('frontend.room.details.availability', ['slug' => $roomContent->slug, 'id' => $roomContent->id]) }}">
+                <label class="form-label fw-bold" for="availability-date">{{ __('Availability Date') }}</label>
+                <div class="input-group">
+                  <input class="form-control" id="availability-date" type="date" name="checkInDates"
+                    value="{{ $availabilityDate }}" min="{{ $venueToday }}">
+                  <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="fal fa-calendar-search me-1"></i>{{ __('View Slots') }}
+                  </button>
+                </div>
+              </form>
+              <div class="p-20" data-court-availability-results aria-live="polite">
+                @include('frontend.room.partials.daily-availability', ['room' => $roomContent])
+              </div>
+              <form id="roomCheckoutForm" class="subscription d-none" action="{{ route('frontend.room.go.checkout') }}"
                 method="POST">
                 @csrf
                 <div class="date-form">
@@ -962,6 +984,59 @@
 
 @endsection
 @section('script')
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const dateForm = document.querySelector('[data-court-availability-date-form]');
+      const dateInput = dateForm?.querySelector('[name="checkInDates"]');
+      const results = document.querySelector('[data-court-availability-results]');
+      const submitButton = dateForm?.querySelector('[type="submit"]');
+      let availabilityRequest;
+
+      if (!dateForm || !dateInput || !results) return;
+
+      async function loadAvailability() {
+        if (!dateInput.value) return;
+
+        availabilityRequest?.abort();
+        const requestController = new AbortController();
+        availabilityRequest = requestController;
+        const url = new URL(dateForm.dataset.availabilityEndpoint, window.location.origin);
+        url.searchParams.set('checkInDates', dateInput.value);
+        results.setAttribute('aria-busy', 'true');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>{{ __('Loading') }}';
+
+        try {
+          const response = await fetch(url, {
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            signal: requestController.signal
+          });
+          if (!response.ok) throw new Error('Unable to load Court availability.');
+
+          results.innerHTML = await response.text();
+          const pageUrl = new URL(dateForm.action, window.location.origin);
+          pageUrl.searchParams.set('checkInDates', dateInput.value);
+          window.history.replaceState({}, '', pageUrl);
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            results.innerHTML = '<div class="alert alert-warning mb-0">{{ __('Court availability could not be loaded. Please try again.') }}</div>';
+          }
+        } finally {
+          if (!requestController.signal.aborted) {
+            results.removeAttribute('aria-busy');
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fal fa-calendar-search me-1"></i>{{ __('View Slots') }}';
+          }
+        }
+      }
+
+      dateForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        loadAvailability();
+      });
+      dateInput.addEventListener('change', loadAvailability);
+    });
+  </script>
   <script>
     var room_id = "{{ $roomContent->id }}";
     var latitude = "{{ $roomContent->latitude }}";

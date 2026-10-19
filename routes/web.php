@@ -58,6 +58,7 @@ Route::middleware('change.lang')->group(function () {
 
     Route::get('/open-play/{id}', 'FrontEnd\OpenPlayController@show')->name('frontend.open_play.show');
     Route::post('/open-play/{id}/checkout', 'FrontEnd\OpenPlayController@checkout')->name('frontend.open_play.checkout');
+    Route::get('/{slug}/{id}/availability', 'FrontEnd\RoomController@availability')->name('frontend.room.details.availability');
     Route::get('/{slug}/{id}', 'FrontEnd\RoomController@details')->name('frontend.room.details');
     Route::get('/{slug}/{id}/get-hourly-price', 'FrontEnd\RoomController@getPrice')->name('frontend.room.details.get_hourly_price');
     Route::post('/room-review/{id}/store-review', 'FrontEnd\RoomController@storeReview')->name('frontend.room.room_details.store_review')->middleware('Demo');
