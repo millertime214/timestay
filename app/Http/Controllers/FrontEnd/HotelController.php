@@ -726,7 +726,11 @@ class HotelController extends Controller
         if ($request->filled('location_val')) {
 
             if ($bs->google_map_api_key_status == 1) {
-                $location = $request->location_val;
+
+                $locate = array_map('trim', explode(",", $request->location_val));
+                $last_n = array_slice($locate, -2);
+
+                $location =  $last_n[0];
                 $hotelIds = HotelContent::where('language_id', $language->id)
                     ->where('address', 'like', '%' . $location . '%')
                     ->distinct()

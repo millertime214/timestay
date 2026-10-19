@@ -37,7 +37,7 @@
           </figure>
           <div class="product_details">
             <div class="p-20">
-              <div class="product_author mt-14">
+              <div class="product_author">
                 <a class="d-flex align-items-center gap-1"
                   href="{{ route('frontend.hotel.details', ['slug' => $room->hotelSlug, 'id' => $room->hotelId]) }}"
                   target="_self" title="{{ __('Link') }}">
@@ -51,7 +51,7 @@
                 </a>
               </div>
               <div class="product_title">
-                <h5 class="title lc-1 mb-0">
+                <h5 class="title lc-1 mb-0 mt-1">
                   <a href="{{ route('frontend.room.details', ['slug' => $room->slug, 'id' => $room->id]) }}"
                     target="_self" title="{{ __('Link') }}">{{ $room->title }}</a>
                 </h5>

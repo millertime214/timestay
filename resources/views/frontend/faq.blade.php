@@ -31,6 +31,13 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8" data-aos="fade-up">
+          <div class="text-center mb-5">
+            <span class="subtitle">{{ __('Pickleball booking help') }}</span>
+            <h2 class="title mt-2 mb-3">{{ __('Frequently Asked Questions') }}</h2>
+            <p class="mb-0">
+              {{ __('Find answers about Court rentals, Open Play registration, payments, cancellations, and listing a Site.') }}
+            </p>
+          </div>
           <div class="accordion pb-75" id="faqAccordion">
             @if (count($faqs) == 0)
               <div class="p-3 text-center bg-light radius-md">
@@ -49,7 +56,7 @@
                     class="accordion-collapse collapse {{ $loop->iteration == 1 ? 'show' : '' }}"
                     aria-labelledby="heading_{{ $faq->id }}" data-bs-parent="#faqAccordion">
                     <div class="accordion-body">
-                      <p> {{ $faq->answer }}</p>
+                      <p class="mb-0">{{ $faq->answer }}</p>
                     </div>
                   </div>
                 </div>

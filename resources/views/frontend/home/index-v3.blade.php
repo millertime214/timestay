@@ -27,7 +27,7 @@
       <div class="container">
         <div class="banner-content">
           <h1 class="title color-white mb-20">
-            {{ !empty($sectionContent->hero_section_title) ? $sectionContent->hero_section_title : __('Discover the Freedom of Hourly Hotel Bookings for Relax') }}
+            {{ !empty($sectionContent->hero_section_title) ? $sectionContent->hero_section_title : __('Find and Book Pickleball Courts Near You') }}
           </h1>
           <p class="text color-white">
             {{ !empty($sectionContent->hero_section_subtitle) ? $sectionContent->hero_section_subtitle : '' }}
@@ -111,6 +111,7 @@
     @endforeach
   @endif
 
+  @include('frontend.home.partials.pickleball-guide')
   <!--city-area  start -->
   @if ($secInfo->city_section_status == 1)
     <section class="category-area category-area_v3 pt-100 pb-70">
@@ -438,7 +439,7 @@
           <div class="col-12">
             <div class="section-title title-inline mb-50" data-aos="fade-up">
               <h2 class="title">
-                {{ !empty($sectionContent->benifit_section_title) ? $sectionContent->benifit_section_title : __('Benefit of Hourly Stay') }}
+                {{ !empty($sectionContent->benifit_section_title) ? $sectionContent->benifit_section_title : __('More Ways to Play Pickleball') }}
               </h2>
             </div>
           </div>
@@ -453,17 +454,13 @@
                   <div class="col-xl-3 col-md-6">
                     <div class="card mb-30 radius-md">
                       <div class="card_img">
-                        <a href="#" title="{{ __('Title') }}" target="_self"
-                          class="lazy-container ratio ratio-1-3">
+                        <div class="lazy-container ratio ratio-1-3">
                           <img class="lazyload"
-                            data-src="{{ asset('assets/img/benifits/' . $benifit->background_image) }}" alt="Image">
-                        </a>
+                            data-src="{{ asset('assets/img/benifits/' . $benifit->background_image) }}" alt="{{ $benifit->title }}">
+                        </div>
                       </div>
                       <div class="card_content p-20">
-                        <h4 class="card_title mb-10 color-white">
-                          <a href="#" target="_self" title="{{ $benifit->title }}"
-                            rel="noopener noreferrer">{{ $benifit->title }}</a>
-                        </h4>
+                        <h4 class="card_title mb-10 color-white">{{ $benifit->title }}</h4>
                         <p class="card_text color-light">{{ $benifit->text }}</p>
                       </div>
                     </div>

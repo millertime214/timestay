@@ -3043,7 +3043,8 @@ Lazyload CSS
 .breadcrumb-area {
     position: relative;
     overflow: hidden;
-    padding-block: 90px;
+    padding: 56px;
+    margin-top: 152px;
 }
 
 .breadcrumb-area .active {

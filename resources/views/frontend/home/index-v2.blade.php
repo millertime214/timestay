@@ -120,6 +120,7 @@
     @endforeach
   @endif
 
+  @include('frontend.home.partials.pickleball-guide')
   <!-- city-area start -->
   @if ($secInfo->city_section_status == 1)
     <section class="category-area category-area_v2 pt-100 pb-70">
@@ -194,7 +195,7 @@
           <div class="col-lg-6">
             <div class="content-title fluid-left pb-20">
               <h2 class="title mb-20">
-                {{ $sectionContent ? $sectionContent->featured_section_title : __('Your Ultimate Hourly Hotel Booking Solution') }}
+                {{ $sectionContent ? $sectionContent->featured_section_title : __('Everything You Need to Get on Court') }}
               </h2>
               <p>
                 {{ $sectionContent ? $sectionContent->featured_section_text : '' }}
@@ -256,13 +257,13 @@
             <div class="section-title title-inline mb-50">
               <div>
                 <h2 class="title">
-                  {{ !empty($sectionContent->featured_room_section_title) ? $sectionContent->featured_room_section_title : __('Popular Hotel Room') }}
+                  {{ !empty($sectionContent->featured_room_section_title) ? $sectionContent->featured_room_section_title : __('Popular Pickleball Courts') }}
                 </h2>
               </div>
               @if (count($room_contents_count) > count($room_contents))
                 <a href="{{ route('frontend.rooms') }}" class="btn btn-lg btn-primary rounded-pill"
-                  title="{{ !empty($sectionContent->featured_room_section_button_text) ? $sectionContent->featured_room_section_button_text : __('View All Rooms') }}"
-                  target="_self">{{ !empty($sectionContent->featured_room_section_button_text) ? $sectionContent->featured_room_section_button_text : __('View All Rooms') }}</a>
+                  title="{{ !empty($sectionContent->featured_room_section_button_text) ? $sectionContent->featured_room_section_button_text : __('View All Courts') }}"
+                  target="_self">{{ !empty($sectionContent->featured_room_section_button_text) ? $sectionContent->featured_room_section_button_text : __('View All Courts') }}</a>
               @endif
             </div>
           </div>
@@ -270,7 +271,7 @@
             <div class="row">
               @if (count($room_contents) < 1)
                 <div class="p-3 text-center bg-light radius-md">
-                  <h6 class="mb-0">{{ __('NO FEATURED ROOM FOUND') }}</h6>
+                  <h6 class="mb-0">{{ __('NO FEATURED COURT FOUND') }}</h6>
                 </div>
               @else
                 @foreach ($room_contents as $room)

@@ -211,3 +211,43 @@ if (typeof google !== "undefined" && google.maps) {
     setTimeout(() => initMap && initMap(), 100);
   }
 }
+function updateUrl() {
+    $('#searchForm').submit();
+    $(".request-loader").addClass("show");
+  }
+
+  $('#searchForm').on('submit', function (e) {
+
+    e.preventDefault();
+    var fd = $(this).serialize();
+    $('.search-container').html('');
+    $.ajax({
+      url: searchUrl,
+      method: "get",
+      data: fd,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        $('.request-loader').removeClass('show');
+        $('.search-container').html(response);
+
+        $('#countryDropdown').select2();
+        $('#stateDropdown').select2();
+        $('#cityDropdown').select2();
+
+        if (clusters) {
+          map.removeLayer(clusters);
+          clusters.clearLayers();
+        }
+        map.off();
+        map.remove();
+
+        var featured_content = featured_contents;
+        var room_content = room_contents;
+        mapInitialize(featured_content, room_content);
+      },
+      error: function (xhr) {
+        console.log(xhr);
+      }
+    });
+  });
