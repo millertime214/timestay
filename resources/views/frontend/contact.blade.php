@@ -147,11 +147,5 @@
   </div>
   <!-- Contact-area end -->
 
-  @if (!empty(showAd(3)))
-    <div class="text-center">
-      {!! showAd(3) !!}
-    </div>
-  @endif
-  </div>
   <!--============ End Contact Section =============-->
 @endsection

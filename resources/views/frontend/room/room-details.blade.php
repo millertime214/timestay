@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @section('pageHeading')
-  {{ $roomContent->title }}
+  {{ $roomContent->title }} @ {{ $roomContent->hoteltitle }}
 
 @endsection
 
@@ -19,7 +19,7 @@
 
 @section('ogTitle')
   @if (!empty($roomContent))
-    {{ $roomContent->title }}
+    {{ $roomContent->title }} @ {{ $roomContent->hoteltitle }}
   @endif
 @endsection
 

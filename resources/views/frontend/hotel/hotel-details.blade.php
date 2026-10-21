@@ -34,7 +34,7 @@
   <!-- Page title end-->
 
   <!-- Hotel-details-area start -->
-  <div class="hotel-details-area pt-100 pb-60">
+  <div class="hotel-details-area pt-60 pb-60">
     <div class="container">
       <!-- Hotel Info -->
       <div class="row gx-xl-5 mb-30" data-aos="fade-up">

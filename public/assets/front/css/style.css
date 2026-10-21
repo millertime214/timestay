@@ -1486,7 +1486,7 @@ button.mfp-close {
 }
 .form-control:focus {
   color: var(--text-dark);
-  background-color: transparent;
+  background-color: #fff;
 }
 .form-control.color-white::-moz-placeholder {
   color: var(--text-white) !important;
