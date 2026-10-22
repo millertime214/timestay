@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
+use App\Models\CourtBlockedSlot;
+use App\Models\CustomPage\Page;
 use App\Models\Hotel;
 use App\Models\Journal\Blog;
 use App\Models\Language;
@@ -66,6 +68,29 @@ class SitemapController extends Controller
             );
         }
 
+        $openPlaySlots = CourtBlockedSlot::query()
+            ->join('rooms', 'rooms.id', '=', 'court_blocked_slots.room_id')
+            ->join('hotels', 'hotels.id', '=', 'rooms.hotel_id')
+            ->where('court_blocked_slots.slot_type', 'open_play')
+            ->where('court_blocked_slots.ends_at', '>', now())
+            ->where('rooms.status', 1)
+            ->where('hotels.status', 1)
+            ->where('hotels.verification_status', 'approved')
+            ->select([
+                'court_blocked_slots.id',
+                'court_blocked_slots.updated_at',
+            ])
+            ->get();
+
+        foreach ($openPlaySlots as $slot) {
+            $urls[] = $this->urlEntry(
+                route('frontend.open_play.show', ['id' => $slot->id]),
+                $slot->updated_at,
+                'daily',
+                '0.7'
+            );
+        }
+
         $vendors = Vendor::query()
             ->join('memberships', 'memberships.vendor_id', '=', 'vendors.id')
             ->where('vendors.status', 1)
@@ -108,6 +133,27 @@ class SitemapController extends Controller
             );
         }
 
+        $customPages = Page::query()
+            ->join('page_contents', 'page_contents.page_id', '=', 'pages.id')
+            ->where('page_contents.language_id', $language->id)
+            ->where('pages.status', 1)
+            ->whereNotNull('page_contents.slug')
+            ->select([
+                'pages.updated_at as page_updated_at',
+                'page_contents.slug',
+                'page_contents.updated_at as content_updated_at',
+            ])
+            ->get();
+
+        foreach ($customPages as $page) {
+            $urls[] = $this->urlEntry(
+                route('dynamic_page', ['slug' => $page->slug]),
+                $this->latestDate($page->page_updated_at, $page->content_updated_at),
+                'monthly',
+                '0.5'
+            );
+        }
+
         return response()
             ->view('frontend.sitemap', compact('urls'))
             ->header('Content-Type', 'application/xml; charset=UTF-8');
@@ -133,6 +179,7 @@ class SitemapController extends Controller
             $this->urlEntry(route('faq'), null, 'monthly', '0.5'),
             $this->urlEntry(route('contact'), null, 'monthly', '0.5'),
             $this->urlEntry(route('terms_and_conditions'), null, 'yearly', '0.3'),
+            $this->urlEntry(route('vendor_site_agreement'), null, 'yearly', '0.3'),
         ];
     }
 

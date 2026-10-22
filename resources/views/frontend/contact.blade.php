@@ -36,7 +36,7 @@
             </div>
             <div class="card-text mt-20">
               <span class="mb-15 d-inline-block">{{ __('MOBILE') }}</span>
-              <span class="h6 mb-10"><a href="{{ $info->contact_number }}" target="_self"
+              <span class="h6 mb-10"><a href="tel:{{ $info->contact_number }}" target="_self"
                   title="{{ $info->contact_number }}">{{ $info->contact_number }}</a></span>
             </div>
           </div>

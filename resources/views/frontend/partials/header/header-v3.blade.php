@@ -80,13 +80,13 @@
                 </button>
                 <ul class="dropdown-menu">
                   @if (!Auth::guard('vendor')->check())
-                    <li><a class="dropdown-item" href="{{ route('vendor.login') }}">{{ __('Login') }}</a></li>
-                    <li><a class="dropdown-item" href="{{ route('vendor.signup') }}">{{ __('Signup') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('vendor.login') }}" nofollow title="Vendor - {{ __('Login') }} to check bookings.">{{ __('Login') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('vendor.signup') }}" nofollow title="Vendor - {{ __('Signup') }} and be seen.">{{ __('Signup') }}</a></li>
                   @else
-                    <li><a class="dropdown-item" href="{{ route('vendor.dashboard') }}">{{ __('Dashboard') }}</a>
+                    <li><a class="dropdown-item" href="{{ route('vendor.dashboard') }}" nofollow title="Vendor - {{ __('Dashboard') }}">{{ __('Dashboard') }}</a>
                     </li>
 
-                    <li><a class="dropdown-item" href="{{ route('vendor.logout') }}">{{ __('Logout') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('vendor.logout') }}" nofollow title="Vendor - {{ __('Logout') }}">{{ __('Logout') }}</a></li>
                   @endif
                 </ul>
               </div>

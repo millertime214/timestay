@@ -11,7 +11,7 @@
 @endsection
 
 @section('metaDescription')
-  @if (!empty($room))
+  @if (!empty($hotel))
     {{ $hotel->meta_description }}
   @endif
 @endsection
@@ -37,25 +37,24 @@
   <div class="hotel-details-area pt-60 pb-60">
     <div class="container">
       <!-- Hotel Info -->
-      <div class="row gx-xl-5 mb-30" data-aos="fade-up">
+      <section class="row gx-xl-5 site-hero-panel" data-aos="fade-up" aria-labelledby="site-title">
 
         <div class="col-lg-6">
           <div class="hotel-info mb-30">
             <figure class="hotel_img">
 
-              <img class="lazyload rounded-circle" src="assets/images/placeholder.png"
-                data-src="{{ asset('assets/img/hotel/logo/' . $hotel->logo) }}
-                " alt="{{ __('Site') }}">
+              <img class="lazyload rounded-circle" src="{{ asset('assets/img/hotel/logo/' . $hotel->logo) }}"
+                data-src="{{ asset('assets/img/hotel/logo/' . $hotel->logo) }}" alt="{{ $hotel->title }}">
             </figure>
             <div class="hotel-info_details">
               <span class="hotel_subtitle d-inline-block fw-medium">
                 <a href="{{ route('frontend.hotels', ['category' => $hotel->categorySlug]) }}" target="_self"
                   title="{{ __('Link') }}">{{ $hotel->categoryName }}</a>
               </span>
-              <h3 class="hotel_title mb-10">
+              <h1 class="hotel_title mb-10" id="site-title">
                 {{ $hotel->title }}
                 @include('frontend.hotel.partials.verification-badge', ['site' => $hotel])
-              </h3>
+              </h1>
               <div class="d-flex flex-wrap row-gap-2 column-gap-2">
                 <div class="vendore_author pe-2 border-end">
                   <a href="{{ route('frontend.vendor.details', ['username' => $userName]) }}" target="_self"
@@ -150,12 +149,16 @@
 
           </div>
         </div>
-      </div>
+      </section>
       <!-- Hotel Details -->
        @if (count($rooms) > 0)
-          <div class="product-area similar-product pb-15 mt-25" data-aos="fade-up">
+          <section class="product-area similar-product site-courts-section" data-aos="fade-up" aria-labelledby="site-courts-title">
             <div class="section-title title-inline mb-30">
-              <h3 class="title">{{ __('Courts') }}</h3>
+              <div>
+                
+                <h2 class="title mb-0" id="site-courts-title">{{ __('Courts') }}</h2>
+                <span class="site-section-eyebrow">{{ __('Available at this Site') }}</span>
+              </div>
               @if (count($totalRooms) > count($rooms))
                 <a href="{{ route('frontend.rooms', ['hotelId' => $hotel->id]) }}"
                   class="btn btn-lg btn-primary radius-sm" title="{{ __('View All Courts') }}"
@@ -329,18 +332,21 @@
               <!-- If we need pagination -->
               <div class="swiper-pagination position-static mb-25" id="product-slider-1-pagination"></div>
             </div>
-          </div>
+          </section>
         @endif
 
       <div class="hotel-single-details" data-aos="fade-up">
-        <!-- Product description -->
-        <div class="hotel-desc">
+        <div class="row g-4 align-items-start site-details-grid">
+          <!-- Product description -->
+          <div class="{{ $hotel->amenities != '[]' ? 'col-lg-8' : 'col-12' }} hotel-desc">
+          <div class="site-content-card">
 
           <!-- Hotel gallery -->
           <div class="hotel-gallery mb-20">
-            <h3 class="title mb-20">{{ $hotel->title }} Gallery</h3>
+            <span class="site-section-eyebrow">{{ __('Explore the venue') }}</span>
+            <h2 class="title mb-20">{{ __('Gallery') }} {{ $hotel->title }} </h2>
             <div class="row gallery-popup">
-              <div class="col-lg-10">
+              <div class="col-12">
                 <!-- Start product-slider wrapper -->
                 <div class="product-slider-style2-wrapper">
                   <!-- Start product-slider -->
@@ -381,22 +387,19 @@
             </div>
           </div>
 
-          <div class="tinymce-content">
+          <div class="tinymce-content site-description">
             {!! optional($hotel)->description !!}
           </div>
-        </div>
-          <!-- Rooms -->
-        
+          </div>
+          </div>
 
-
-        
-        @if ($hotel->amenities != '[]')
-          <div class="row">
-            <div class="col-lg-10">
-              <div class="pt-60 pb-60">
-                <div class="product-amenities aos-init aos-animate" data-aos="fade-up">
-                  <h3 class="title mb-20">{{ __('Amenities') }}</h3>
-                  <ul class="amenities-list list-unstyled p-20 radius-md border">
+          @if ($hotel->amenities != '[]')
+            <div class="col-lg-4">
+              <aside class="site-amenities-card">
+                <div class="product-amenities" data-aos="fade-up">
+                  <span class="site-section-eyebrow">{{ __('At a glance') }}</span>
+                  <h2 class="title mb-20">{{ __('Amenities') }}</h2>
+                  <ul class="site-amenities-list list-unstyled p-20 radius-md border mb-0">
                     @php
                       $amenities = json_decode($hotel->amenities);
                     @endphp
@@ -411,16 +414,17 @@
                     @endforeach
                   </ul>
                 </div>
-              </div>
+              </aside>
             </div>
-          </div>
-        @endif
+          @endif
+        </div>
 
         <div class="row">
-          <div class="col-lg-10">
-            <div class="hotel-location pb-90 aos-init aos-animate" data-aos="fade-up">
-              <h3 class="title mb-20">{{ __('Location') }}</h3>
-              <div class="p-20 radius-md border">
+          <div class="col-lg-12">
+            <section class="hotel-location site-location-section" data-aos="fade-up" aria-labelledby="site-location-title">
+              <span class="site-section-eyebrow">{{ __('Find this Site') }}</span>
+              <h2 class="title mb-20" id="site-location-title">{{ __('Location') }}</h2>
+              <div class="site-location-card p-20 radius-md border">
 
                 <p class=" mb-10">
                   <i class="fal fa-map-marker-alt"></i>
@@ -457,18 +461,21 @@
                     <div id="map"></div>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
         </div>
 
         
 
         <!-- Hotel Review -->
-        <div class="hotel-review pt-60" data-aos="fade-up">
+        <section class="hotel-review site-reviews-section" data-aos="fade-up" aria-labelledby="site-reviews-title">
           <div class="section-title title-inline mb-30">
-            <h3 class="title">{{ __('Reviews') }}</h3>
+            <div>
+              <span class="site-section-eyebrow">{{ __('Player feedback') }}</span>
+              <h2 class="title mb-0" id="site-reviews-title">{{ __('Reviews') }}</h2>
+            </div>
           </div>
-          <div class="review-progresses bg-primary-light p-30 radius-md mb-40">
+          <div class="review-progresses site-review-summary bg-primary-light p-30 radius-md mb-40">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-30">
               <div class="d-flex gap-3">
                 <h4 class="mb-0">{{ __('Average Rating') }} </h4>
@@ -523,7 +530,7 @@
             <div class="row">
               @foreach ($reviews as $review)
                 <div class="col-lg-6">
-                  <div class="review-list mb-30 border radius-md">
+                  <div class="review-list site-review-card mb-30 border radius-md">
                     <div class="review-item p-30">
                       <div class="review-header flex-wrap mb-20">
                         <div class="author d-flex align-items-center justify-content-between gap-3">
@@ -577,7 +584,7 @@
               @endif
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   </div>

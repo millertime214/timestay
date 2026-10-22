@@ -181,9 +181,9 @@
           <div class="col-12" data-aos="fade-up">
             <div class="section-title title-inline mb-50">
               <div>
-                <h2 class="title">
+                <h1 class="title">
                   {{ !empty($sectionContent->featured_room_section_title) ? $sectionContent->featured_room_section_title : __('Popular Courts') }}
-                </h2>
+                </h1>
               </div>
               @if (count($room_contents_count) > count($room_contents))
                 <a href="{{ route('frontend.rooms') }}" class="btn btn-lg btn-primary rounded-pill"

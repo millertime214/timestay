@@ -9,7 +9,14 @@
   <meta name="keywords" content="@yield('metaKeywords')">
   <meta name="description" content="@yield('metaDescription')">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <meta property="og:title" content="@yield('ogTitle')">
+  <meta property="og:title" content="Courts @ Dinksite" />
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://dinksite.com" />
+  <meta property="og:image" content="{{ asset('assets/img/og-image.png') }}" />
+  <meta property="og:site_name" content="{{ $websiteInfo->website_title }}" />
+  <meta property="og:description" content="@yield('metaDescription')" />
+  <link rel="canonical" href="https://dinksite.com" />
   {{-- title --}}
   <title>@yield('pageHeading') {{ '| ' . $websiteInfo->website_title }}</title>
   {{-- fav icon --}}

@@ -65,6 +65,7 @@ class PickleballDomainTest extends TestCase
         $this->assertGreaterThan(0, count($xml->url));
         $this->assertStringContainsString(route('frontend.hotels'), $sitemap->getContent());
         $this->assertStringContainsString(route('frontend.rooms'), $sitemap->getContent());
+        $this->assertStringContainsString(route('vendor_site_agreement'), $sitemap->getContent());
 
         $robots = $controller->robots();
         $this->assertSame(200, $robots->getStatusCode());
