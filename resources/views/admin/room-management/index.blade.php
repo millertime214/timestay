@@ -140,6 +140,7 @@
                         </th>
                         <th scope="col">{{ __('Featured Image') }}</th>
                         <th scope="col">{{ __('Title') }}</th>
+                        <th scope="col">{{ __('Site Name') }}</th>
                         <th scope="col">{{ __('Vendor') }}</th>
                         @if (count($charges) > 0)
                           <th scope="col">{{ __('Featured') }}</th>
@@ -175,6 +176,8 @@
                                   ->where('language_id', $language->id)
                                   ->first();
                           }
+
+                          $site_content = $room->hotel ? $room->hotel->hotel_contents->first() : null;
                         @endphp
                         <tr>
                           <td>
@@ -203,6 +206,16 @@
                               <a href="{{ route('frontend.room.details', ['slug' => $room_content->slug, 'id' => $room->id]) }}"
                                 target="_blank">
                                 {{ strlen(@$room_content->title) > 50 ? mb_substr(@$room_content->title, 0, 50, 'utf-8') . '...' : @$room_content->title }}
+                              </a>
+                            @else
+                              --
+                            @endif
+                          </td>
+
+                          <td>
+                            @if (!empty($site_content))
+                              <a href="{{ route('admin.hotel_management.edit_hotel', ['id' => $room->hotel_id]) }}">
+                                {{ $site_content->title }}
                               </a>
                             @else
                               --

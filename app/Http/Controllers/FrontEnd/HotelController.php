@@ -23,7 +23,11 @@ use App\Models\RoomReview;
 use App\Models\Vendor;
 use App\Support\CourtDailyAvailability;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class HotelController extends Controller
 {
@@ -1154,7 +1158,96 @@ class HotelController extends Controller
         );
         $information['dailyAvailability'] = $availabilityCardData['availability'];
         $information['courtAvailabilityEligibility'] = $availabilityCardData['eligibility'];
+        $information['contactFormSettings'] = Basic::select('google_recaptcha_status')->first();
 
         return view('frontend.hotel.hotel-details', $information);
+    }
+
+    public function contact(Request $request, int $id)
+    {
+        $rules = [
+            'name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'email:rfc,dns', 'max:255'],
+            'subject' => ['required', 'string', 'max:150'],
+            'message' => ['required', 'string', 'max:5000'],
+        ];
+
+        $contactFormSettings = Basic::select('google_recaptcha_status')->first();
+        if ($contactFormSettings && $contactFormSettings->google_recaptcha_status == 1) {
+            $rules['g-recaptcha-response'] = ['required', 'captcha'];
+        }
+
+        $validator = Validator::make($request->all(), $rules, [
+            'g-recaptcha-response.required' => __('Please verify that you are not a robot.'),
+            'g-recaptcha-response.captcha' => __('Captcha error! Try again later or contact the Site directly.'),
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->toArray()], 422);
+        }
+
+        $site = Hotel::with('vendor')->publiclyVisible()->findOrFail($id);
+        if ((int) $site->vendor_id === 0) {
+            $recipient = Admin::query()->value('email');
+        } else {
+            $recipient = optional($site->vendor)->status == 1 ? $site->vendor->email : null;
+        }
+
+        abort_unless($recipient, 404);
+
+        $language = (new MiscellaneousController())->getLanguage();
+        $siteTitle = HotelContent::query()
+            ->where('hotel_id', $site->id)
+            ->where('language_id', $language->id)
+            ->value('title') ?: __('Site');
+
+        $mailSettings = Basic::select(
+            'smtp_status',
+            'smtp_host',
+            'smtp_port',
+            'encryption',
+            'smtp_username',
+            'smtp_password',
+            'from_mail',
+            'from_name'
+        )->firstOrFail();
+
+        if ($mailSettings->smtp_status == 1) {
+            Config::set('mail.mailers.smtp', [
+                'transport' => 'smtp',
+                'host' => $mailSettings->smtp_host,
+                'port' => $mailSettings->smtp_port,
+                'encryption' => $mailSettings->encryption,
+                'username' => $mailSettings->smtp_username,
+                'password' => $mailSettings->smtp_password,
+                'timeout' => null,
+                'auth_mode' => null,
+            ]);
+        }
+
+        $validated = $validator->validated();
+        $body = '<h3>' . e(__('New inquiry for :site', ['site' => $siteTitle])) . '</h3>'
+            . '<p><strong>' . e(__('Name')) . ':</strong> ' . e($validated['name']) . '</p>'
+            . '<p><strong>' . e(__('Email')) . ':</strong> ' . e($validated['email']) . '</p>'
+            . '<p><strong>' . e(__('Message')) . ':</strong></p>'
+            . '<p>' . nl2br(e($validated['message'])) . '</p>';
+
+        try {
+            Mail::send([], [], function (Message $message) use ($recipient, $validated, $siteTitle, $body, $mailSettings) {
+                $message->to($recipient)
+                    ->replyTo($validated['email'], $validated['name'])
+                    ->subject('[' . $siteTitle . '] ' . $validated['subject'])
+                    ->from($mailSettings->from_mail, $mailSettings->from_name)
+                    ->html($body, 'text/html');
+            });
+
+            session()->flash('success', __('Message sent successfully'));
+
+            return response()->json(['message' => __('Message sent successfully')]);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return response()->json(['message' => __('Unable to send your message right now. Please try again later.')], 500);
+        }
     }
 }

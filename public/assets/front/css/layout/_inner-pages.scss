@@ -130,6 +130,7 @@
     .site-content-card,
     .site-amenities-card,
     .site-location-card,
+    .site-contact-card,
     .site-review-card {
         background-color: var(--bg-white);
         border: 1px solid var(--border-color);
@@ -191,6 +192,12 @@
         > p i { width: 18px; margin-top: 4px; color: var(--color-primary); text-align: center; }
         .lazy-container { overflow: hidden; }
     }
+    .site-contact-section { margin-bottom: 60px; }
+    .site-contact-card {
+        padding: 30px;
+        .form-label { margin-bottom: 8px; color: var(--text-dark); font-weight: var(--font-medium); }
+        textarea.form-control { min-height: 130px; resize: vertical; }
+    }
     .site-reviews-section { padding-top: 0; }
     .site-review-summary { border: 1px solid rgba(var(--color-primary-rgb), .14); }
     .site-review-card { height: calc(100% - 30px); }
@@ -200,7 +207,7 @@
     }
 
     @media #{$sm} {
-        .site-hero-panel, .site-courts-section, .site-content-card, .site-amenities-card, .site-location-card { padding: 20px; }
+        .site-hero-panel, .site-courts-section, .site-content-card, .site-amenities-card, .site-location-card, .site-contact-card { padding: 20px; }
         .site-hero-panel .hotel-info { align-items: flex-start; }
         .site-hero-panel .hotel-info .hotel_img { width: 82px; height: 82px; }
     }

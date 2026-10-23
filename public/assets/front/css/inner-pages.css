@@ -76,6 +76,7 @@
 .hotel-details-area .site-content-card,
 .hotel-details-area .site-amenities-card,
 .hotel-details-area .site-location-card,
+.hotel-details-area .site-contact-card,
 .hotel-details-area .site-review-card {
     background-color: var(--bg-white);
     border: 1px solid var(--border-color);
@@ -193,6 +194,25 @@
     overflow: hidden;
 }
 
+.hotel-details-area .site-contact-section {
+    margin-bottom: 60px;
+}
+
+.hotel-details-area .site-contact-card {
+    padding: 30px;
+}
+
+.hotel-details-area .site-contact-card .form-label {
+    margin-bottom: 8px;
+    color: var(--text-dark);
+    font-weight: var(--font-medium);
+}
+
+.hotel-details-area .site-contact-card textarea.form-control {
+    min-height: 130px;
+    resize: vertical;
+}
+
 .hotel-details-area .site-reviews-section {
     padding-top: 0;
 }
@@ -216,7 +236,8 @@
     .hotel-details-area .site-courts-section,
     .hotel-details-area .site-content-card,
     .hotel-details-area .site-amenities-card,
-    .hotel-details-area .site-location-card {
+    .hotel-details-area .site-location-card,
+    .hotel-details-area .site-contact-card {
         padding: 20px;
     }
 
@@ -595,6 +616,9 @@
 
 .z-3 {
     z-index: 3 !important;
+}
+.zn-1 {
+    z-index: -1 !important;
 }
 
 :is(.lc-1, .lc-2, .lc-3) {

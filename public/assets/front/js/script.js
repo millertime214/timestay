@@ -940,7 +940,7 @@ $(document).on('submit', '.court-availability__checkout-form', function (event) 
 });
 
 $(document).ready(function () {
-    $('#vendorContactForm').on('submit', function (e) {
+    $('#vendorContactForm, #siteContactForm').on('submit', function (e) {
 
         e.preventDefault(); // Prevent the default form submission
         $(".request-loader").addClass("show");
@@ -959,11 +959,14 @@ $(document).ready(function () {
             },
             error: function (xhr) {
                 $('.request-loader').removeClass('show');
-                var errors = xhr.responseJSON.errors;
+                var response = xhr.responseJSON || {};
+                var errors = response.errors;
                 if (errors) {
                     $.each(errors, function (key, value) {
                         $('#err_' + key).text(value[0]);
                     });
+                } else {
+                    toastr['error'](response.message || 'Unable to send your message right now.');
                 }
             }
         });

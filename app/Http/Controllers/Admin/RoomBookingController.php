@@ -721,7 +721,7 @@ class RoomBookingController extends Controller
             'hour' =>  $hour,
             'adult' =>  $adult,
             'children' => $children,
-            'booking_name' => $request->customer_name,
+            'booking_name' => $request->cutomer_name,
             'booking_email' => $request->customer_email,
             'booking_phone' => $request->customer_phone,
             'booking_address' => null,

@@ -171,6 +171,9 @@ class RoomController extends Controller
             'room_content' => function ($q) use ($language_id) {
                 $q->where('language_id', $language_id);
             },
+            'hotel.hotel_contents' => function ($q) use ($language_id) {
+                $q->where('language_id', $language_id);
+            },
             'vendor'
         ])
             ->when($roomCategories, function ($query) use ($type_roomIds) {

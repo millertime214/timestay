@@ -1,5 +1,5 @@
 <!-- Breadcrumb start -->
-<div class="breadcrumb-area bg-img bg-cover z-1 header-next mt-50"
+<div class="breadcrumb-area bg-img bg-cover zn-1 header-next mt-50"
 @if(isset($roomContent->feature_image))
 data-bg-img="{{ asset('assets/img/room/featureImage/' . $roomContent->feature_image) }}"
 @else

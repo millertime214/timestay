@@ -117,6 +117,9 @@ Route::middleware('change.lang')->group(function () {
     return redirect()->route('frontend.hotel.details', compact('slug', 'id'), 301);
   });
   Route::get('/site/{slug}/{id}', 'FrontEnd\HotelController@details')->name('frontend.hotel.details');
+  Route::post('/site/{id}/contact', 'FrontEnd\HotelController@contact')
+    ->middleware('throttle:5,1')
+    ->name('frontend.hotel.contact');
 
   Route::prefix('/blog')->group(function () {
     Route::get('', 'FrontEnd\BlogController@index')->name('blog');

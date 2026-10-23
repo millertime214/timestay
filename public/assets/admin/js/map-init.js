@@ -203,7 +203,7 @@ function getCurrentLocation() {
 
       // Optionally, you can zoom the map to the current location
       map.setCenter(latlng);
-      map.setZoom(18);
+      map.setZoom(10);
 
     }, function (error) {
       alert("Unable to retrieve your location. Error: " + error.message);

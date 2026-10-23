@@ -25,11 +25,17 @@
             <ul class="footer-links">
               @foreach ($quickLinkInfos as $quickLinkInfo)
                 <li>
-                  <a href="{{ $quickLinkInfo->url }}" target="_self" title="{{ __('Link') }}">{{ $quickLinkInfo->title }}</a>
+                  <a href="{{ $quickLinkInfo->url }}" target="_self" title="{{ $quickLinkInfo->title }}">{{ $quickLinkInfo->title }}</a>
                 </li>
-              @endforeach             
-                <a href="{{ route('terms_and_conditions') }}" target="_self">
+              @endforeach  
+              <li>           
+                <a href="{{ route('terms_and_conditions') }}" target="_self" title="Terms and Conditions">
                   {{ __('Terms and Conditions') }}
+                </a>
+              </li>
+              <li>
+              <a href="/sitemap.xml" target="_self" title="Sitemap">
+                  {{ __('Sitemap') }}
                 </a>
               </li>
             </ul>

@@ -41,6 +41,7 @@ class PickleballDomainTest extends TestCase
         $this->assertStringEndsWith('/sites', route('frontend.hotels'));
         $this->assertStringEndsWith('/courts', route('frontend.rooms'));
         $this->assertStringEndsWith('/site/central-pickleball/7', route('frontend.hotel.details', ['central-pickleball', 7]));
+        $this->assertStringEndsWith('/site/7/contact', route('frontend.hotel.contact', ['id' => 7]));
         $this->assertStringEndsWith('/court/championship-court/11', route('frontend.room.details', ['championship-court', 11]));
         $this->assertStringEndsWith('/court/championship-court/11/availability', route('frontend.room.details.availability', ['championship-court', 11]));
         $this->assertStringEndsWith('/terms-and-conditions', route('terms_and_conditions'));
@@ -71,6 +72,19 @@ class PickleballDomainTest extends TestCase
         $this->assertSame(200, $robots->getStatusCode());
         $this->assertSame('text/plain; charset=UTF-8', $robots->headers->get('Content-Type'));
         $this->assertStringContainsString('Sitemap: ' . route('sitemap'), $robots->getContent());
+    }
+
+    public function test_site_contact_requires_sender_details(): void
+    {
+        $request = \Illuminate\Http\Request::create('/site/1/contact', 'POST');
+        $response = app(\App\Http\Controllers\FrontEnd\HotelController::class)->contact($request, 1);
+
+        $this->assertSame(422, $response->getStatusCode());
+        $errors = $response->getData(true)['errors'];
+        $this->assertArrayHasKey('name', $errors);
+        $this->assertArrayHasKey('email', $errors);
+        $this->assertArrayHasKey('subject', $errors);
+        $this->assertArrayHasKey('message', $errors);
     }
 
     public function test_legacy_translation_keys_render_pickleball_language(): void

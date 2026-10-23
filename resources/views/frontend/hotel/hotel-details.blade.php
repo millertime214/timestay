@@ -34,7 +34,7 @@
   <!-- Page title end-->
 
   <!-- Hotel-details-area start -->
-  <div class="hotel-details-area pt-60 pb-60">
+  <div class="hotel-details-area mtn-50 pb-60 position-relative">
     <div class="container">
       <!-- Hotel Info -->
       <section class="row gx-xl-5 site-hero-panel" data-aos="fade-up" aria-labelledby="site-title">
@@ -153,10 +153,10 @@
       <!-- Hotel Details -->
        @if (count($rooms) > 0)
           <section class="product-area similar-product site-courts-section" data-aos="fade-up" aria-labelledby="site-courts-title">
-            <div class="section-title title-inline mb-30">
+            <div class="section-title title-inline mt-30 mb-30">
               <div>
                 
-                <h2 class="title mb-0" id="site-courts-title">{{ __('Courts') }}</h2>
+                <h3 class="title mb-0" id="site-courts-title">{{ __('Courts') }}</h3>
                 <span class="site-section-eyebrow">{{ __('Available at this Site') }}</span>
               </div>
               @if (count($totalRooms) > count($rooms))
@@ -342,7 +342,7 @@
           <div class="site-content-card">
 
           <!-- Hotel gallery -->
-          <div class="hotel-gallery mb-20">
+          <div class="hotel-gallery mt-30mb-20">
             <span class="site-section-eyebrow">{{ __('Explore the venue') }}</span>
             <h2 class="title mb-20">{{ __('Gallery') }} {{ $hotel->title }} </h2>
             <div class="row gallery-popup">
@@ -420,12 +420,12 @@
         </div>
 
         <div class="row">
-          <div class="col-lg-12">
+         
+            
             <section class="hotel-location site-location-section" data-aos="fade-up" aria-labelledby="site-location-title">
-              <span class="site-section-eyebrow">{{ __('Find this Site') }}</span>
-              <h2 class="title mb-20" id="site-location-title">{{ __('Location') }}</h2>
               <div class="site-location-card p-20 radius-md border">
-
+              <span class="site-section-eyebrow">{{ __('Find this Site') }}</span>
+              <h2 class="title mb-20" id="site-location-title">{{ __('Location') }}</h2>   
                 <p class=" mb-10">
                   <i class="fal fa-map-marker-alt"></i>
                   <span>
@@ -460,16 +460,90 @@
                 <div class="lazy-container radius-md ratio ratio-21-8">
                     <div id="map"></div>
                 </div>
+                <h6 class="m-1">
+                              <a href="https://www.google.com/maps/dir/?api=1&destination={{ $hotel->latitude }},{{ $hotel->longitude }}" target="_blank"
+                                title="{{ __('Link') }}">Get Directions</a>
+                            </h6>
               </div>
+               
             </section>
-          </div>
+            
+          
         </div>
-
-        
-
+ <div class="row">
+        <section class="site-contact-section" data-aos="fade-up" aria-labelledby="site-contact-title">
+          <div class="site-contact-card">
+            <div class="row g-4 align-items-center">
+              <div class="col-lg-4">
+                <span class="site-section-eyebrow">{{ __('Contact the venue') }}</span>
+                <h2 class="title mb-15" id="site-contact-title">{{ __('Ask about this Site') }}</h2>
+                <p class="mb-0">
+                  {{ __('Send your question directly to the Site vendor. They will reply to the email address you provide.') }}
+                </p>
+              </div>
+              <div class="col-lg-8">
+                <form action="{{ route('frontend.hotel.contact', ['id' => $hotel->id]) }}" method="POST"
+                  id="siteContactForm">
+                  @csrf
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group mb-20">
+                        <label class="form-label" for="site-contact-name">{{ __('Full Name') }}</label>
+                        <input type="text" class="form-control" id="site-contact-name" name="name"
+                          value="{{ old('name', optional(Auth::guard('web')->user())->username) }}"
+                          placeholder="{{ __('Enter Your Full Name') }}" maxlength="100" required>
+                        <p class="text-danger em mb-0" id="err_name"></p>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group mb-20">
+                        <label class="form-label" for="site-contact-email">{{ __('Email Address') }}</label>
+                        <input type="email" class="form-control" id="site-contact-email" name="email"
+                          value="{{ old('email', optional(Auth::guard('web')->user())->email) }}"
+                          placeholder="{{ __('Enter Your Email') }}" maxlength="255" required>
+                        <p class="text-danger em mb-0" id="err_email"></p>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group mb-20">
+                        <label class="form-label" for="site-contact-subject">{{ __('Subject') }}</label>
+                        <input type="text" class="form-control" id="site-contact-subject" name="subject"
+                          value="{{ old('subject') }}" placeholder="{{ __('Enter Subject') }}" maxlength="150" required>
+                        <p class="text-danger em mb-0" id="err_subject"></p>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group mb-20">
+                        <label class="form-label" for="site-contact-message">{{ __('Message') }}</label>
+                        <textarea class="form-control" id="site-contact-message" name="message" rows="5" maxlength="5000"
+                          placeholder="{{ __('Message') }}" required>{{ old('message') }}</textarea>
+                        <p class="text-danger em mb-0" id="err_message"></p>
+                      </div>
+                    </div>
+                    @if ($contactFormSettings && $contactFormSettings->google_recaptcha_status == 1)
+                      <div class="col-12">
+                        <div class="form-group mb-20">
+                          {!! NoCaptcha::renderJs() !!}
+                          {!! NoCaptcha::display() !!}
+                          <p class="text-danger em mb-0" id="err_g-recaptcha-response"></p>
+                        </div>
+                      </div>
+                    @endif
+                    <div class="col-12">
+                      <button class="btn btn-lg btn-primary radius-sm" type="submit">
+                        <i class="fal fa-paper-plane me-1"></i>{{ __('Send Message') }}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+</div>
         <!-- Hotel Review -->
         <section class="hotel-review site-reviews-section" data-aos="fade-up" aria-labelledby="site-reviews-title">
-          <div class="section-title title-inline mb-30">
+          <div class="section-title title-inline mt-30 mb-30">
             <div>
               <span class="site-section-eyebrow">{{ __('Player feedback') }}</span>
               <h2 class="title mb-0" id="site-reviews-title">{{ __('Reviews') }}</h2>
