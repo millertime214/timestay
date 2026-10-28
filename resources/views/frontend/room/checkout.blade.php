@@ -17,7 +17,7 @@
     $none = 'none';
   @endphp
   <!-- Checkout-area start -->
-  <div class="shopping-area pt-100 pb-60">
+  <div class="shopping-area pt-80 pb-60">
     <div class="container">
       <form id="payment-form" class="modal-form" action="{{ route('frontend.room.room_booking') }}" method="post"
         enctype="multipart/form-data">
@@ -25,7 +25,7 @@
         <div class="row gx-xl-5">
           <div class="col-lg-8">
             <div class="billing-details pb-40">
-              <h5 class="mb-20">{{ __('Booking Details') }}</h5>
+              <h5 class="mb-20">{{ __('Booking Checkout') }}</h5>
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group mb-20">
@@ -153,10 +153,7 @@
                 </table>
               </div>
             @endif
-
-
-          </div>
-          <div class="col-lg-4">
+          
             <div class="widget-area aos-init aos-animate">
               {{--  Booking Details  --}}
               <div class="widget widget-select border radius-md mb-30">
@@ -261,6 +258,9 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+            <div class="col-lg-4">
               {{--  order-payment Coupon  --}}
               @unless ($openPlaySlot)
               <div class="order-payment mb-30">
@@ -284,14 +284,16 @@
                     <!-- @foreach ($onlineGateways as $onlineGateway)
                       <option @selected(old('gateway') == $onlineGateway->keyword) value="{{ $onlineGateway->keyword }}">
                         {{ __($onlineGateway->name) }}</option>
-                    @endforeach
+                    @endforeach -->
 
                     @if (count($offline_gateways) > 0)
                       @foreach ($offline_gateways as $offlineGateway)
+                      @if($offlineGateway->id == 3 )
                         <option @selected(old('gateway') == $offlineGateway->id) value="{{ $offlineGateway->id }}">
                           {{ __($offlineGateway->name) }}</option>
+                          @endif
                       @endforeach
-                    @endif -->
+                    @endif
 
                     @if ($vendorEwallets->isNotEmpty())
                       <optgroup label="{{ __('Vendor E-wallets') }}">

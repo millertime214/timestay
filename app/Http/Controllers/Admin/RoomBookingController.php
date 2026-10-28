@@ -272,7 +272,7 @@ class RoomBookingController extends Controller
         } else {
             $mailTemplate = MailTemplate::where('mail_type', 'payment_cancelled_for_room_booking')->firstOrFail();
         }
-        $mailData['subject'] = $mailTemplate->mail_subject;
+        $mailData['subject'] = $mailTemplate->mail_subject . ' '. $bookingInfo->booking_name;
         $mailBody = $mailTemplate->mail_body;
 
         // get the website title info from db

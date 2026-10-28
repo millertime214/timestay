@@ -335,7 +335,7 @@
           </section>
         @endif
 
-      <div class="hotel-single-details" data-aos="fade-up">
+      <div class="row hotel-single-details" data-aos="fade-up">
         <div class="row g-4 align-items-start site-details-grid">
           <!-- Product description -->
           <div class="{{ $hotel->amenities != '[]' ? 'col-lg-8' : 'col-12' }} hotel-desc">
@@ -419,7 +419,7 @@
           @endif
         </div>
 
-        <div class="row">
+        <div class="col-md-6">
          
             
             <section class="hotel-location site-location-section" data-aos="fade-up" aria-labelledby="site-location-title">
@@ -470,18 +470,18 @@
             
           
         </div>
- <div class="row">
+        <div class="col-md-6">
         <section class="site-contact-section" data-aos="fade-up" aria-labelledby="site-contact-title">
           <div class="site-contact-card">
-            <div class="row g-4 align-items-center">
-              <div class="col-lg-4">
+            <div class="g-4 align-items-center">
+              <div class="col-md-12">
                 <span class="site-section-eyebrow">{{ __('Contact the venue') }}</span>
                 <h2 class="title mb-15" id="site-contact-title">{{ __('Ask about this Site') }}</h2>
-                <p class="mb-0">
+                <p class="mb-15">
                   {{ __('Send your question directly to the Site vendor. They will reply to the email address you provide.') }}
                 </p>
               </div>
-              <div class="col-lg-8">
+              <div class="col-lg-12 pt-20">
                 <form action="{{ route('frontend.hotel.contact', ['id' => $hotel->id]) }}" method="POST"
                   id="siteContactForm">
                   @csrf
@@ -540,7 +540,7 @@
             </div>
           </div>
         </section>
-</div>
+      </div>
         <!-- Hotel Review -->
         <section class="hotel-review site-reviews-section" data-aos="fade-up" aria-labelledby="site-reviews-title">
           <div class="section-title title-inline mt-30 mb-30">
